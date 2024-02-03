@@ -1,0 +1,42 @@
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include "game.hpp"
+
+int main()
+{
+    const uint32_t window_width  = 1280;
+    const uint32_t window_height = 800;
+    const uint32_t fps = 60;
+    
+    sf::View viewport(sf::FloatRect(0.f, 0.f, window_width, window_height));
+    
+    sf::RenderWindow window(sf::VideoMode(window_width, window_height), "Test");
+    window.setFramerateLimit(fps);
+    window.setView(viewport);
+    window.setKeyRepeatEnabled(false);
+    
+    Game *game = new Game(&window);
+    game->onQuit = [&window]() -> void {
+        window.close();
+    };
+    
+//    Renderer *renderer = new Renderer(scene, window);
+//    InputManager *input = new InputManager(scene);
+    
+    sf::Event event;
+    while (window.isOpen()) {
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+                case sf::Event::Closed:
+                    window.close();
+                    break;
+                default:
+                    game->handleEvent(event);
+                    break;
+            }
+        }
+        float dt = 1.0/fps;
+        game->step(dt);
+    }
+    return 0;
+}

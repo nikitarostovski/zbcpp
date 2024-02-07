@@ -13,9 +13,10 @@ struct EmitterConfig
     EmitterCategory category;
     float maxSpeed;
     float acceleration;
+    float consumption;
     
     EmitterConfig();
-    EmitterConfig(EmitterCategory category, float maxSpeed, float acceleration);
+    EmitterConfig(EmitterCategory category, float maxSpeed, float acceleration, float consumption);
     
     bool operator==(const EmitterConfig& rhs) const;
 };

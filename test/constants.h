@@ -13,4 +13,6 @@
 // SFML uses degrees for angles while Box2D uses radians
 #define DEG_PER_RAD 57.2957795F
 
+#define PARTICLE_LIFETIME 3.0F
+
 #endif /* constants_h */

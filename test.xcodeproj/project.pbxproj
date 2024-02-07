@@ -94,7 +94,6 @@
 		8DA698472B68007F006CDF9C /* ship_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA698452B68007F006CDF9C /* ship_config.cpp */; };
 		8DA6984D2B6804B4006CDF9C /* ship_frame_basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6984B2B6804B4006CDF9C /* ship_frame_basic.cpp */; };
 		8DA698502B68050D006CDF9C /* ship_frame_advanced.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6984E2B68050D006CDF9C /* ship_frame_advanced.cpp */; };
-		8DA698542B68D113006CDF9C /* player_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA698522B68D113006CDF9C /* player_config.cpp */; };
 		8DA698592B68DDFA006CDF9C /* collector_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA698572B68DDFA006CDF9C /* collector_config.cpp */; };
 		8DA6985C2B68DE03006CDF9C /* emitter_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6985A2B68DE03006CDF9C /* emitter_config.cpp */; };
 		8DA6985F2B68DE0B006CDF9C /* frame_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6985D2B68DE0B006CDF9C /* frame_config.cpp */; };
@@ -328,7 +327,6 @@
 		8DA6984C2B6804B4006CDF9C /* ship_frame_basic.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship_frame_basic.hpp; sourceTree = "<group>"; };
 		8DA6984E2B68050D006CDF9C /* ship_frame_advanced.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ship_frame_advanced.cpp; sourceTree = "<group>"; };
 		8DA6984F2B68050D006CDF9C /* ship_frame_advanced.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship_frame_advanced.hpp; sourceTree = "<group>"; };
-		8DA698522B68D113006CDF9C /* player_config.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = player_config.cpp; sourceTree = "<group>"; };
 		8DA698532B68D113006CDF9C /* player_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = player_config.hpp; sourceTree = "<group>"; };
 		8DA698572B68DDFA006CDF9C /* collector_config.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = collector_config.cpp; sourceTree = "<group>"; };
 		8DA698582B68DDFA006CDF9C /* collector_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = collector_config.hpp; sourceTree = "<group>"; };
@@ -868,7 +866,6 @@
 			isa = PBXGroup;
 			children = (
 				8DA698532B68D113006CDF9C /* player_config.hpp */,
-				8DA698522B68D113006CDF9C /* player_config.cpp */,
 				8D0301C32B64C6090084DD17 /* player.hpp */,
 				8D0301C22B64C6090084DD17 /* player.cpp */,
 			);
@@ -1214,7 +1211,6 @@
 				8D0301C42B64C6090084DD17 /* player.cpp in Sources */,
 				8D898D3B2B221F11008E532F /* b2Island.cpp in Sources */,
 				8DA693552B67F69E006CDF9C /* trader_scene.cpp in Sources */,
-				8DA698542B68D113006CDF9C /* player_config.cpp in Sources */,
 				8D898D4C2B221F11008E532F /* b2ParticleAssembly.cpp in Sources */,
 				8D898D322B221F11008E532F /* b2DistanceJoint.cpp in Sources */,
 				8D898D432B221F11008E532F /* b2Stat.cpp in Sources */,

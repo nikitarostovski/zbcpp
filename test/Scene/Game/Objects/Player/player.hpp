@@ -7,7 +7,12 @@ class Player
 private:
     sf::Font mainFont;
     
-    sf::Text healthText;
+    sf::RectangleShape healthBar;
+    sf::RectangleShape healthBarBackground;
+    
+    sf::RectangleShape fuelBar;
+    sf::RectangleShape fuelBarBackground;
+    
     sf::Text materialText;
     
 public:

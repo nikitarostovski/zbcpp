@@ -31,13 +31,14 @@ void GravityField::applyGravityToEntities(std::vector<BaseEntity *> entities)
 
 void GravityField::applyGravityToLiquid(b2ParticleSystem *particleSystem)
 {
+    const float particleGravityStrength = 0.01f;
+    const float particleStrength = strength * particleSystem->GetDensity() * particleGravityStrength;
     b2Vec2 fieldCenter{x, y};
     
     int count = particleSystem->GetParticleCount();
     b2Vec2* positions = particleSystem->GetPositionBuffer();
     
-    for (int i = 0; i < count; i++)
-    {
+    for (int i = 0; i < count; i++) {
         b2Vec2 center = positions[i];
         b2Vec2 shift = center - fieldCenter;
         float dist = shift.Length();
@@ -45,7 +46,7 @@ void GravityField::applyGravityToLiquid(b2ParticleSystem *particleSystem)
         if (dist > radius)
             continue;
         
-        b2Vec2 imp = -shift / shift.Normalize() * strength;
+        b2Vec2 imp = -shift / shift.Normalize() * particleStrength;
         particleSystem->ParticleApplyLinearImpulse(i, imp);
     }
 }

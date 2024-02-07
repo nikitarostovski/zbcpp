@@ -13,16 +13,17 @@ std::string emitterTypeString(EmitterCategory emitter)
 }
 
 EmitterConfig::EmitterConfig()
-    : EmitterConfig(EmitterNone, 0, 0)
+    : EmitterConfig(EmitterNone, 0, 0, 0)
 { }
 
-EmitterConfig::EmitterConfig(EmitterCategory category, float maxSpeed, float acceleration)
+EmitterConfig::EmitterConfig(EmitterCategory category, float maxSpeed, float acceleration, float consumption)
     : category(category)
     , maxSpeed(maxSpeed)
     , acceleration(acceleration)
+    , consumption(consumption)
 { }
 
 bool EmitterConfig::operator==(const EmitterConfig& rhs) const
 {
-    return category == rhs.category && maxSpeed == rhs.maxSpeed && acceleration == rhs.acceleration;
+    return category == rhs.category && maxSpeed == rhs.maxSpeed && acceleration == rhs.acceleration && consumption == rhs.consumption;
 }

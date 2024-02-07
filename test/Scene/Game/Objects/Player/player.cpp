@@ -9,13 +9,6 @@ Player::Player(b2Vec2 pos, PlayerConfig playerConfig, ShipConfig shipConfig, Phy
     mainFont = sf::Font();
     mainFont.loadFromFile(resourcePath() + "Signwood-Regular.ttf");
     
-    healthText = sf::Text();
-    healthText.setFont(mainFont);
-    healthText.setCharacterSize(18);
-    healthText.setFillColor(sf::Color::White);
-    healthText.setOutlineColor(sf::Color::Red);
-    healthText.setOutlineThickness(1);
-    
     materialText = sf::Text();
     materialText.setFont(mainFont);
     materialText.setCharacterSize(14);
@@ -23,9 +16,25 @@ Player::Player(b2Vec2 pos, PlayerConfig playerConfig, ShipConfig shipConfig, Phy
     materialText.setOutlineColor(sf::Color::Blue);
     materialText.setOutlineThickness(1);
     
+    
+    healthBar = sf::RectangleShape();
+    healthBar.setFillColor(sf::Color::Red);
+    healthBarBackground = sf::RectangleShape();
+    healthBarBackground.setFillColor(sf::Color(127, 127, 127, 127));
+    
+    fuelBar = sf::RectangleShape();
+    fuelBar.setFillColor(sf::Color::Blue);
+    fuelBarBackground = sf::RectangleShape();
+    fuelBarBackground.setFillColor(sf::Color(127, 127, 127, 127));
+    
     ship = new ControlledShip(pos, shipConfig, world);
     ship->frame->onDamageReceive = [this](float damage){
-        this->config.health -= damage;
+        int health = this->config.health;
+        health = std::max(0.0f, (health - damage));
+        this->config.health = health;
+        if (health == 0) {
+            printf("GAME OVER\n");
+        }
     };
     ship->collector->onMaterialCollect = [this](int amount){
         this->config.material += amount;
@@ -39,21 +48,38 @@ Player::~Player()
 
 void Player::render(sf::RenderWindow *window, Camera camera)
 {
-    float x = (ship->getPosition().x - camera.x) * PPM + window->getSize().x / 2;
-    float y = (ship->getPosition().y - camera.y) * PPM + window->getSize().y / 2;
+    float x = 64;
+    float y = 64;
     
-    std::string health = std::to_string((int)config.health);
     std::string materials = std::to_string(config.material);
-    
-    healthText.setPosition(x, y - 6);
-    healthText.setString(health);
-    healthText.setOrigin(healthText.getGlobalBounds().width / 2,
-                         healthText.getGlobalBounds().height / 2);
-    window->draw(healthText);
-    
-    materialText.setPosition(x, y + 10);
+
+    materialText.setPosition(window->getSize().x - 100, y);
     materialText.setString(materials);
     materialText.setOrigin(materialText.getGlobalBounds().width / 2,
                            materialText.getGlobalBounds().height / 2);
     window->draw(materialText);
+    
+    
+    const float healthBarHeight = 20.0f;
+    const float healthBarWidth = 200.0f;
+    
+    float healthBarActualWidth = healthBarWidth * config.health / config.maxHealth;
+    
+    healthBarBackground.setSize(sf::Vector2f(healthBarWidth, healthBarHeight));
+    healthBar.setSize(sf::Vector2f(healthBarActualWidth, healthBarHeight));
+    healthBarBackground.setPosition(x, y);
+    healthBar.setPosition(x, y);
+    
+    window->draw(healthBarBackground);
+    window->draw(healthBar);
+    
+    float fuelBarActualWidth = healthBarWidth * ship->shipConfig.fuel / ship->shipConfig.maxFuel;
+    
+    fuelBarBackground.setSize(sf::Vector2f(healthBarWidth, healthBarHeight));
+    fuelBar.setSize(sf::Vector2f(fuelBarActualWidth, healthBarHeight));
+    fuelBarBackground.setPosition(x, y + 40);
+    fuelBar.setPosition(x, y + 40);
+    
+    window->draw(fuelBarBackground);
+    window->draw(fuelBar);
 }

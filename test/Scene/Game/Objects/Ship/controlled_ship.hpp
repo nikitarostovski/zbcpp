@@ -16,6 +16,8 @@ private:
     bool updateFrameIfNeeded(FrameConfig newFrame, b2Vec2 pos);
     bool updateEmitterIfNeeded(EmitterConfig newEmitter, b2Vec2 pos);
     bool updateCollectorIfNeeded(CollectorConfig newCollector, b2Vec2 pos);
+    
+    void makeExhaustTrace(b2Vec2 impulse);
 
 public:
     ShipFrame *frame;

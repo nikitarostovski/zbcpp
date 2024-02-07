@@ -9,6 +9,8 @@ PhysicsWorld::PhysicsWorld()
     
     b2ParticleSystemDef def;
     def.radius = 2. / PPM;
+    def.density = 0.3f;
+    def.viscousStrength = 0.8f;
     b2ParticleSystem *system = world->CreateParticleSystem(&def);
     particle_system = system;
     
@@ -38,6 +40,17 @@ void PhysicsWorld::addLink(BaseEntity *entityA, BaseEntity *entityB)
 {
     std::pair<BaseEntity *, BaseEntity *> link{entityA, entityB};
     linksToAdd.push_back(link);
+}
+
+void PhysicsWorld::addLiquid(b2Vec2 pos, b2Vec2 velocity, b2ParticleColor color)
+{
+    b2ParticleDef def;
+    def.position = pos;
+    def.velocity = velocity;
+    def.color = b2ParticleColor(color.r, color.g, color.b, color.a);
+    def.flags = b2_waterParticle | b2_viscousParticle;
+    def.lifetime = PARTICLE_LIFETIME;
+    particle_system->CreateParticle(def);
 }
 
 void PhysicsWorld::step(float dt)
@@ -177,6 +190,30 @@ void PhysicsWorld::render(sf::RenderWindow *window, Camera camera)
 {
     for (auto field : gravityFields)
         field->render(window, camera);
+    
+    
+    int count = particle_system->GetParticleCount();
+    
+    float radius = particle_system->GetRadius();
+    b2Vec2 *positions = particle_system->GetPositionBuffer();
+    b2ParticleColor *colors = particle_system->GetColorBuffer();
+    
+    for (int i = 0; i < count; i++) {
+        auto pos = positions[i];
+        auto col = colors[i];
+        
+        float lifetimeRemained = particle_system->GetParticleLifetime(i);
+        col.a = 255 * std::max(0.0f, std::min(1.0f, lifetimeRemained / PARTICLE_LIFETIME));
+        
+        sf::CircleShape particle;
+        particle.setOrigin(radius / 2 * PPM, radius / 2 * PPM);
+        particle.setPosition((pos.x - camera.x) * PPM + window->getSize().x / 2, (pos.y - camera.y) * PPM + window->getSize().y / 2);
+        particle.setRadius(radius * PPM);
+        particle.setFillColor(sf::Color(col.r, col.g, col.b, col.a));
+        
+        window->draw(particle);
+    }
+    
     
     for (auto entity : entities)
         entity->render(window, camera);

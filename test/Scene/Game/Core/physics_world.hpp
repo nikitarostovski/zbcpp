@@ -36,6 +36,7 @@ public:
     void addEntity(BaseEntity *entity);
     void addGravityField(GravityField *field);
     void addLink(BaseEntity *entityA, BaseEntity *entityB);
+    void addLiquid(b2Vec2 pos, b2Vec2 velocity, b2ParticleColor color);
     
     void render(sf::RenderWindow *window, Camera camera);
 };

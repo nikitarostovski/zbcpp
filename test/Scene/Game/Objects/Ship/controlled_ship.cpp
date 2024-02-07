@@ -151,19 +151,41 @@ void ControlledShip::step(float dt)
     frame->body->SetAngularVelocity(delta * rotationSpeed);
 }
 
+void ControlledShip::makeExhaustTrace(b2Vec2 impulse)
+{
+    sf::Color color = sf::Color::Blue;
+    b2Vec2 pos = emitter->getPosition();
+    float dist = 0.4f;
+    float angle = atan2(emitter->getPosition().y - frame->getPosition().y, emitter->getPosition().x - frame->getPosition().x);
+
+    pos.x += dist * cos(angle);
+    pos.y += dist * sin(angle);
+    
+    b2ParticleColor pColor{color.r, color.g, color.b, 255};
+    world->addLiquid(pos, impulse, pColor);
+    world->addLiquid(pos, impulse, pColor);
+    world->addLiquid(pos, impulse, pColor);
+}
+
 void ControlledShip::move(b2Vec2 vector)
 {
-    if (!frame->body)
+    if (!frame->body || vector == b2Vec2_zero)
         return;
     
+    float consumption = emitter->config.consumption;
     float maxVelocity = emitter->config.maxSpeed;
     float acceleration = emitter->config.acceleration;
+    
+    float fuel = shipConfig.fuel;
+    if (fuel == 0)
+        return;
+    
+    fuel = std::max(0.0f, fuel - consumption);
+    shipConfig.fuel = fuel;
     
     b2Vec2 imp;
     imp.x = vector.x * acceleration;
     imp.y = vector.y * acceleration;
-    
-    //    createLiquid(emitter->GetWorldCenter().x, emitter->GetWorldCenter().y, imp * -1, sf::Color::Blue);
     
     frame->body->ApplyLinearImpulse(imp, frame->body->GetWorldCenter(), true);
     
@@ -173,6 +195,8 @@ void ControlledShip::move(b2Vec2 vector)
         vel = vel / vel.Length() * maxVelocity;
         frame->body->SetLinearVelocity(vel);
     }
+    
+    makeExhaustTrace(imp * -1);
 }
 
 void ControlledShip::rotate(float desiredAngle)

@@ -12,6 +12,7 @@ private:
     
 public:
     EmitterConfig config;
+    
     ShipEmitter(b2Vec2 pos, EmitterConfig config);
     
     void initializeBody(b2World *world) override;

@@ -23,11 +23,11 @@ GameScene::GameScene(sf::RenderWindow *window)
     
     world = new PhysicsWorld();
     
-    PlayerConfig playerConfig{20.0f, 100};
+    PlayerConfig playerConfig{20.0f, 20.0f, 350};
     FrameConfig frameConfig{FrameBasic, 0.0f, 1.0f};
-    EmitterConfig emitterConfig{EmitterBasic, 10.0f, 0.5f};
+    EmitterConfig emitterConfig{EmitterBasic, 10.0f, 0.5f, 1.0f};
     CollectorConfig collectorConfig{CollectorBasic, 10};
-    ShipConfig shipConfig{frameConfig, emitterConfig, collectorConfig};
+    ShipConfig shipConfig{frameConfig, emitterConfig, collectorConfig, 900.0f, 1000.0f};
     player = new Player(b2Vec2(0, 200), playerConfig, shipConfig, world);
     
     mainPlanet = new Planet(b2Vec2(0, 0), 100, 400, world);
@@ -49,7 +49,7 @@ GameScene::GameScene(sf::RenderWindow *window)
         items.push_back(item);
     }
     for (int i = 0; i < 3; i++) {
-        EmitterConfig newEmitter = EmitterConfig(EmitterBasic, 15 + i * 2, 0.5 + (static_cast<float>(i) / 2));
+        EmitterConfig newEmitter = EmitterConfig(EmitterBasic, 15 + i * 2, 0.5 + (static_cast<float>(i) / 2), 1.0f + 0.05f * i);
         int price = 20 + i * 5;
         
         std::string title = string_format("Emitter \"%s\"", emitterTypeString(newEmitter.category).c_str());

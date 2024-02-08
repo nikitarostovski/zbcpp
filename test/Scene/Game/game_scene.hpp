@@ -6,6 +6,7 @@
 #include "planet.hpp"
 #include "asteroid_belt.hpp"
 #include "trader.hpp"
+#include "fuel_station.hpp"
 
 class GameScene : public BaseScene
 {
@@ -17,9 +18,11 @@ private:
     PhysicsWorld *world;
     
     Trader *activeTrader;
+    FuelStation *activeFuelStation;
     
     Player *player;
     Trader *trader;
+    FuelStation *fuelStation;
     Planet *mainPlanet;
     AsteroidBelt *mainAsteroids;
     
@@ -27,6 +30,7 @@ public:
     bool isPaused;
     std::function<void(Player *player)> onShowInventory;
     std::function<void(Player *player, Trader *trader)> onShowTrader;
+    std::function<void(Player *player, FuelStation *fuelStation)> onShowFuelStation;
     
     GameScene(sf::RenderWindow *window);
     ~GameScene();

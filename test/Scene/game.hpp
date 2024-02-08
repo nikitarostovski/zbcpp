@@ -4,6 +4,7 @@
 class BaseScene;
 class Player;
 class Trader;
+class FuelStation;
 
 class Game
 {
@@ -15,6 +16,7 @@ private:
     void showGame();
     void showInventory(Player *player);
     void showTrader(Player *player, Trader *trader);
+    void showFuelStation(Player *player, FuelStation *fuelStation);
     void quit();
 public:
     Game(sf::RenderWindow* window);

@@ -72,6 +72,7 @@ GameScene::GameScene(sf::RenderWindow *window)
         });
         items.push_back(item);
     }
+    
     TraderConfig traderConfig{100, items};
     trader = new Trader(b2Vec2(-80, -80), traderConfig, world);
     trader->building->onPlayerEnter = [this]{
@@ -79,6 +80,16 @@ GameScene::GameScene(sf::RenderWindow *window)
     };
     trader->building->onPlayerLeave = [this]{
         this->activeTrader = nullptr;
+    };
+    
+    
+    FuelStationConfig fuelStationConfig{11240.0f, 1.2f};
+    fuelStation = new FuelStation(b2Vec2(80, 80), fuelStationConfig, world);
+    fuelStation->building->onPlayerEnter = [this]{
+        this->activeFuelStation = fuelStation;
+    };
+    fuelStation->building->onPlayerLeave = [this]{
+        this->activeFuelStation = nullptr;
     };
 }
 
@@ -125,9 +136,14 @@ void GameScene::handleKeyDown(sf::Keyboard::Key key)
         onShowInventory(player);
     }
     
-    if (key == sf::Keyboard::Space && activeTrader && onShowTrader) {
-        playerMovement = b2Vec2_zero;
-        onShowTrader(player, activeTrader);
+    if (key == sf::Keyboard::Space) {
+        if (activeTrader && onShowTrader) {
+            playerMovement = b2Vec2_zero;
+            onShowTrader(player, activeTrader);
+        } else if (activeFuelStation && onShowFuelStation) {
+            playerMovement = b2Vec2_zero;
+            onShowFuelStation(player, activeFuelStation);
+        }
     }
 }
 

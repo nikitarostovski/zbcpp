@@ -107,11 +107,14 @@
 		8DF5DDA22B5EB6890037562F /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5DDA02B5EB6890037562F /* game.cpp */; };
 		8DF5DDA52B5ED8790037562F /* main_menu_scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5DDA32B5ED8790037562F /* main_menu_scene.cpp */; };
 		8DF5DDA82B5ED8880037562F /* base_scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5DDA62B5ED8880037562F /* base_scene.cpp */; };
-		8DF5DDAF2B5EE5440037562F /* Button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5DDAD2B5EE5440037562F /* Button.cpp */; };
 		8DF5E4F52B6125F20037562F /* gravity_field.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E4F42B6125F20037562F /* gravity_field.cpp */; };
 		8DF5E4F72B61308C0037562F /* base_entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E4F62B61308C0037562F /* base_entity.cpp */; };
 		8DF5E7472B61683D0037562F /* ship_frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E7452B61683D0037562F /* ship_frame.cpp */; };
 		8DF5E74A2B6168C70037562F /* controlled_ship.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E7482B6168C60037562F /* controlled_ship.cpp */; };
+		8DF83B142B749260000DC138 /* fuel_station.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF83B122B749260000DC138 /* fuel_station.cpp */; };
+		8DF83B1A2B7492B1000DC138 /* building.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF83B182B7492B1000DC138 /* building.cpp */; };
+		8DF83B1D2B749644000DC138 /* fuel_station_building.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF83B1B2B749644000DC138 /* fuel_station_building.cpp */; };
+		8DF83B212B749C7D000DC138 /* fuel_station_scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF83B1F2B749C7D000DC138 /* fuel_station_scene.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -377,8 +380,6 @@
 		8DF5DDA42B5ED8790037562F /* main_menu_scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = main_menu_scene.hpp; sourceTree = "<group>"; };
 		8DF5DDA62B5ED8880037562F /* base_scene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = base_scene.cpp; sourceTree = "<group>"; };
 		8DF5DDA72B5ED8880037562F /* base_scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = base_scene.hpp; sourceTree = "<group>"; };
-		8DF5DDAD2B5EE5440037562F /* Button.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Button.cpp; sourceTree = "<group>"; };
-		8DF5DDAE2B5EE5440037562F /* Button.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Button.hpp; sourceTree = "<group>"; };
 		8DF5E4F12B600F7E0037562F /* gravity_field.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gravity_field.hpp; sourceTree = "<group>"; };
 		8DF5E4F42B6125F20037562F /* gravity_field.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gravity_field.cpp; sourceTree = "<group>"; };
 		8DF5E4F62B61308C0037562F /* base_entity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = base_entity.cpp; sourceTree = "<group>"; };
@@ -386,6 +387,15 @@
 		8DF5E7462B61683D0037562F /* ship_frame.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship_frame.hpp; sourceTree = "<group>"; };
 		8DF5E7482B6168C60037562F /* controlled_ship.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = controlled_ship.cpp; sourceTree = "<group>"; };
 		8DF5E7492B6168C70037562F /* controlled_ship.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = controlled_ship.hpp; sourceTree = "<group>"; };
+		8DF83B122B749260000DC138 /* fuel_station.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fuel_station.cpp; sourceTree = "<group>"; };
+		8DF83B132B749260000DC138 /* fuel_station.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fuel_station.hpp; sourceTree = "<group>"; };
+		8DF83B152B749272000DC138 /* fuel_station_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fuel_station_config.hpp; sourceTree = "<group>"; };
+		8DF83B182B7492B1000DC138 /* building.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = building.cpp; sourceTree = "<group>"; };
+		8DF83B192B7492B1000DC138 /* building.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = building.hpp; sourceTree = "<group>"; };
+		8DF83B1B2B749644000DC138 /* fuel_station_building.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fuel_station_building.cpp; sourceTree = "<group>"; };
+		8DF83B1C2B749644000DC138 /* fuel_station_building.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fuel_station_building.hpp; sourceTree = "<group>"; };
+		8DF83B1F2B749C7D000DC138 /* fuel_station_scene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fuel_station_scene.cpp; sourceTree = "<group>"; };
+		8DF83B202B749C7D000DC138 /* fuel_station_scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fuel_station_scene.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -482,13 +492,13 @@
 		8D6772A02B4C406700403134 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
-				8DF5DDAC2B5EE5350037562F /* GUI */,
 				8DF5DDA12B5EB6890037562F /* game.hpp */,
 				8DF5DDA02B5EB6890037562F /* game.cpp */,
 				8DF5DDA72B5ED8880037562F /* base_scene.hpp */,
 				8DF5DDA62B5ED8880037562F /* base_scene.cpp */,
 				8DF5DDAA2B5EDA0B0037562F /* MainMenu */,
 				8DA693522B67F69E006CDF9C /* Trader */,
+				8DF83B1E2B749C63000DC138 /* FuelStation */,
 				8DF5DDAB2B5EDA170037562F /* Inventory */,
 				8DF5DDA92B5ED9FD0037562F /* Game */,
 			);
@@ -1037,15 +1047,6 @@
 			path = Inventory;
 			sourceTree = "<group>";
 		};
-		8DF5DDAC2B5EE5350037562F /* GUI */ = {
-			isa = PBXGroup;
-			children = (
-				8DF5DDAE2B5EE5440037562F /* Button.hpp */,
-				8DF5DDAD2B5EE5440037562F /* Button.cpp */,
-			);
-			path = GUI;
-			sourceTree = "<group>";
-		};
 		8DF5E4F22B6013AE0037562F /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -1062,7 +1063,8 @@
 		8DF5E4F32B6013B40037562F /* Objects */ = {
 			isa = PBXGroup;
 			children = (
-				8DA6986A2B6945E7006CDF9C /* Market */,
+				8DF83B162B749291000DC138 /* Buildings */,
+				8DF83B112B74924B000DC138 /* FuelStation */,
 				8DA698632B694583006CDF9C /* Trader */,
 				8DA698552B68D11E006CDF9C /* Player */,
 				8D0300542B63BF550084DD17 /* Terrain */,
@@ -1082,6 +1084,45 @@
 				8D03FEFD2B639D7B0084DD17 /* Parts */,
 			);
 			path = Ship;
+			sourceTree = "<group>";
+		};
+		8DF83B112B74924B000DC138 /* FuelStation */ = {
+			isa = PBXGroup;
+			children = (
+				8DF83B152B749272000DC138 /* fuel_station_config.hpp */,
+				8DF83B132B749260000DC138 /* fuel_station.hpp */,
+				8DF83B122B749260000DC138 /* fuel_station.cpp */,
+			);
+			path = FuelStation;
+			sourceTree = "<group>";
+		};
+		8DF83B162B749291000DC138 /* Buildings */ = {
+			isa = PBXGroup;
+			children = (
+				8DF83B192B7492B1000DC138 /* building.hpp */,
+				8DF83B182B7492B1000DC138 /* building.cpp */,
+				8DF83B172B74929C000DC138 /* FuelStation */,
+				8DA6986A2B6945E7006CDF9C /* Market */,
+			);
+			path = Buildings;
+			sourceTree = "<group>";
+		};
+		8DF83B172B74929C000DC138 /* FuelStation */ = {
+			isa = PBXGroup;
+			children = (
+				8DF83B1C2B749644000DC138 /* fuel_station_building.hpp */,
+				8DF83B1B2B749644000DC138 /* fuel_station_building.cpp */,
+			);
+			path = FuelStation;
+			sourceTree = "<group>";
+		};
+		8DF83B1E2B749C63000DC138 /* FuelStation */ = {
+			isa = PBXGroup;
+			children = (
+				8DF83B202B749C7D000DC138 /* fuel_station_scene.hpp */,
+				8DF83B1F2B749C7D000DC138 /* fuel_station_scene.cpp */,
+			);
+			path = FuelStation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1157,6 +1198,7 @@
 				8D2806E92B31BD0F00DD0D8F /* game_scene.cpp in Sources */,
 				8D6773AB2B4DB7D900403134 /* clipper.offset.cpp in Sources */,
 				8D6772A42B4C410D00403134 /* material.cpp in Sources */,
+				8DF83B212B749C7D000DC138 /* fuel_station_scene.cpp in Sources */,
 				8DA6895F2B669845006CDF9C /* imgui.cpp in Sources */,
 				8D898D232B221F11008E532F /* b2World.cpp in Sources */,
 				8D898D372B221F11008E532F /* b2Joint.cpp in Sources */,
@@ -1176,9 +1218,9 @@
 				8D898D502B221F11008E532F /* b2DynamicTree.cpp in Sources */,
 				8D898D562B221F11008E532F /* b2BroadPhase.cpp in Sources */,
 				8DA6882B2B64EE12006CDF9C /* ship_collector.cpp in Sources */,
+				8DF83B1D2B749644000DC138 /* fuel_station_building.cpp in Sources */,
 				8DF5E74A2B6168C70037562F /* controlled_ship.cpp in Sources */,
 				8D898D272B221F11008E532F /* b2ChainAndCircleContact.cpp in Sources */,
-				8DF5DDAF2B5EE5440037562F /* Button.cpp in Sources */,
 				8DF3DA772B431D3900A9593C /* PolygonClipping.cpp in Sources */,
 				8DA6985F2B68DE0B006CDF9C /* frame_config.cpp in Sources */,
 				8DF5E7472B61683D0037562F /* ship_frame.cpp in Sources */,
@@ -1213,6 +1255,7 @@
 				8DA693552B67F69E006CDF9C /* trader_scene.cpp in Sources */,
 				8D898D4C2B221F11008E532F /* b2ParticleAssembly.cpp in Sources */,
 				8D898D322B221F11008E532F /* b2DistanceJoint.cpp in Sources */,
+				8DF83B142B749260000DC138 /* fuel_station.cpp in Sources */,
 				8D898D432B221F11008E532F /* b2Stat.cpp in Sources */,
 				8DA6984D2B6804B4006CDF9C /* ship_frame_basic.cpp in Sources */,
 				8DF5DDA22B5EB6890037562F /* game.cpp in Sources */,
@@ -1240,6 +1283,7 @@
 				8D8995CD2B236340008E532F /* renderer.cpp in Sources */,
 				8DF3DA7A2B47F83300A9593C /* polygon.cpp in Sources */,
 				8D898D522B221F11008E532F /* b2EdgeShape.cpp in Sources */,
+				8DF83B1A2B7492B1000DC138 /* building.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

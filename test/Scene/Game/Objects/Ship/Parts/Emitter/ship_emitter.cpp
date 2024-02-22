@@ -4,24 +4,34 @@
 using namespace PolygonUtils;
 
 ShipEmitter::ShipEmitter(b2Vec2 pos, EmitterConfig config)
-    : BaseEntity(false)
+    : BodyEntity(pos, PlayerEmitter, false)
     , config(config)
     , pos(pos)
 { }
 
-void ShipEmitter::initializeBody(b2World *world)
+b2AABB ShipEmitter::getInitialAABB()
+{
+    b2AABB result;
+    result.lowerBound.x = pos.x - 5;
+    result.lowerBound.y = pos.y + 5;
+    result.upperBound.x = pos.x + 5;
+    result.upperBound.y = pos.y + 5.5;
+    return result;
+}
+
+b2Body* ShipEmitter::createBody(b2World *world)
 {
     b2BodyDef bodyDef;
-    bodyDef.position.Set(pos.x / PPM, pos.y / PPM);
+    bodyDef.position.Set(pos.x, pos.y);
     bodyDef.type = b2_dynamicBody;
-    body = world->CreateBody(&bodyDef);
+    b2Body *body = world->CreateBody(&bodyDef);
     
     b2PolygonShape shape;
     std::vector<b2Vec2> points;
-    points.emplace_back(-15 / PPM, 50 / PPM);
-    points.emplace_back(15 / PPM, 50 / PPM);
-    points.emplace_back(5 / PPM, 55 / PPM);
-    points.emplace_back(-5 / PPM, 55 / PPM);
+    points.emplace_back(-1.5, 5);
+    points.emplace_back(1.5, 5);
+    points.emplace_back(5, 5.5);
+    points.emplace_back(-5, 5.5);
     shape.Set(points.data(), (int)points.size());
     
     b2FixtureDef fixtureDef;
@@ -33,16 +43,15 @@ void ShipEmitter::initializeBody(b2World *world)
     fixtureDef.shape = &shape;
     
     body->CreateFixture(&fixtureDef);
-}
-
-CollisionCategory ShipEmitter::getEntityType()
-{
-    return CollisionCategory::PlayerEmitter;
+    return body;
 }
 
 void ShipEmitter::render(sf::RenderWindow *window, Camera camera)
 {
-    sf::Vector2<float> localCenter{body->GetLocalCenter().x * PPM, body->GetLocalCenter().y * PPM};
+    if (!body)
+        return;
+    
+    sf::Vector2<float> localCenter{body->GetLocalCenter().x * camera.scale, body->GetLocalCenter().y * camera.scale};
     sf::Vector2<float> worldCenter{body->GetWorldCenter().x, body->GetWorldCenter().y};
     float angle = body->GetAngle();
 
@@ -51,11 +60,11 @@ void ShipEmitter::render(sf::RenderWindow *window, Camera camera)
     sf::ConvexShape polygon;
     polygon.setFillColor(sf::Color::Cyan);
     polygon.setOrigin(localCenter);
-    polygon.setPosition((worldCenter.x - camera.x) * PPM + window->getSize().x / 2,
-                        (worldCenter.y - camera.y) * PPM + window->getSize().y / 2);
+    polygon.setPosition((worldCenter.x - camera.x) * camera.scale + window->getSize().x / 2,
+                        (worldCenter.y - camera.y) * camera.scale + window->getSize().y / 2);
     polygon.setPointCount(shape->GetVertexCount());
     for (int i = 0; i < shape->GetVertexCount(); i++) {
-        polygon.setPoint(i, sf::Vector2<float>(shape->GetVertex(i).x * PPM, shape->GetVertex(i).y * PPM));
+        polygon.setPoint(i, sf::Vector2<float>(shape->GetVertex(i).x * camera.scale, shape->GetVertex(i).y * camera.scale));
     }
     polygon.setRotation(angle * DEG_PER_RAD);
     window->draw(polygon);

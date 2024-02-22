@@ -2,6 +2,7 @@
 #include "constants.h"
 #include "ship_frame_basic.hpp"
 #include "ship_frame_advanced.hpp"
+#include "liquid_entity.hpp"
 
 ControlledShip::ControlledShip(b2Vec2 pos, ShipConfig config, PhysicsWorld *world)
     : world(world)
@@ -30,7 +31,7 @@ b2Vec2 ControlledShip::getPosition()
 
 void ControlledShip::onConfigDidUpdate()
 {
-    b2Vec2 pos = getPosition() * PPM;
+    b2Vec2 pos = getPosition();
     updateFrameIfNeeded(shipConfig.frame, pos);
     updateEmitterIfNeeded(shipConfig.emitter, pos);
     updateCollectorIfNeeded(shipConfig.collector, pos);
@@ -44,7 +45,7 @@ bool ControlledShip::updateFrameIfNeeded(FrameConfig newFrame, b2Vec2 pos)
     bool hasDamageCallback = false;
     std::function<void(float)> damageCallback;
     if (frame) {
-        frame->isDestroying = true;
+        frame->isDead = true;
         if (frame->onDamageReceive) {
             damageCallback = frame->onDamageReceive;
             hasDamageCallback = true;
@@ -83,7 +84,7 @@ bool ControlledShip::updateEmitterIfNeeded(EmitterConfig newEmitter, b2Vec2 pos)
         return false;
     
     if (emitter)
-        emitter->isDestroying = true;
+        emitter->isDead = true;
     
     switch (newEmitter.category) {
         case EmitterNone:
@@ -109,7 +110,7 @@ bool ControlledShip::updateCollectorIfNeeded(CollectorConfig newCollector, b2Vec
         return false;
     
     if (collector)
-        collector->isDestroying = true;
+        collector->isDead = true;
     
     switch (newCollector.category) {
         case CollectorNone:
@@ -154,17 +155,19 @@ void ControlledShip::step(float dt)
 void ControlledShip::makeExhaustTrace(b2Vec2 impulse)
 {
     sf::Color color = sf::Color::Blue;
-    b2Vec2 pos = emitter->getPosition();
-    float dist = 0.4f;
-    float angle = atan2(emitter->getPosition().y - frame->getPosition().y, emitter->getPosition().x - frame->getPosition().x);
-
-    pos.x += dist * cos(angle);
-    pos.y += dist * sin(angle);
+//    b2Vec2 pos = emitter->getPosition();
+//    float dist = 0.4f;
+//    float angle = atan2(emitter->getPosition().y - frame->getPosition().y, emitter->getPosition().x - frame->getPosition().x);
+//
+//    pos.x += dist * cos(angle);
+//    pos.y += dist * sin(angle);
+    
+    b2Vec2 pos = frame->getPosition();
     
     b2ParticleColor pColor{color.r, color.g, color.b, 255};
-    world->addLiquid(pos, impulse, pColor);
-    world->addLiquid(pos, impulse, pColor);
-    world->addLiquid(pos, impulse, pColor);
+    
+    auto liquid = new LiquidEntity(pos, impulse, pColor);
+    world->addEntity(liquid);
 }
 
 void ControlledShip::move(b2Vec2 vector)

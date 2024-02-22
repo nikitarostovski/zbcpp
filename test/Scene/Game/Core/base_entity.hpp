@@ -9,44 +9,28 @@ struct Camera
     float scale;
 };
 
-enum CollisionCategory {
-    PlayerFrame = 0x0001,
-    PlayerEmitter = 0x0002,
-    PlayerCollector = 0x0004,
-    PlayerShield = 0x0008,
-    Asteroid = 0x0010,
-    PlanetCore = 0x0020
-};
-
 class BaseEntity
 {
-private:
-    std::map<BaseEntity*, bool> collisionMap;
-    
-protected:
-//    b2Body *body;
 public:
-    bool canBeDestroyed;
-    bool isDestroying;
+    int lastChunkXLo;
+    int lastChunkXHi;
+    int lastChunkYLo;
+    int lastChunkYHi;
     
-    b2Body *body; // TODO: make body protected again
+    bool isDead;
     
-    BaseEntity(bool canBeDestroyed);
+    BaseEntity();
     virtual ~BaseEntity();
     
-    b2Vec2 getPosition();
+    virtual std::string getName();
     
-    void destroy();
-    virtual void initializeBody(b2World *world) = 0;
-    virtual void destroyBody(b2World *world);
+    bool checkIfChunkChanged();
     
-    virtual void contactBegin(BaseEntity *entity, b2Fixture *fixture);
-    virtual void contactEnd(BaseEntity *entity, b2Fixture *fixture);
-    void contactSolve(BaseEntity *entity, float impulse);
+    virtual b2AABB getAABB() = 0;
+    virtual b2Vec2 getPosition() = 0;
     
-    virtual void receiveCollision(BaseEntity *entity, float impulse) {};
-    
-    virtual CollisionCategory getEntityType() = 0;
+    virtual void activate(b2World *world) = 0;
+    virtual void deactivate(b2World *world) = 0;
     
     virtual void render(sf::RenderWindow *window, Camera camera) {};
 };

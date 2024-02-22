@@ -7,22 +7,32 @@ ShipFrameBasic::ShipFrameBasic(b2Vec2 pos, FrameConfig config)
     : ShipFrame(pos, config, sf::Color::Yellow)
 { }
 
-void ShipFrameBasic::initializeBody(b2World *world)
+b2AABB ShipFrameBasic::getInitialAABB()
+{
+    b2AABB result;
+    result.lowerBound.x = pos.x - 2;
+    result.lowerBound.y = pos.y + 0;
+    result.upperBound.x = pos.x + 3;
+    result.upperBound.y = pos.y + 5;
+    return result;
+}
+
+b2Body* ShipFrameBasic::createBody(b2World *world)
 {
     b2BodyDef bodyDef;
-    bodyDef.position.Set(pos.x / PPM, pos.y / PPM);
+    bodyDef.position.Set(pos.x, pos.y);
     bodyDef.type = b2_dynamicBody;
-    body = world->CreateBody(&bodyDef);
+    b2Body *body = world->CreateBody(&bodyDef);
     body->SetUserData(this);
     
     b2PolygonShape shape;
     std::vector<b2Vec2> points;
-    points.emplace_back(-20 / PPM, 0);
-    points.emplace_back(-30 / PPM, 30 / PPM);
-    points.emplace_back(-15 / PPM, 50 / PPM);
-    points.emplace_back(15 / PPM, 50 / PPM);
-    points.emplace_back(30 / PPM, 30 / PPM);
-    points.emplace_back(20 / PPM, 0);
+    points.emplace_back(-2, 0);
+    points.emplace_back(-3, 3);
+    points.emplace_back(-1.5, 5);
+    points.emplace_back(1.5, 5);
+    points.emplace_back(3, 3);
+    points.emplace_back(2, 0);
     shape.Set(points.data(), (int)points.size());
 
     b2FixtureDef fixtureDef;
@@ -34,9 +44,10 @@ void ShipFrameBasic::initializeBody(b2World *world)
     fixtureDef.shape = &shape;
 
     body->CreateFixture(&fixtureDef);
+    return body;
 }
 
-void ShipFrameBasic::receiveCollision(BaseEntity *entity, float impulse)
+void ShipFrameBasic::receiveCollision(BodyEntity *entity, float impulse)
 {
     const std::vector<std::pair<float, float>> impactToDamage = {{5, 1}, {20, 2}, {50, 3}, {100, 10}};
     

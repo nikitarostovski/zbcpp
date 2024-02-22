@@ -1,42 +1,43 @@
 #pragma once
-#include <vector>
 #include "Box2D.h"
-#include "gravity_field.hpp"
 #include "base_entity.hpp"
+#include "chunk.hpp"
+#include <SFML/System.hpp>
 
 class PhysicsWorld : public b2ContactListener
 {
 private:
-//    b2World *world;
+    sf::Clock chunkClock;
     b2ParticleSystem *particle_system;
     
-    std::vector<GravityField *> gravityFields;
-    std::vector<BaseEntity *> entities;
+    std::map<std::pair<int, int>, Chunk *> chunks;
     
-    std::vector<BaseEntity *> entitiesToAdd;
-    std::vector<std::pair<BaseEntity *, BaseEntity *>> linksToAdd;
+    sf::Vector2i activeChunkX;
+    sf::Vector2i activeChunkY;
     
-    void processGravity();
+    std::vector<std::pair<int, int>> chunksToDeactivate;
+    std::vector<std::pair<int, int>> chunksToActivate;
+    
+    b2Vec2 lastChunkUpdateCenter;
+    
     void processDestroyedEntities();
-    void processNewEntities();
+    void processChunks();
     void processNewLinks();
     
     void BeginContact(b2Contact* contact);
     void EndContact(b2Contact* contact);
     void PostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
-    
 public:
     b2World *world;
     
     PhysicsWorld();
     ~PhysicsWorld();
     
+    void updateChunks(b2Vec2 center, float width, float height);
     void step(float dt);
     
     void addEntity(BaseEntity *entity);
-    void addGravityField(GravityField *field);
     void addLink(BaseEntity *entityA, BaseEntity *entityB);
-    void addLiquid(b2Vec2 pos, b2Vec2 velocity, b2ParticleColor color);
     
     void render(sf::RenderWindow *window, Camera camera);
 };

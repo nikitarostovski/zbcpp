@@ -4,27 +4,35 @@
 using namespace PolygonUtils;
 
 ShipCollector::ShipCollector(b2Vec2 pos, CollectorConfig config)
-    : BaseEntity(false)
+    : BodyEntity(pos, PlayerCollector, false)
     , config(config)
     , pos(pos)
+{ }
+
+b2AABB ShipCollector::getInitialAABB()
 {
-    
+    b2AABB result;
+    result.lowerBound.x = pos.x - 1.5;
+    result.lowerBound.y = pos.y -1;
+    result.upperBound.x = pos.x + 1.5;
+    result.upperBound.y = pos.y;
+    return result;
 }
 
-void ShipCollector::initializeBody(b2World *world)
+b2Body* ShipCollector::createBody(b2World *world)
 {
     b2BodyDef bodyDef;
-    bodyDef.position.Set(pos.x / PPM, pos.y / PPM);
+    bodyDef.position.Set(pos.x, pos.y);
     bodyDef.type = b2_dynamicBody;
-    body = world->CreateBody(&bodyDef);
+    b2Body *body = world->CreateBody(&bodyDef);
     body->SetUserData(this);
     
     b2PolygonShape shape;
     std::vector<b2Vec2> points;
-    points.emplace_back(10 / PPM, -10 / PPM);
-    points.emplace_back(-10 / PPM, -10 / PPM);
-    points.emplace_back(-15 / PPM, 0);
-    points.emplace_back(15 / PPM, 0);
+    points.emplace_back(1, -1);
+    points.emplace_back(-1, -1);
+    points.emplace_back(-1.5, 0);
+    points.emplace_back(1.5, 0);
     shape.Set(points.data(), (int)points.size());
     
     b2FixtureDef fixtureDef;
@@ -37,20 +45,16 @@ void ShipCollector::initializeBody(b2World *world)
     fixtureDef.shape = &shape;
     
     body->CreateFixture(&fixtureDef);
+    return body;
 }
 
-CollisionCategory ShipCollector::getEntityType()
-{
-    return CollisionCategory::PlayerCollector;
-}
-
-void ShipCollector::contactBegin(BaseEntity *entity, b2Fixture *fixture)
+void ShipCollector::contactBegin(BodyEntity *entity, b2Fixture *fixture)
 {
     if (!entity)
         return;
     
-    if (entity->getEntityType() == CollisionCategory::Asteroid) {
-        entity->destroy();
+    if (entity->collisionCategory == Asteroid) {
+//        entity->destroy();
         if (onMaterialCollect)
             onMaterialCollect(1);
     }
@@ -58,7 +62,10 @@ void ShipCollector::contactBegin(BaseEntity *entity, b2Fixture *fixture)
 
 void ShipCollector::render(sf::RenderWindow *window, Camera camera)
 {
-    sf::Vector2<float> localCenter{body->GetLocalCenter().x * PPM, body->GetLocalCenter().y * PPM};
+    if (!body)
+        return;
+    
+    sf::Vector2<float> localCenter{body->GetLocalCenter().x * camera.scale, body->GetLocalCenter().y * camera.scale};
     sf::Vector2<float> worldCenter{body->GetWorldCenter().x, body->GetWorldCenter().y};
     float angle = body->GetAngle();
 
@@ -67,11 +74,11 @@ void ShipCollector::render(sf::RenderWindow *window, Camera camera)
     sf::ConvexShape polygon;
     polygon.setFillColor(sf::Color(32, 255, 255, 128));
     polygon.setOrigin(localCenter);
-    polygon.setPosition((worldCenter.x - camera.x) * PPM + window->getSize().x / 2,
-                        (worldCenter.y - camera.y) * PPM + window->getSize().y / 2);
+    polygon.setPosition((worldCenter.x - camera.x) * camera.scale + window->getSize().x / 2,
+                        (worldCenter.y - camera.y) * camera.scale + window->getSize().y / 2);
     polygon.setPointCount(shape->GetVertexCount());
     for (int i = 0; i < shape->GetVertexCount(); i++) {
-        polygon.setPoint(i, sf::Vector2<float>(shape->GetVertex(i).x * PPM, shape->GetVertex(i).y * PPM));
+        polygon.setPoint(i, sf::Vector2<float>(shape->GetVertex(i).x * camera.scale, shape->GetVertex(i).y * camera.scale));
     }
     polygon.setRotation(angle * DEG_PER_RAD);
     window->draw(polygon);

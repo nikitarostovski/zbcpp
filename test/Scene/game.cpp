@@ -74,7 +74,7 @@ void Game::showFuelStation(Player *player, FuelStation *fuelStation)
 void Game::quit() {
     onQuit();
 }
-    
+
 void Game::handleEvent(sf::Event event) {
     if (visibleScenes.empty())
         return;

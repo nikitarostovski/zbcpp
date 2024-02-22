@@ -10,6 +10,6 @@ FuelStation::FuelStation(b2Vec2 pos, FuelStationConfig config, PhysicsWorld *wor
 
 FuelStation::~FuelStation()
 {
-    building->destroy();
+//    building->destroy();
     delete building;
 }

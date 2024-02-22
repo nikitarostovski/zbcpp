@@ -22,6 +22,17 @@ Polygon::Polygon(std::vector<b2Vec2> points, MaterialType materialType, bool isD
 {
     this->isDynamic = isDynamic;
     this->points = points;
+    this->aabb = b2AABB();
+    
+    aabb.lowerBound = b2Vec2(FLT_MAX,FLT_MAX);
+    aabb.upperBound = b2Vec2(-FLT_MAX,-FLT_MAX);
+    for (auto p : points) {
+        aabb.lowerBound.x = std::min(aabb.lowerBound.x, p.x);
+        aabb.lowerBound.y = std::min(aabb.lowerBound.y, p.y);
+        aabb.upperBound.x = std::max(aabb.upperBound.x, p.x);
+        aabb.upperBound.y = std::max(aabb.upperBound.y, p.y);
+    }
+    
     calculateCenter();
 }
 

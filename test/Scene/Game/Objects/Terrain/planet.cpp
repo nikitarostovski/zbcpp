@@ -1,7 +1,7 @@
 #include "planet.hpp"
 #include "polygon.hpp"
 #include "solid_block.hpp"
-#include "gravity_field.hpp"
+#include "gravity_field_entity.hpp"
 
 using namespace PolygonUtils;
 
@@ -14,8 +14,8 @@ Planet::Planet(b2Vec2 pos, float radius, float gravityRadius, PhysicsWorld *worl
     SolidBlock *coreBlock = new SolidBlock(corePolygon);
     world->addEntity(coreBlock);
     
-    GravityField *field = new GravityField{pos.x, pos.y, gravityRadius, 0.1f};
-    world->addGravityField(field);
+    GravityFieldEntity *field = new GravityFieldEntity(pos, gravityRadius, 0.1f);
+    world->addEntity(field);
 }
 
 Planet::~Planet()

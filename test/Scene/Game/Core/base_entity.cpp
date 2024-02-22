@@ -1,51 +1,37 @@
 #include "base_entity.hpp"
+#include "constants.h"
 
-BaseEntity::BaseEntity(bool canBeDestroyed)
+BaseEntity::BaseEntity()
 {
-    this->canBeDestroyed = canBeDestroyed;
-    this->isDestroying = false;
+    this->lastChunkXLo = 0;
+    this->lastChunkXHi = 0;
+    this->lastChunkYLo = 0;
+    this->lastChunkYHi = 0;
 }
 
 BaseEntity::~BaseEntity()
-{
-    body = nullptr;
-}
+{ }
 
-b2Vec2 BaseEntity::getPosition()
+bool BaseEntity::checkIfChunkChanged()
 {
-    if (!body)
-        return b2Vec2_zero;
+    auto aabb = getAABB();
+
+    int xLo = static_cast<int>(std::floor(aabb.lowerBound.x / CHUNK_SIZE));
+    int xHi = static_cast<int>(std::floor(aabb.upperBound.x / CHUNK_SIZE));
+    int yLo = static_cast<int>(std::floor(aabb.lowerBound.y / CHUNK_SIZE));
+    int yHi = static_cast<int>(std::floor(aabb.upperBound.y / CHUNK_SIZE));
+        
+    bool positionChanged = xLo != lastChunkXLo || xHi != lastChunkXHi || yLo != lastChunkYLo || yHi != lastChunkYHi;
     
-    return body->GetWorldCenter();
-}
-
-void BaseEntity::destroyBody(b2World *world)
-{
-    if (!body)
-        return;
-    world->DestroyBody(body);
-}
-
-void BaseEntity::destroy()
-{
-    if (!canBeDestroyed)
-        return;
-    isDestroying = true;
-}
-
-void BaseEntity::contactBegin(BaseEntity *entity, b2Fixture *fixture) {
-    if (entity)
-        collisionMap[entity] = true;
-}
-
-void BaseEntity::contactEnd(BaseEntity *entity, b2Fixture *fixture) { }
-
-void BaseEntity::contactSolve(BaseEntity *entity, float impulse) {
-    if (!entity)
-        return;
+    this->lastChunkXLo = xLo;
+    this->lastChunkXHi = xHi;
+    this->lastChunkYLo = yLo;
+    this->lastChunkYHi = yHi;
     
-    if (collisionMap[entity] == false)
-        return;
-    receiveCollision(entity, impulse);
-    collisionMap.erase(entity);
+    return positionChanged;
+}
+
+std::string BaseEntity::getName()
+{
+    return "unnamed";
 }

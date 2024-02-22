@@ -1,7 +1,6 @@
 #include "asteroid_belt.hpp"
 #include "polygon.hpp"
 #include "solid_block.hpp"
-#include "gravity_field.hpp"
 
 using namespace PolygonUtils;
 

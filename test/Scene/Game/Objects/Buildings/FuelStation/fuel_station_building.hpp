@@ -13,8 +13,6 @@ protected:
 public:
     FuelStationBuilding(b2Vec2 pos);
     
-    CollisionCategory getEntityType() override;
-    
     b2Body* initializeBuildingBody(b2World *world) override;
     void renderBuilding(sf::RenderWindow *window, Camera camera) override;
 };

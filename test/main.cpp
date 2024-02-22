@@ -20,8 +20,7 @@ int main()
         window.close();
     };
     
-//    Renderer *renderer = new Renderer(scene, window);
-//    InputManager *input = new InputManager(scene);
+    auto clock = sf::Clock();
     
     sf::Event event;
     while (window.isOpen()) {
@@ -37,6 +36,10 @@ int main()
         }
         float dt = 1.0/fps;
         game->step(dt);
+        
+        auto t = clock.getElapsedTime();
+        printf("%.dms\n", t.asMilliseconds());
+        clock.restart();
     }
     return 0;
 }

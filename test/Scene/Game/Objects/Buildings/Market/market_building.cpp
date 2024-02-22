@@ -4,29 +4,24 @@
 using namespace PolygonUtils;
 
 MarketBuilding::MarketBuilding(b2Vec2 pos)
-    : Building(pos, 70)
+    : Building(pos, 4)
     , buildingColor(sf::Color(255, 0, 255))
 { }
-
-CollisionCategory MarketBuilding::getEntityType()
-{
-    return CollisionCategory::PlanetCore;
-}
 
 b2Body* MarketBuilding::initializeBuildingBody(b2World *world)
 {
     b2BodyDef bodyDef;
-    bodyDef.position.Set(pos.x / PPM, pos.y / PPM);
+    bodyDef.position.Set(pos.x, pos.y);
     bodyDef.type = b2_staticBody;
     b2Body *body = world->CreateBody(&bodyDef);
     body->SetUserData(this);
     
     b2PolygonShape mainShape;
     std::vector<b2Vec2> mainPoints;
-    mainPoints.emplace_back(-20 / PPM, -20 / PPM);
-    mainPoints.emplace_back(-20 / PPM, 20 / PPM);
-    mainPoints.emplace_back(20 / PPM, 20 / PPM);
-    mainPoints.emplace_back(20 / PPM, -20 / PPM);
+    mainPoints.emplace_back(-2, -2);
+    mainPoints.emplace_back(-2, 2);
+    mainPoints.emplace_back(2, 2);
+    mainPoints.emplace_back(2, -2);
     mainShape.Set(mainPoints.data(), (int)mainPoints.size());
 
     b2FixtureDef mainFixtureDef;
@@ -44,7 +39,7 @@ b2Body* MarketBuilding::initializeBuildingBody(b2World *world)
 
 void MarketBuilding::renderBuilding(sf::RenderWindow *window, Camera camera)
 {
-    sf::Vector2<float> localCenter{body->GetLocalCenter().x * PPM, body->GetLocalCenter().y * PPM};
+    sf::Vector2<float> localCenter{body->GetLocalCenter().x * camera.scale, body->GetLocalCenter().y * camera.scale};
     sf::Vector2<float> worldCenter{body->GetWorldCenter().x, body->GetWorldCenter().y};
     float angle = body->GetAngle();
     
@@ -52,11 +47,11 @@ void MarketBuilding::renderBuilding(sf::RenderWindow *window, Camera camera)
     sf::ConvexShape mainPolygon;
     mainPolygon.setFillColor(buildingColor);
     mainPolygon.setOrigin(localCenter);
-    mainPolygon.setPosition((worldCenter.x - camera.x) * PPM + window->getSize().x / 2,
-                            (worldCenter.y - camera.y) * PPM + window->getSize().y / 2);
+    mainPolygon.setPosition((worldCenter.x - camera.x) * camera.scale + window->getSize().x / 2,
+                            (worldCenter.y - camera.y) * camera.scale + window->getSize().y / 2);
     mainPolygon.setPointCount(mainShape->GetVertexCount());
     for (int i = 0; i < mainShape->GetVertexCount(); i++) {
-        mainPolygon.setPoint(i, sf::Vector2<float>(mainShape->GetVertex(i).x * PPM, mainShape->GetVertex(i).y * PPM));
+        mainPolygon.setPoint(i, sf::Vector2<float>(mainShape->GetVertex(i).x * camera.scale, mainShape->GetVertex(i).y * camera.scale));
     }
     mainPolygon.setRotation(angle * DEG_PER_RAD);
     window->draw(mainPolygon);

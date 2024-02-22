@@ -1,21 +1,21 @@
 #include "physics_world.hpp"
 #include "constants.h"
 #include "solid_block.hpp"
+#include "body_entity.hpp"
 
 PhysicsWorld::PhysicsWorld()
 {
+    lastChunkUpdateCenter = b2Vec2(b2_maxFloat / 2, b2_maxFloat / 2);
+    
     world = new b2World(b2Vec2(0, 0));
     world->SetContactListener(this);
     
     b2ParticleSystemDef def;
-    def.radius = 2. / PPM;
+    def.radius = PARTICLE_RADIUS;
     def.density = 0.3f;
     def.viscousStrength = 0.8f;
     b2ParticleSystem *system = world->CreateParticleSystem(&def);
     particle_system = system;
-    
-    entities = std::vector<BaseEntity *>();
-    entitiesToAdd = std::vector<BaseEntity *>();
 }
 
 PhysicsWorld::~PhysicsWorld()
@@ -26,121 +26,283 @@ PhysicsWorld::~PhysicsWorld()
 
 // MARK: - Lifecycle
 
-void PhysicsWorld::addGravityField(GravityField *field)
-{
-    gravityFields.push_back(field);
-}
-
 void PhysicsWorld::addEntity(BaseEntity *entity)
 {
-    entitiesToAdd.push_back(entity);
+    entity->checkIfChunkChanged();
+    for (int x = entity->lastChunkXLo; x <= entity->lastChunkXHi; x++) {
+        for (int y = entity->lastChunkYLo; y <= entity->lastChunkYHi; y++) {
+            auto address = std::pair<int, int>(x, y);
+            Chunk *chunk = chunks[address];
+            if (!chunk) {
+                chunk = new Chunk();
+                chunks[address] = chunk;
+            }
+            chunk->entities.push_back(entity);
+        }
+    }
+    int r1MinX = std::min(activeChunkX.x, activeChunkX.x + activeChunkX.y);
+    int r1MaxX = std::max(activeChunkX.x, activeChunkX.x + activeChunkX.y);
+    int r1MinY = std::min(activeChunkY.x, activeChunkY.x + activeChunkY.y);
+    int r1MaxY = std::max(activeChunkY.x, activeChunkY.x + activeChunkY.y);
+
+    int r2MinX = std::min(entity->lastChunkXLo, entity->lastChunkXHi);
+    int r2MaxX = std::max(entity->lastChunkXLo, entity->lastChunkXHi);
+    int r2MinY = std::min(entity->lastChunkYLo, entity->lastChunkYHi);
+    int r2MaxY = std::max(entity->lastChunkYLo, entity->lastChunkYHi);
+
+    int interLeft   = std::max(r1MinX, r2MinX);
+    int interTop    = std::max(r1MinY, r2MinY);
+    int interRight  = std::min(r1MaxX, r2MaxX);
+    int interBottom = std::min(r1MaxY, r2MaxY);
+
+    bool intersects = (interLeft <= interRight) && (interTop <= interBottom);
+    if (intersects) {
+        entity->activate(world);
+    }
 }
 
 void PhysicsWorld::addLink(BaseEntity *entityA, BaseEntity *entityB)
 {
-    std::pair<BaseEntity *, BaseEntity *> link{entityA, entityB};
-    linksToAdd.push_back(link);
+//    std::pair<BaseEntity *, BaseEntity *> link{entityA, entityB};
+//    linksToAdd.push_back(link);
 }
 
-void PhysicsWorld::addLiquid(b2Vec2 pos, b2Vec2 velocity, b2ParticleColor color)
+void PhysicsWorld::updateChunks(b2Vec2 center, float width, float height)
 {
-    b2ParticleDef def;
-    def.position = pos;
-    def.velocity = velocity;
-    def.color = b2ParticleColor(color.r, color.g, color.b, color.a);
-    def.flags = b2_waterParticle | b2_viscousParticle;
-    def.lifetime = PARTICLE_LIFETIME;
-    particle_system->CreateParticle(def);
+    float dist = (center - lastChunkUpdateCenter).Length();
+    if (dist < CHUNK_SIZE / 4)
+        return;
+    
+    float chunksWidth = width / CHUNK_SIZE;
+    float chunksHeight = height / CHUNK_SIZE;
+    float chunkX = center.x / CHUNK_SIZE - 0.5f;
+    float chunkY = center.y / CHUNK_SIZE - 0.5f;
+    
+    int xStart = std::floor(chunkX - chunksWidth / 2);
+    int xEnd = std::ceil(chunkX + chunksWidth / 2);
+    int yStart = std::floor(chunkY - chunksHeight / 2);
+    int yEnd = std::ceil(chunkY + chunksHeight / 2);
+    
+    for (int x = activeChunkX.x; x <= activeChunkX.x + activeChunkX.y; x++) {
+        for (int y = activeChunkY.x; y <= activeChunkY.x + activeChunkY.y; y++) {
+            if (x < xStart || x > xEnd || y < yStart || y > yEnd) {
+                auto address = std::pair<int, int>(x, y);
+                bool alreadyInList = false;
+                for (int i = 0; i < chunksToDeactivate.size(); i++) {
+                    if (chunksToDeactivate[i] == address) {
+                        alreadyInList = true;
+                        break;
+                    }
+                }
+                if (!alreadyInList)
+                    chunksToDeactivate.push_back(address);
+            }
+        }
+    }
+    for (int x = xStart; x <= xEnd; x++) {
+        for (int y = yStart; y <= yEnd; y++) {
+            if (x >= activeChunkX.x && x <= activeChunkX.x + activeChunkX.y &&
+                y >= activeChunkY.x && y <= activeChunkY.x + activeChunkY.y) {
+                continue;
+            }
+            auto address = std::pair<int, int>(x, y);
+            bool alreadyInList = false;
+            for (int i = 0; i < chunksToActivate.size(); i++) {
+                if (chunksToActivate[i] == address) {
+                    alreadyInList = true;
+                    break;
+                }
+            }
+            if (!alreadyInList)
+                chunksToActivate.push_back(address);
+        }
+    }
+    
+    activeChunkX.x = xStart;
+    activeChunkY.x = yStart;
+    activeChunkX.y = xEnd - xStart;
+    activeChunkY.y = yEnd - yStart;
+    
+    lastChunkUpdateCenter = center;
 }
 
 void PhysicsWorld::step(float dt)
 {
+    processChunks();
+    
+    for (int x = activeChunkX.x; x <= activeChunkX.x + activeChunkX.y; x++) {
+        for (int y = activeChunkY.x; y <= activeChunkY.x + activeChunkY.y; y++) {
+            auto address = std::pair<int, int>(x, y);
+            Chunk *chunk = chunks[address];
+            if (!chunk)
+                continue;
+            
+            for (int i = 0; i < chunk->entities.size(); i++) {
+                auto e = chunk->entities[i];
+                int lastXLo = e->lastChunkXLo;
+                int lastXHi = e->lastChunkXHi;
+                int lastYLo = e->lastChunkYLo;
+                int lastYHi = e->lastChunkYHi;
+                
+                if (e->checkIfChunkChanged()) {
+                    int newXLo = e->lastChunkXLo;
+                    int newXHi = e->lastChunkXHi;
+                    int newYLo = e->lastChunkYLo;
+                    int newYHi = e->lastChunkYHi;
+                    
+                    // delete entity from old chunks
+                    for (int xx = lastXLo; xx <= lastXHi; xx++) {
+                        for (int yy = lastYLo; yy <= lastYHi; yy++) {
+                            if (xx < newXLo || xx > newXHi || yy < newYLo || yy > newYHi) {
+                                auto addressToRemove = std::pair<int, int>(xx, yy);
+                                Chunk *chunkToRemove = chunks[addressToRemove];
+                                if (!chunkToRemove)
+                                    continue;
+                                for (int ii = 0; ii < chunkToRemove->entities.size(); ii++) {
+                                    if (chunkToRemove->entities[ii] == e) {
+                                        chunkToRemove->entities.erase(chunkToRemove->entities.begin() + ii);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // add entity to new chunks
+                    for (int xx = newXLo; xx <= newXHi; xx++) {
+                        for (int yy = newYLo; yy <= newYHi; yy++) {
+                            auto addressToAdd = std::pair<int, int>(xx, yy);
+                            Chunk *chunkToAdd = chunks[addressToAdd];
+                            if (!chunkToAdd) {
+                                chunkToAdd = new Chunk();
+                                chunks[addressToAdd] = chunkToAdd;
+                            }
+                            bool alreadyInChunk = false;
+                            for (int ii = 0; ii < chunkToAdd->entities.size(); ii++) {
+                                if (chunkToAdd->entities[ii] == e) {
+                                    alreadyInChunk = true;
+                                    break;
+                                }
+                            }
+                            if (!alreadyInChunk) {
+                                chunkToAdd->entities.push_back(e);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     processDestroyedEntities();
-    processNewEntities();
     processNewLinks();
     
     world->Step(dt, 8, 3, 1);
-    
-    processGravity();
 }
 
 // MARK: - Physics
 
 void PhysicsWorld::processDestroyedEntities()
 {
-//    std::vector<SolidBlockDef> bodiesToAdd;
-    
-    for (int i = 0; i < entities.size();) {
-        BaseEntity *entity = entities[i];
-        if (entity->isDestroying) {
-            entities.erase(entities.begin() + i);
-            entity->destroyBody(world);
-            delete entity;
-        } else {
-            i++;
+    for (int x = activeChunkX.x; x <= activeChunkX.x + activeChunkX.y; x++) {
+        for (int y = activeChunkY.x; y <= activeChunkY.x + activeChunkY.y; y++) {
+            auto address = std::pair<int, int>(x, y);
+            Chunk *chunk = chunks[address];
+            if (chunk)
+                chunk->removeDeadEntities(world);
         }
     }
-//        if (entity->isDestroying()) {
-//            auto parts = block->split();
-//            for (auto def: parts)
-//                bodiesToAdd.push_back(def);
-//            
-//            world->DestroyBody(block->body);
-//            blocks.erase(blocks.begin() + i);
-//            
-//            delete block;
-//        }
-//    }
-//    for (auto def: bodiesToAdd) {
-//        instantinateBlock(def);
-//    }
 }
 
-void PhysicsWorld::processNewEntities()
+void PhysicsWorld::processChunks()
 {
-    for (auto entity : entitiesToAdd) {
-        entity->initializeBody(world);
-        entities.push_back(entity);
+    chunkClock.restart();
+    
+    for (int i = 0; i < chunksToActivate.size();) {
+        auto address = chunksToActivate[i];
+        if (chunkClock.getElapsedTime().asMilliseconds() > CHUNK_ACTIVATION_TIME_LIMIT_MS) {
+            break;
+        }
+        Chunk *chunk = chunks[address];
+        if (!chunk) {
+            chunk = new Chunk();
+            chunks[address] = chunk;
+        }
+        for (auto entity : chunk->entities) {
+            entity->activate(world);
+        }
+        chunksToActivate.erase(chunksToActivate.begin() + i);
     }
-    entitiesToAdd.clear();
+    
+    for (int i = 0; i < chunksToDeactivate.size();) {
+        auto address = chunksToDeactivate[i];
+        if (chunkClock.getElapsedTime().asMilliseconds() > CHUNK_ACTIVATION_TIME_LIMIT_MS) {
+            break;
+        }
+        Chunk *chunk = chunks[address];
+        if (!chunk) {
+            i++;
+            continue;
+        }
+        for (auto entity : chunk->entities) {
+            int r1MinX = std::min(activeChunkX.x, activeChunkX.x + activeChunkX.y);
+            int r1MaxX = std::max(activeChunkX.x, activeChunkX.x + activeChunkX.y);
+            int r1MinY = std::min(activeChunkY.x, activeChunkY.x + activeChunkY.y);
+            int r1MaxY = std::max(activeChunkY.x, activeChunkY.x + activeChunkY.y);
+
+            int r2MinX = std::min(entity->lastChunkXLo, entity->lastChunkXHi);
+            int r2MaxX = std::max(entity->lastChunkXLo, entity->lastChunkXHi);
+            int r2MinY = std::min(entity->lastChunkYLo, entity->lastChunkYHi);
+            int r2MaxY = std::max(entity->lastChunkYLo, entity->lastChunkYHi);
+
+            int interLeft   = std::max(r1MinX, r2MinX);
+            int interTop    = std::max(r1MinY, r2MinY);
+            int interRight  = std::min(r1MaxX, r2MaxX);
+            int interBottom = std::min(r1MaxY, r2MaxY);
+
+            bool intersects = (interLeft <= interRight) && (interTop <= interBottom);
+            
+            if (!intersects)
+                entity->deactivate(world);
+        }
+        chunksToDeactivate.erase(chunksToDeactivate.begin() + i);
+    }
 }
 
 void PhysicsWorld::processNewLinks()
 {
-    for (int i = 0; i < linksToAdd.size();) {
-        b2Body *a = linksToAdd[i].first->body;
-        b2Body *b = linksToAdd[i].second->body;
-        if (a && b) {
-            b2WeldJointDef cjd;
-            cjd.collideConnected = false;
-            cjd.bodyA = a;
-            cjd.bodyB = b;
-            world->CreateJoint(&cjd);
-            linksToAdd.erase(linksToAdd.begin() + i);
-        } else {
-            i++;
-        }
-    }
-}
-
-void PhysicsWorld::processGravity()
-{
-    for (GravityField *field : gravityFields) {
-        field->applyGravityToLiquid(particle_system);
-        field->applyGravityToEntities(entities);
-    }
+//    for (auto address: activeChunks) {
+//        Chunk *chunk = chunks[address];
+//        if (!chunk) {
+//            continue;
+//        }
+//        for (auto link : chunk->links) {
+//            b2Body *a = linksToAdd[i].first->body;
+//            b2Body *b = linksToAdd[i].second->body;
+//            if (a && b) {
+//                b2WeldJointDef cjd;
+//                cjd.collideConnected = false;
+//                cjd.bodyA = a;
+//                cjd.bodyB = b;
+//                world->CreateJoint(&cjd);
+//                linksToAdd.erase(linksToAdd.begin() + i);
+//            } else {
+//                i++;
+//            }
+//        }
+//    }
 }
 
 // MARK: - Contacts
 
 void PhysicsWorld::BeginContact(b2Contact* contact) {
-    BaseEntity *entityA = static_cast<BaseEntity *>(contact->GetFixtureA()->GetBody()->GetUserData());
-    BaseEntity *entityB = static_cast<BaseEntity *>(contact->GetFixtureB()->GetBody()->GetUserData());
+    BodyEntity *entityA = static_cast<BodyEntity *>(contact->GetFixtureA()->GetBody()->GetUserData());
+    BodyEntity *entityB = static_cast<BodyEntity *>(contact->GetFixtureB()->GetBody()->GetUserData());
     
     if (!entityA || !entityB)
         return;
     
-    if (entityA->isDestroying || entityB->isDestroying)
+    if (entityA->isDead || entityB->isDead)
         return;
     
     if (entityA)
@@ -151,13 +313,13 @@ void PhysicsWorld::BeginContact(b2Contact* contact) {
 }
 
 void PhysicsWorld::EndContact(b2Contact* contact) {
-    BaseEntity *entityA = static_cast<BaseEntity *>(contact->GetFixtureA()->GetBody()->GetUserData());
-    BaseEntity *entityB = static_cast<BaseEntity *>(contact->GetFixtureB()->GetBody()->GetUserData());
+    BodyEntity *entityA = static_cast<BodyEntity *>(contact->GetFixtureA()->GetBody()->GetUserData());
+    BodyEntity *entityB = static_cast<BodyEntity *>(contact->GetFixtureB()->GetBody()->GetUserData());
     
     if (!entityA || !entityB)
         return;
     
-    if (entityA->isDestroying || entityB->isDestroying)
+    if (entityA->isDead || entityB->isDead)
         return;
     
     if (entityA)
@@ -175,8 +337,8 @@ void PhysicsWorld::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse
         return;
     }
     
-    BaseEntity *entityA = static_cast<BaseEntity *>(contact->GetFixtureA()->GetBody()->GetUserData());
-    BaseEntity *entityB = static_cast<BaseEntity *>(contact->GetFixtureB()->GetBody()->GetUserData());
+    BodyEntity *entityA = static_cast<BodyEntity *>(contact->GetFixtureA()->GetBody()->GetUserData());
+    BodyEntity *entityB = static_cast<BodyEntity *>(contact->GetFixtureB()->GetBody()->GetUserData());
     
     if (entityA)
         entityA->contactSolve(entityB, imp);
@@ -188,33 +350,24 @@ void PhysicsWorld::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse
 
 void PhysicsWorld::render(sf::RenderWindow *window, Camera camera)
 {
-    for (auto field : gravityFields)
-        field->render(window, camera);
-    
-    
-    int count = particle_system->GetParticleCount();
-    
-    float radius = particle_system->GetRadius();
-    b2Vec2 *positions = particle_system->GetPositionBuffer();
-    b2ParticleColor *colors = particle_system->GetColorBuffer();
-    
-    for (int i = 0; i < count; i++) {
-        auto pos = positions[i];
-        auto col = colors[i];
-        
-        float lifetimeRemained = particle_system->GetParticleLifetime(i);
-        col.a = 255 * std::max(0.0f, std::min(1.0f, lifetimeRemained / PARTICLE_LIFETIME));
-        
-        sf::CircleShape particle;
-        particle.setOrigin(radius / 2 * PPM, radius / 2 * PPM);
-        particle.setPosition((pos.x - camera.x) * PPM + window->getSize().x / 2, (pos.y - camera.y) * PPM + window->getSize().y / 2);
-        particle.setRadius(radius * PPM);
-        particle.setFillColor(sf::Color(col.r, col.g, col.b, col.a));
-        
-        window->draw(particle);
+    for (int x = activeChunkX.x; x <= activeChunkX.x + activeChunkX.y; x++) {
+        for (int y = activeChunkY.x; y <= activeChunkY.x + activeChunkY.y; y++) {
+            auto address = std::pair<int, int>(x, y);
+            Chunk *chunk = chunks[address];
+            if (chunk)
+                chunk->render(window, camera, address);
+        }
     }
     
-    
-    for (auto entity : entities)
-        entity->render(window, camera);
+    for (int x = activeChunkX.x; x <= activeChunkX.x + activeChunkX.y; x++) {
+        for (int y = activeChunkY.x; y <= activeChunkY.x + activeChunkY.y; y++) {
+            auto address = std::pair<int, int>(x, y);
+            Chunk *chunk = chunks[address];
+            if (!chunk) {
+                continue;
+            }
+            for (auto entity : chunk->entities)
+                entity->render(window, camera);
+        }
+    }
 }

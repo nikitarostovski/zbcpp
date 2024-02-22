@@ -1,6 +1,5 @@
 #pragma once
 #include "physics_world.hpp"
-#include "base_entity.hpp"
 #include "ship_frame.hpp"
 #include "ship_emitter.hpp"
 #include "ship_collector.hpp"

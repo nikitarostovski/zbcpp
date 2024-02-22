@@ -19,19 +19,25 @@ GameScene::GameScene(sf::RenderWindow *window)
     
     camera.x = 0;
     camera.y = 0;
-    camera.scale = 1;
+    camera.scale = 10.0f;
     
     world = new PhysicsWorld();
     
     PlayerConfig playerConfig{20.0f, 20.0f, 350};
     FrameConfig frameConfig{FrameBasic, 0.0f, 1.0f};
-    EmitterConfig emitterConfig{EmitterBasic, 10.0f, 0.5f, 1.0f};
+    EmitterConfig emitterConfig{EmitterBasic, 30.0f, 10.0f, 1.0f};
     CollectorConfig collectorConfig{CollectorBasic, 10};
-    ShipConfig shipConfig{frameConfig, emitterConfig, collectorConfig, 900.0f, 1000.0f};
-    player = new Player(b2Vec2(0, 200), playerConfig, shipConfig, world);
+    ShipConfig shipConfig{frameConfig, emitterConfig, collectorConfig, 1900.0f, 3000.0f};
+    player = new Player(b2Vec2(-100, 0), playerConfig, shipConfig, world);
     
-    mainPlanet = new Planet(b2Vec2(0, 0), 100, 400, world);
-    mainAsteroids = new AsteroidBelt(mainPlanet->center, mainPlanet->gravityRadius, mainPlanet->gravityRadius + 100, 20, world);
+    mainPlanet = new Planet(b2Vec2(-20, -40), 5, 30, world);
+    mainAsteroids = new AsteroidBelt(mainPlanet->center, mainPlanet->gravityRadius, mainPlanet->gravityRadius + 5, 1, world);
+//    
+    auto planet2 = new Planet(b2Vec2(60, 5), 30, 40, world);
+    auto asteroids2 = new AsteroidBelt(planet2->center, planet2->gravityRadius, planet2->gravityRadius + 10, 0.8, world);
+
+    auto planet3 = new Planet(b2Vec2(-30, 40), 15, 35, world);
+    auto asteroids3 = new AsteroidBelt(planet3->center, planet3->gravityRadius, planet3->gravityRadius + 4, 0.5, world);
     
     std::vector<TradingItem> items;
     for (int i = 0; i < 3; i++) {
@@ -74,7 +80,7 @@ GameScene::GameScene(sf::RenderWindow *window)
     }
     
     TraderConfig traderConfig{100, items};
-    trader = new Trader(b2Vec2(-80, -80), traderConfig, world);
+    trader = new Trader(b2Vec2(-8, -8), traderConfig, world);
     trader->building->onPlayerEnter = [this]{
         this->activeTrader = trader;
     };
@@ -82,9 +88,8 @@ GameScene::GameScene(sf::RenderWindow *window)
         this->activeTrader = nullptr;
     };
     
-    
     FuelStationConfig fuelStationConfig{11240.0f, 1.2f};
-    fuelStation = new FuelStation(b2Vec2(80, 80), fuelStationConfig, world);
+    fuelStation = new FuelStation(b2Vec2(8, 8), fuelStationConfig, world);
     fuelStation->building->onPlayerEnter = [this]{
         this->activeFuelStation = fuelStation;
     };
@@ -106,11 +111,26 @@ void GameScene::step(float dt)
     player->ship->rotate(playerRotation);
     player->ship->step(dt);
     
+    float viewportWidth = window->getSize().x / camera.scale / 2;
+    float viewportHeight = window->getSize().y / camera.scale / 2;
+    world->updateChunks(b2Vec2(camera.x, camera.y), viewportWidth, viewportHeight);
+    
     world->step(dt);
 }
 
 void GameScene::render()
 {
+    float viewportWidth = window->getSize().x / 2;
+    float viewportHeight = window->getSize().y / 2;
+    
+    sf::RectangleShape chunkRect;
+    chunkRect.setSize(sf::Vector2f{viewportWidth, viewportHeight});
+    chunkRect.setPosition((window->getSize().x - viewportWidth) / 2, (window->getSize().y - viewportHeight) / 2);
+    chunkRect.setFillColor(sf::Color::Transparent);
+    chunkRect.setOutlineColor(sf::Color::Green);
+    chunkRect.setOutlineThickness(2.0f);
+    window->draw(chunkRect);
+    
     world->render(window, camera);
     player->render(window, camera);
 }

@@ -10,6 +10,6 @@ Trader::Trader(b2Vec2 pos, TraderConfig config, PhysicsWorld *world)
 
 Trader::~Trader()
 {
-    building->destroy();
+//    building->destroy();
     delete building;
 }

@@ -13,6 +13,8 @@
 		8D03FF012B639DBC0084DD17 /* planet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D03FEFF2B639DBC0084DD17 /* planet.cpp */; };
 		8D2806E92B31BD0F00DD0D8F /* game_scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D2806E72B31BD0F00DD0D8F /* game_scene.cpp */; };
 		8D2AEC3D2B3A9CE4000C7F6B /* solid_block_def.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D2AEC3B2B3A9CE4000C7F6B /* solid_block_def.cpp */; };
+		8D36B72B2B79F733008731BD /* body_entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D36B7292B79F733008731BD /* body_entity.cpp */; };
+		8D36C1DF2B7A6DDE008731BD /* chunk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D36C1DD2B7A6DDE008731BD /* chunk.cpp */; };
 		8D6772A42B4C410D00403134 /* material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D6772A32B4C410D00403134 /* material.cpp */; };
 		8D6773AB2B4DB7D900403134 /* clipper.offset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D6773A92B4DB7D400403134 /* clipper.offset.cpp */; };
 		8D6773AC2B4DB7D900403134 /* clipper.engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D6773A82B4DB7D400403134 /* clipper.engine.cpp */; };
@@ -80,7 +82,6 @@
 		8D898D572B221F11008E532F /* b2CollideEdge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D898D202B221F11008E532F /* b2CollideEdge.cpp */; };
 		8D898D582B221F11008E532F /* b2Collision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D898D212B221F11008E532F /* b2Collision.cpp */; };
 		8D8995C92B2361C3008E532F /* physics_world.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8995C82B2361C3008E532F /* physics_world.cpp */; };
-		8D8995CD2B236340008E532F /* renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8995CB2B236340008E532F /* renderer.cpp */; };
 		8D8998792B273E50008E532F /* player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8998772B273E50008E532F /* player.cpp */; };
 		8D89A9A22B2B0F0A008E532F /* solid_block.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D89A9A02B2B0F0A008E532F /* solid_block.cpp */; };
 		8DA6882B2B64EE12006CDF9C /* ship_collector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA688292B64EE12006CDF9C /* ship_collector.cpp */; };
@@ -99,6 +100,7 @@
 		8DA6985F2B68DE0B006CDF9C /* frame_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6985D2B68DE0B006CDF9C /* frame_config.cpp */; };
 		8DA698662B6945A6006CDF9C /* trader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA698642B6945A5006CDF9C /* trader.cpp */; };
 		8DA6986D2B694615006CDF9C /* market_building.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6986B2B694615006CDF9C /* market_building.cpp */; };
+		8DC002CD2B7DD5780004337C /* liquid_entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DC002CB2B7DD5780004337C /* liquid_entity.cpp */; };
 		8DE64CA42B403E6D0068AE91 /* CDT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DE64C9F2B403E6D0068AE91 /* CDT.cpp */; };
 		8DF3DA762B431D3900A9593C /* Polygon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF3DA722B431D3900A9593C /* Polygon.cpp */; };
 		8DF3DA772B431D3900A9593C /* PolygonClipping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF3DA742B431D3900A9593C /* PolygonClipping.cpp */; };
@@ -107,7 +109,7 @@
 		8DF5DDA22B5EB6890037562F /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5DDA02B5EB6890037562F /* game.cpp */; };
 		8DF5DDA52B5ED8790037562F /* main_menu_scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5DDA32B5ED8790037562F /* main_menu_scene.cpp */; };
 		8DF5DDA82B5ED8880037562F /* base_scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5DDA62B5ED8880037562F /* base_scene.cpp */; };
-		8DF5E4F52B6125F20037562F /* gravity_field.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E4F42B6125F20037562F /* gravity_field.cpp */; };
+		8DF5E4F52B6125F20037562F /* gravity_field_entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E4F42B6125F20037562F /* gravity_field_entity.cpp */; };
 		8DF5E4F72B61308C0037562F /* base_entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E4F62B61308C0037562F /* base_entity.cpp */; };
 		8DF5E7472B61683D0037562F /* ship_frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E7452B61683D0037562F /* ship_frame.cpp */; };
 		8DF5E74A2B6168C70037562F /* controlled_ship.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E7482B6168C60037562F /* controlled_ship.cpp */; };
@@ -154,6 +156,10 @@
 		8D2AEC3B2B3A9CE4000C7F6B /* solid_block_def.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = solid_block_def.cpp; sourceTree = "<group>"; };
 		8D2AEC3C2B3A9CE4000C7F6B /* solid_block_def.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = solid_block_def.hpp; sourceTree = "<group>"; };
 		8D2DE0142B6BD90900AFE75C /* string_utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = string_utils.hpp; sourceTree = "<group>"; };
+		8D36B7292B79F733008731BD /* body_entity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = body_entity.cpp; sourceTree = "<group>"; };
+		8D36B72A2B79F733008731BD /* body_entity.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = body_entity.hpp; sourceTree = "<group>"; };
+		8D36C1DD2B7A6DDE008731BD /* chunk.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = chunk.cpp; sourceTree = "<group>"; };
+		8D36C1DE2B7A6DDE008731BD /* chunk.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = chunk.hpp; sourceTree = "<group>"; };
 		8D6772A22B4C40E300403134 /* material.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = material.hpp; sourceTree = "<group>"; };
 		8D6772A32B4C410D00403134 /* material.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = material.cpp; sourceTree = "<group>"; };
 		8D67739F2B4DB7D400403134 /* clipper.rectclip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = clipper.rectclip.h; sourceTree = "<group>"; };
@@ -296,8 +302,6 @@
 		8D898D212B221F11008E532F /* b2Collision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2Collision.cpp; sourceTree = "<group>"; };
 		8D8995C72B235A6C008E532F /* physics_world.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = physics_world.hpp; sourceTree = "<group>"; };
 		8D8995C82B2361C3008E532F /* physics_world.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = physics_world.cpp; sourceTree = "<group>"; };
-		8D8995CB2B236340008E532F /* renderer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = renderer.cpp; sourceTree = "<group>"; };
-		8D8995CC2B236340008E532F /* renderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = renderer.hpp; sourceTree = "<group>"; };
 		8D8998762B273C5A008E532F /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
 		8D8998772B273E50008E532F /* player.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = player.cpp; sourceTree = "<group>"; };
 		8D8998782B273E50008E532F /* player.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = player.hpp; sourceTree = "<group>"; };
@@ -343,6 +347,8 @@
 		8DA698682B6945BD006CDF9C /* trader_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = trader_config.hpp; sourceTree = "<group>"; };
 		8DA6986B2B694615006CDF9C /* market_building.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = market_building.cpp; sourceTree = "<group>"; };
 		8DA6986C2B694615006CDF9C /* market_building.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = market_building.hpp; sourceTree = "<group>"; };
+		8DC002CB2B7DD5780004337C /* liquid_entity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = liquid_entity.cpp; sourceTree = "<group>"; };
+		8DC002CC2B7DD5780004337C /* liquid_entity.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = liquid_entity.hpp; sourceTree = "<group>"; };
 		8DE64A362B403E6C0068AE91 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		8DE64A382B403E6C0068AE91 /* portable_nth_element.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = portable_nth_element.hpp; sourceTree = "<group>"; };
 		8DE64A392B403E6C0068AE91 /* KDTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KDTree.h; sourceTree = "<group>"; };
@@ -380,8 +386,8 @@
 		8DF5DDA42B5ED8790037562F /* main_menu_scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = main_menu_scene.hpp; sourceTree = "<group>"; };
 		8DF5DDA62B5ED8880037562F /* base_scene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = base_scene.cpp; sourceTree = "<group>"; };
 		8DF5DDA72B5ED8880037562F /* base_scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = base_scene.hpp; sourceTree = "<group>"; };
-		8DF5E4F12B600F7E0037562F /* gravity_field.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gravity_field.hpp; sourceTree = "<group>"; };
-		8DF5E4F42B6125F20037562F /* gravity_field.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gravity_field.cpp; sourceTree = "<group>"; };
+		8DF5E4F12B600F7E0037562F /* gravity_field_entity.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gravity_field_entity.hpp; sourceTree = "<group>"; };
+		8DF5E4F42B6125F20037562F /* gravity_field_entity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gravity_field_entity.cpp; sourceTree = "<group>"; };
 		8DF5E4F62B61308C0037562F /* base_entity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = base_entity.cpp; sourceTree = "<group>"; };
 		8DF5E7452B61683D0037562F /* ship_frame.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ship_frame.cpp; sourceTree = "<group>"; };
 		8DF5E7462B61683D0037562F /* ship_frame.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship_frame.hpp; sourceTree = "<group>"; };
@@ -588,7 +594,6 @@
 				8D7C41F12B1F915800D90479 /* main.cpp */,
 				8D67740D2B54211C00403134 /* Resources */,
 				8D2AEB392B369FA1000C7F6B /* Utils */,
-				8D8995CA2B23632C008E532F /* Renderer */,
 				8D6772A02B4C406700403134 /* Scene */,
 				8D8995C62B235A2D008E532F /* Physics */,
 			);
@@ -800,15 +805,6 @@
 				8D67729F2B4C401C00403134 /* Planet */,
 			);
 			path = Physics;
-			sourceTree = "<group>";
-		};
-		8D8995CA2B23632C008E532F /* Renderer */ = {
-			isa = PBXGroup;
-			children = (
-				8D8995CC2B236340008E532F /* renderer.hpp */,
-				8D8995CB2B236340008E532F /* renderer.cpp */,
-			);
-			path = Renderer;
 			sourceTree = "<group>";
 		};
 		8DA6882C2B669844006CDF9C /* imgui */ = {
@@ -1052,10 +1048,16 @@
 			children = (
 				8D8995C72B235A6C008E532F /* physics_world.hpp */,
 				8D8995C82B2361C3008E532F /* physics_world.cpp */,
+				8D36C1DE2B7A6DDE008731BD /* chunk.hpp */,
+				8D36C1DD2B7A6DDE008731BD /* chunk.cpp */,
 				8D67740B2B54019D00403134 /* base_entity.hpp */,
 				8DF5E4F62B61308C0037562F /* base_entity.cpp */,
-				8DF5E4F12B600F7E0037562F /* gravity_field.hpp */,
-				8DF5E4F42B6125F20037562F /* gravity_field.cpp */,
+				8DF5E4F12B600F7E0037562F /* gravity_field_entity.hpp */,
+				8DF5E4F42B6125F20037562F /* gravity_field_entity.cpp */,
+				8D36B72A2B79F733008731BD /* body_entity.hpp */,
+				8D36B7292B79F733008731BD /* body_entity.cpp */,
+				8DC002CC2B7DD5780004337C /* liquid_entity.hpp */,
+				8DC002CB2B7DD5780004337C /* liquid_entity.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1210,6 +1212,7 @@
 				8DA689882B669845006CDF9C /* imgui_draw.cpp in Sources */,
 				8D898D532B221F11008E532F /* b2CircleShape.cpp in Sources */,
 				8D898D2E2B221F11008E532F /* b2WorldCallbacks.cpp in Sources */,
+				8D36B72B2B79F733008731BD /* body_entity.cpp in Sources */,
 				8D898D3A2B221F11008E532F /* b2RopeJoint.cpp in Sources */,
 				8D898D2A2B221F11008E532F /* b2ContactSolver.cpp in Sources */,
 				8D898D512B221F11008E532F /* b2ChainShape.cpp in Sources */,
@@ -1221,6 +1224,7 @@
 				8DF83B1D2B749644000DC138 /* fuel_station_building.cpp in Sources */,
 				8DF5E74A2B6168C70037562F /* controlled_ship.cpp in Sources */,
 				8D898D272B221F11008E532F /* b2ChainAndCircleContact.cpp in Sources */,
+				8D36C1DF2B7A6DDE008731BD /* chunk.cpp in Sources */,
 				8DF3DA772B431D3900A9593C /* PolygonClipping.cpp in Sources */,
 				8DA6985F2B68DE0B006CDF9C /* frame_config.cpp in Sources */,
 				8DF5E7472B61683D0037562F /* ship_frame.cpp in Sources */,
@@ -1238,7 +1242,7 @@
 				8DA6985C2B68DE03006CDF9C /* emitter_config.cpp in Sources */,
 				8D898D3D2B221F11008E532F /* b2Rope.cpp in Sources */,
 				8D898D582B221F11008E532F /* b2Collision.cpp in Sources */,
-				8DF5E4F52B6125F20037562F /* gravity_field.cpp in Sources */,
+				8DF5E4F52B6125F20037562F /* gravity_field_entity.cpp in Sources */,
 				8DF5E4F72B61308C0037562F /* base_entity.cpp in Sources */,
 				8D898D352B221F11008E532F /* b2RevoluteJoint.cpp in Sources */,
 				8D898D252B221F11008E532F /* b2ChainAndPolygonContact.cpp in Sources */,
@@ -1274,13 +1278,13 @@
 				8D898D282B221F11008E532F /* b2PolygonAndCircleContact.cpp in Sources */,
 				8D6773AC2B4DB7D900403134 /* clipper.engine.cpp in Sources */,
 				8DA698472B68007F006CDF9C /* ship_config.cpp in Sources */,
+				8DC002CD2B7DD5780004337C /* liquid_entity.cpp in Sources */,
 				8DA6986D2B694615006CDF9C /* market_building.cpp in Sources */,
 				8D898D4F2B221F11008E532F /* b2CollidePolygon.cpp in Sources */,
 				8D898D362B221F11008E532F /* b2GearJoint.cpp in Sources */,
 				8D898D542B221F11008E532F /* b2PolygonShape.cpp in Sources */,
 				8D898D552B221F11008E532F /* b2TimeOfImpact.cpp in Sources */,
 				8D898D4E2B221F11008E532F /* b2CollideCircle.cpp in Sources */,
-				8D8995CD2B236340008E532F /* renderer.cpp in Sources */,
 				8DF3DA7A2B47F83300A9593C /* polygon.cpp in Sources */,
 				8D898D522B221F11008E532F /* b2EdgeShape.cpp in Sources */,
 				8DF83B1A2B7492B1000DC138 /* building.cpp in Sources */,

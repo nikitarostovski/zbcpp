@@ -1,18 +1,19 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "polygon.hpp"
-#include "base_entity.hpp"
+#include "body_entity.hpp"
 
 using namespace PolygonUtils;
 
-class SolidBlock : public BaseEntity
+class SolidBlock : public BodyEntity
 {
 private:
     Polygon polygon;
-    CollisionCategory entityType;
+    void createFixture(b2Body *body, Polygon polygon);
     
-    void createFixture(Polygon polygon);
-    
+protected:
+    b2Body* createBody(b2World *world) override;
+    b2AABB getInitialAABB() override;
 public:
     bool canBeCollected;
     
@@ -20,8 +21,8 @@ public:
     
 //    std::vector<SolidBlockDef> split();
     
-    void initializeBody(b2World *world) override;
-    void receiveCollision(BaseEntity *entity, float impulse) override;
-    CollisionCategory getEntityType() override;
+    void receiveCollision(BodyEntity *entity, float impulse) override;
     void render(sf::RenderWindow *window, Camera camera) override;
+    
+    std::string getName() override;
 };

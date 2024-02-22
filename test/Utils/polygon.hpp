@@ -12,6 +12,7 @@ private:
 public:
     std::vector<b2Vec2> points;
     b2Vec2 center;
+    b2AABB aabb;
     Material material;
     bool isDynamic;
     

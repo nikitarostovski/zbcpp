@@ -1,13 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "Box2D.h"
-
-struct Camera
-{
-    float x;
-    float y;
-    float scale;
-};
+#include "camera.hpp"
 
 class BaseEntity
 {

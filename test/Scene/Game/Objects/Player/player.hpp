@@ -1,5 +1,5 @@
 #pragma once
-#include "controlled_ship.hpp"
+#include "ship.hpp"
 #include "player_config.hpp"
 
 class Player
@@ -17,7 +17,7 @@ private:
     
 public:
     PlayerConfig config;
-    ControlledShip *ship;
+    Ship *ship;
     
     Player(b2Vec2 pos, PlayerConfig playerConfig, ShipConfig shipConfig, PhysicsWorld *world);
     ~Player();

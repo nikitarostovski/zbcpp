@@ -1,40 +1,20 @@
 #include "ship_collector.hpp"
 #include "constants.h"
+#include "collision_category.hpp"
 
-using namespace PolygonUtils;
-
-ShipCollector::ShipCollector(b2Vec2 pos, CollectorConfig config)
-    : BodyEntity(pos, PlayerCollector, false)
-    , config(config)
-    , pos(pos)
-{ }
-
-b2AABB ShipCollector::getInitialAABB()
+ShipCollector::ShipCollector(CollectorConfig config, b2Body *body)
+    : config(config)
+    , color(sf::Color(200, 140, 20))
 {
-    b2AABB result;
-    result.lowerBound.x = pos.x - 1.5;
-    result.lowerBound.y = pos.y -1;
-    result.upperBound.x = pos.x + 1.5;
-    result.upperBound.y = pos.y;
-    return result;
-}
-
-b2Body* ShipCollector::createBody(b2World *world)
-{
-    b2BodyDef bodyDef;
-    bodyDef.position.Set(pos.x, pos.y);
-    bodyDef.type = b2_dynamicBody;
-    b2Body *body = world->CreateBody(&bodyDef);
-    body->SetUserData(this);
-    
-    b2PolygonShape shape;
     std::vector<b2Vec2> points;
     points.emplace_back(1, -1);
     points.emplace_back(-1, -1);
     points.emplace_back(-1.5, 0);
     points.emplace_back(1.5, 0);
-    shape.Set(points.data(), (int)points.size());
     
+    b2PolygonShape shape;
+    shape.Set(points.data(), (int)points.size());
+
     b2FixtureDef fixtureDef;
     fixtureDef.filter.categoryBits = CollisionCategory::PlayerCollector;
     fixtureDef.filter.maskBits = CollisionCategory::Asteroid;
@@ -43,36 +23,29 @@ b2Body* ShipCollector::createBody(b2World *world)
     fixtureDef.friction = 0.5;
     fixtureDef.restitution = 0.2;
     fixtureDef.shape = &shape;
-    
-    body->CreateFixture(&fixtureDef);
-    return body;
+
+    fixture = body->CreateFixture(&fixtureDef);
 }
 
-void ShipCollector::contactBegin(BodyEntity *entity, b2Fixture *fixture)
+b2Fixture* ShipCollector::getFixture()
 {
-    if (!entity)
-        return;
-    
-    if (entity->collisionCategory == Asteroid) {
-//        entity->destroy();
-        if (onMaterialCollect)
-            onMaterialCollect(1);
-    }
+    return fixture;
 }
 
-void ShipCollector::render(sf::RenderWindow *window, Camera camera)
+void ShipCollector::renderFixture(sf::RenderWindow *window, Camera camera)
 {
-    if (!body)
+    if (!fixture)
         return;
+    
+    b2Body *body = fixture->GetBody();
     
     sf::Vector2<float> localCenter{body->GetLocalCenter().x * camera.scale, body->GetLocalCenter().y * camera.scale};
     sf::Vector2<float> worldCenter{body->GetWorldCenter().x, body->GetWorldCenter().y};
     float angle = body->GetAngle();
 
-    b2Fixture *fixture = body->GetFixtureList();
     b2PolygonShape* shape = (b2PolygonShape*)fixture->GetShape();
     sf::ConvexShape polygon;
-    polygon.setFillColor(sf::Color(32, 255, 255, 128));
+    polygon.setFillColor(color);
     polygon.setOrigin(localCenter);
     polygon.setPosition((worldCenter.x - camera.x) * camera.scale + window->getSize().x / 2,
                         (worldCenter.y - camera.y) * camera.scale + window->getSize().y / 2);

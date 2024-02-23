@@ -93,14 +93,13 @@
 		8DA6898F2B669B88006CDF9C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA6898E2B669B88006CDF9C /* OpenGL.framework */; };
 		8DA693552B67F69E006CDF9C /* trader_scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA693532B67F69E006CDF9C /* trader_scene.cpp */; };
 		8DA698472B68007F006CDF9C /* ship_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA698452B68007F006CDF9C /* ship_config.cpp */; };
-		8DA6984D2B6804B4006CDF9C /* ship_frame_basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6984B2B6804B4006CDF9C /* ship_frame_basic.cpp */; };
-		8DA698502B68050D006CDF9C /* ship_frame_advanced.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6984E2B68050D006CDF9C /* ship_frame_advanced.cpp */; };
 		8DA698592B68DDFA006CDF9C /* collector_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA698572B68DDFA006CDF9C /* collector_config.cpp */; };
 		8DA6985C2B68DE03006CDF9C /* emitter_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6985A2B68DE03006CDF9C /* emitter_config.cpp */; };
 		8DA6985F2B68DE0B006CDF9C /* frame_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6985D2B68DE0B006CDF9C /* frame_config.cpp */; };
 		8DA698662B6945A6006CDF9C /* trader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA698642B6945A5006CDF9C /* trader.cpp */; };
 		8DA6986D2B694615006CDF9C /* market_building.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6986B2B694615006CDF9C /* market_building.cpp */; };
 		8DC002CD2B7DD5780004337C /* liquid_entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DC002CB2B7DD5780004337C /* liquid_entity.cpp */; };
+		8DC891002B87134500123FB1 /* ship.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DC890FE2B87134500123FB1 /* ship.cpp */; };
 		8DE64CA42B403E6D0068AE91 /* CDT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DE64C9F2B403E6D0068AE91 /* CDT.cpp */; };
 		8DF3DA762B431D3900A9593C /* Polygon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF3DA722B431D3900A9593C /* Polygon.cpp */; };
 		8DF3DA772B431D3900A9593C /* PolygonClipping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF3DA742B431D3900A9593C /* PolygonClipping.cpp */; };
@@ -112,7 +111,6 @@
 		8DF5E4F52B6125F20037562F /* gravity_field_entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E4F42B6125F20037562F /* gravity_field_entity.cpp */; };
 		8DF5E4F72B61308C0037562F /* base_entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E4F62B61308C0037562F /* base_entity.cpp */; };
 		8DF5E7472B61683D0037562F /* ship_frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E7452B61683D0037562F /* ship_frame.cpp */; };
-		8DF5E74A2B6168C70037562F /* controlled_ship.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF5E7482B6168C60037562F /* controlled_ship.cpp */; };
 		8DF83B142B749260000DC138 /* fuel_station.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF83B122B749260000DC138 /* fuel_station.cpp */; };
 		8DF83B1A2B7492B1000DC138 /* building.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF83B182B7492B1000DC138 /* building.cpp */; };
 		8DF83B1D2B749644000DC138 /* fuel_station_building.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF83B1B2B749644000DC138 /* fuel_station_building.cpp */; };
@@ -330,10 +328,6 @@
 		8DA693542B67F69E006CDF9C /* trader_scene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = trader_scene.hpp; sourceTree = "<group>"; };
 		8DA698452B68007F006CDF9C /* ship_config.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ship_config.cpp; sourceTree = "<group>"; };
 		8DA698462B68007F006CDF9C /* ship_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship_config.hpp; sourceTree = "<group>"; };
-		8DA6984B2B6804B4006CDF9C /* ship_frame_basic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ship_frame_basic.cpp; sourceTree = "<group>"; };
-		8DA6984C2B6804B4006CDF9C /* ship_frame_basic.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship_frame_basic.hpp; sourceTree = "<group>"; };
-		8DA6984E2B68050D006CDF9C /* ship_frame_advanced.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ship_frame_advanced.cpp; sourceTree = "<group>"; };
-		8DA6984F2B68050D006CDF9C /* ship_frame_advanced.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship_frame_advanced.hpp; sourceTree = "<group>"; };
 		8DA698532B68D113006CDF9C /* player_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = player_config.hpp; sourceTree = "<group>"; };
 		8DA698572B68DDFA006CDF9C /* collector_config.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = collector_config.cpp; sourceTree = "<group>"; };
 		8DA698582B68DDFA006CDF9C /* collector_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = collector_config.hpp; sourceTree = "<group>"; };
@@ -349,6 +343,10 @@
 		8DA6986C2B694615006CDF9C /* market_building.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = market_building.hpp; sourceTree = "<group>"; };
 		8DC002CB2B7DD5780004337C /* liquid_entity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = liquid_entity.cpp; sourceTree = "<group>"; };
 		8DC002CC2B7DD5780004337C /* liquid_entity.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = liquid_entity.hpp; sourceTree = "<group>"; };
+		8DC890FE2B87134500123FB1 /* ship.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ship.cpp; sourceTree = "<group>"; };
+		8DC890FF2B87134500123FB1 /* ship.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship.hpp; sourceTree = "<group>"; };
+		8DC8A1BB2B889B5C00123FB1 /* camera.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = camera.hpp; sourceTree = "<group>"; };
+		8DC8A1BC2B889C2E00123FB1 /* collision_category.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = collision_category.hpp; sourceTree = "<group>"; };
 		8DE64A362B403E6C0068AE91 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		8DE64A382B403E6C0068AE91 /* portable_nth_element.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = portable_nth_element.hpp; sourceTree = "<group>"; };
 		8DE64A392B403E6C0068AE91 /* KDTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KDTree.h; sourceTree = "<group>"; };
@@ -391,8 +389,6 @@
 		8DF5E4F62B61308C0037562F /* base_entity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = base_entity.cpp; sourceTree = "<group>"; };
 		8DF5E7452B61683D0037562F /* ship_frame.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ship_frame.cpp; sourceTree = "<group>"; };
 		8DF5E7462B61683D0037562F /* ship_frame.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship_frame.hpp; sourceTree = "<group>"; };
-		8DF5E7482B6168C60037562F /* controlled_ship.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = controlled_ship.cpp; sourceTree = "<group>"; };
-		8DF5E7492B6168C70037562F /* controlled_ship.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = controlled_ship.hpp; sourceTree = "<group>"; };
 		8DF83B122B749260000DC138 /* fuel_station.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fuel_station.cpp; sourceTree = "<group>"; };
 		8DF83B132B749260000DC138 /* fuel_station.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fuel_station.hpp; sourceTree = "<group>"; };
 		8DF83B152B749272000DC138 /* fuel_station_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fuel_station_config.hpp; sourceTree = "<group>"; };
@@ -436,9 +432,12 @@
 		8D03FEFD2B639D7B0084DD17 /* Parts */ = {
 			isa = PBXGroup;
 			children = (
-				8DA698482B680485006CDF9C /* Frame */,
-				8DA698492B68048E006CDF9C /* Emitter */,
-				8DA6984A2B680494006CDF9C /* Collector */,
+				8DF5E7462B61683D0037562F /* ship_frame.hpp */,
+				8DF5E7452B61683D0037562F /* ship_frame.cpp */,
+				8D883D3E2B62A86C0044A476 /* ship_emitter.hpp */,
+				8D883D3D2B62A86C0044A476 /* ship_emitter.cpp */,
+				8DA6882A2B64EE12006CDF9C /* ship_collector.hpp */,
+				8DA688292B64EE12006CDF9C /* ship_collector.cpp */,
 			);
 			path = Parts;
 			sourceTree = "<group>";
@@ -837,37 +836,6 @@
 			path = Trader;
 			sourceTree = "<group>";
 		};
-		8DA698482B680485006CDF9C /* Frame */ = {
-			isa = PBXGroup;
-			children = (
-				8DF5E7462B61683D0037562F /* ship_frame.hpp */,
-				8DF5E7452B61683D0037562F /* ship_frame.cpp */,
-				8DA6984C2B6804B4006CDF9C /* ship_frame_basic.hpp */,
-				8DA6984B2B6804B4006CDF9C /* ship_frame_basic.cpp */,
-				8DA6984F2B68050D006CDF9C /* ship_frame_advanced.hpp */,
-				8DA6984E2B68050D006CDF9C /* ship_frame_advanced.cpp */,
-			);
-			path = Frame;
-			sourceTree = "<group>";
-		};
-		8DA698492B68048E006CDF9C /* Emitter */ = {
-			isa = PBXGroup;
-			children = (
-				8D883D3E2B62A86C0044A476 /* ship_emitter.hpp */,
-				8D883D3D2B62A86C0044A476 /* ship_emitter.cpp */,
-			);
-			path = Emitter;
-			sourceTree = "<group>";
-		};
-		8DA6984A2B680494006CDF9C /* Collector */ = {
-			isa = PBXGroup;
-			children = (
-				8DA6882A2B64EE12006CDF9C /* ship_collector.hpp */,
-				8DA688292B64EE12006CDF9C /* ship_collector.cpp */,
-			);
-			path = Collector;
-			sourceTree = "<group>";
-		};
 		8DA698552B68D11E006CDF9C /* Player */ = {
 			isa = PBXGroup;
 			children = (
@@ -1046,6 +1014,8 @@
 		8DF5E4F22B6013AE0037562F /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				8DC8A1BB2B889B5C00123FB1 /* camera.hpp */,
+				8DC8A1BC2B889C2E00123FB1 /* collision_category.hpp */,
 				8D8995C72B235A6C008E532F /* physics_world.hpp */,
 				8D8995C82B2361C3008E532F /* physics_world.cpp */,
 				8D36C1DE2B7A6DDE008731BD /* chunk.hpp */,
@@ -1081,8 +1051,8 @@
 				8DA698562B68DDEB006CDF9C /* Config */,
 				8DA698462B68007F006CDF9C /* ship_config.hpp */,
 				8DA698452B68007F006CDF9C /* ship_config.cpp */,
-				8DF5E7492B6168C70037562F /* controlled_ship.hpp */,
-				8DF5E7482B6168C60037562F /* controlled_ship.cpp */,
+				8DC890FF2B87134500123FB1 /* ship.hpp */,
+				8DC890FE2B87134500123FB1 /* ship.cpp */,
 				8D03FEFD2B639D7B0084DD17 /* Parts */,
 			);
 			path = Ship;
@@ -1222,7 +1192,6 @@
 				8D898D562B221F11008E532F /* b2BroadPhase.cpp in Sources */,
 				8DA6882B2B64EE12006CDF9C /* ship_collector.cpp in Sources */,
 				8DF83B1D2B749644000DC138 /* fuel_station_building.cpp in Sources */,
-				8DF5E74A2B6168C70037562F /* controlled_ship.cpp in Sources */,
 				8D898D272B221F11008E532F /* b2ChainAndCircleContact.cpp in Sources */,
 				8D36C1DF2B7A6DDE008731BD /* chunk.cpp in Sources */,
 				8DF3DA772B431D3900A9593C /* PolygonClipping.cpp in Sources */,
@@ -1230,8 +1199,8 @@
 				8DF5E7472B61683D0037562F /* ship_frame.cpp in Sources */,
 				8D89A9A22B2B0F0A008E532F /* solid_block.cpp in Sources */,
 				8D0300572B63C0390084DD17 /* asteroid_belt.cpp in Sources */,
+				8DC891002B87134500123FB1 /* ship.cpp in Sources */,
 				8D8995C92B2361C3008E532F /* physics_world.cpp in Sources */,
-				8DA698502B68050D006CDF9C /* ship_frame_advanced.cpp in Sources */,
 				8D67897E2B55A88700403134 /* resource_path.mm in Sources */,
 				8D898D572B221F11008E532F /* b2CollideEdge.cpp in Sources */,
 				8DA6898D2B669AF0006CDF9C /* imgui-SFML.cpp in Sources */,
@@ -1261,7 +1230,6 @@
 				8D898D322B221F11008E532F /* b2DistanceJoint.cpp in Sources */,
 				8DF83B142B749260000DC138 /* fuel_station.cpp in Sources */,
 				8D898D432B221F11008E532F /* b2Stat.cpp in Sources */,
-				8DA6984D2B6804B4006CDF9C /* ship_frame_basic.cpp in Sources */,
 				8DF5DDA22B5EB6890037562F /* game.cpp in Sources */,
 				8D898D2C2B221F11008E532F /* b2EdgeAndCircleContact.cpp in Sources */,
 				8D898D222B221F11008E532F /* b2Body.cpp in Sources */,

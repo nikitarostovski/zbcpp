@@ -27,8 +27,8 @@ Player::Player(b2Vec2 pos, PlayerConfig playerConfig, ShipConfig shipConfig, Phy
     fuelBarBackground = sf::RectangleShape();
     fuelBarBackground.setFillColor(sf::Color(127, 127, 127, 127));
     
-    ship = new ControlledShip(pos, shipConfig, world);
-    ship->frame->onDamageReceive = [this](float damage){
+    ship = new Ship(pos, shipConfig, world);
+    ship->onDamageReceive = [this](float damage){
         int health = this->config.health;
         health = std::max(0.0f, (health - damage));
         this->config.health = health;
@@ -36,9 +36,10 @@ Player::Player(b2Vec2 pos, PlayerConfig playerConfig, ShipConfig shipConfig, Phy
             printf("GAME OVER\n");
         }
     };
-    ship->collector->onMaterialCollect = [this](int amount){
+    ship->onMaterialCollect = [this](int amount){
         this->config.material += amount;
     };
+    world->addEntity(ship);
 }
 
 Player::~Player()

@@ -1,11 +1,12 @@
 #pragma once
 #include "physics_world.hpp"
+#include "body_entity.hpp"
 #include "ship_frame.hpp"
 #include "ship_emitter.hpp"
 #include "ship_collector.hpp"
 #include "ship_config.hpp"
 
-class ControlledShip
+class Ship : public BodyEntity
 {
 private:
     PhysicsWorld *world;
@@ -17,24 +18,31 @@ private:
     bool updateCollectorIfNeeded(CollectorConfig newCollector, b2Vec2 pos);
     
     void makeExhaustTrace(b2Vec2 impulse);
-
+protected:
+    b2Body* createBody(b2World *world) override;
+    b2AABB getInitialAABB() override;
+    
 public:
     ShipFrame *frame;
     ShipEmitter *emitter;
     ShipCollector *collector;
     
     ShipConfig shipConfig;
+    std::function<void(float)> onDamageReceive;
+    std::function<void(int)> onMaterialCollect;
     
-    ControlledShip(b2Vec2 pos, ShipConfig config, PhysicsWorld *world);
-    ~ControlledShip();
-    
-    b2Vec2 getPosition();
+    Ship(b2Vec2 pos, ShipConfig config, PhysicsWorld *world);
+    ~Ship();
     
     void step(float dt);
-    virtual void render(sf::RenderWindow *window, Camera camera);
     
     void move(b2Vec2 vector);
     void rotate(float desiredAngle);
     
     void onConfigDidUpdate();
+    
+    void contactBegin(BodyEntity *entity, b2Fixture *fixture) override;
+    void receiveCollision(BodyEntity *entity, float impulse) override;
+    
+    void render(sf::RenderWindow *window, Camera camera) override;
 };

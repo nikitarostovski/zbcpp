@@ -1,39 +1,20 @@
 #include "ship_emitter.hpp"
 #include "constants.h"
+#include "collision_category.hpp"
 
-using namespace PolygonUtils;
-
-ShipEmitter::ShipEmitter(b2Vec2 pos, EmitterConfig config)
-    : BodyEntity(pos, PlayerEmitter, false)
-    , config(config)
-    , pos(pos)
-{ }
-
-b2AABB ShipEmitter::getInitialAABB()
+ShipEmitter::ShipEmitter(EmitterConfig config, b2Body *body)
+    : config(config)
+    , color(sf::Color(24, 200, 160))
 {
-    b2AABB result;
-    result.lowerBound.x = pos.x - 5;
-    result.lowerBound.y = pos.y + 5;
-    result.upperBound.x = pos.x + 5;
-    result.upperBound.y = pos.y + 5.5;
-    return result;
-}
-
-b2Body* ShipEmitter::createBody(b2World *world)
-{
-    b2BodyDef bodyDef;
-    bodyDef.position.Set(pos.x, pos.y);
-    bodyDef.type = b2_dynamicBody;
-    b2Body *body = world->CreateBody(&bodyDef);
+    std::vector<b2Vec2> points;
+    points.emplace_back(-1.3, 5);
+    points.emplace_back(1.3, 5);
+    points.emplace_back(1.7, 6);
+    points.emplace_back(-1.7, 6);
     
     b2PolygonShape shape;
-    std::vector<b2Vec2> points;
-    points.emplace_back(-1.5, 5);
-    points.emplace_back(1.5, 5);
-    points.emplace_back(5, 5.5);
-    points.emplace_back(-5, 5.5);
     shape.Set(points.data(), (int)points.size());
-    
+
     b2FixtureDef fixtureDef;
     fixtureDef.filter.categoryBits = CollisionCategory::PlayerEmitter;
     fixtureDef.filter.maskBits = 0;//CollisionCategory::Asteroid | CollisionCategory::PlanetCore;
@@ -41,24 +22,29 @@ b2Body* ShipEmitter::createBody(b2World *world)
     fixtureDef.friction = 0.5;
     fixtureDef.restitution = 0.2;
     fixtureDef.shape = &shape;
-    
-    body->CreateFixture(&fixtureDef);
-    return body;
+
+    fixture = body->CreateFixture(&fixtureDef);
 }
 
-void ShipEmitter::render(sf::RenderWindow *window, Camera camera)
+b2Fixture* ShipEmitter::getFixture()
 {
-    if (!body)
+    return fixture;
+}
+
+void ShipEmitter::renderFixture(sf::RenderWindow *window, Camera camera)
+{
+    if (!fixture)
         return;
+    
+    b2Body *body = fixture->GetBody();
     
     sf::Vector2<float> localCenter{body->GetLocalCenter().x * camera.scale, body->GetLocalCenter().y * camera.scale};
     sf::Vector2<float> worldCenter{body->GetWorldCenter().x, body->GetWorldCenter().y};
     float angle = body->GetAngle();
 
-    b2Fixture *fixture = body->GetFixtureList();
     b2PolygonShape* shape = (b2PolygonShape*)fixture->GetShape();
     sf::ConvexShape polygon;
-    polygon.setFillColor(sf::Color::Cyan);
+    polygon.setFillColor(color);
     polygon.setOrigin(localCenter);
     polygon.setPosition((worldCenter.x - camera.x) * camera.scale + window->getSize().x / 2,
                         (worldCenter.y - camera.y) * camera.scale + window->getSize().y / 2);

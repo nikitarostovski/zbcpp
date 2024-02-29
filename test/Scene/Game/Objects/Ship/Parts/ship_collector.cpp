@@ -6,53 +6,84 @@ ShipCollector::ShipCollector(CollectorConfig config, b2Body *body)
     : config(config)
     , color(sf::Color(200, 140, 20))
 {
-    std::vector<b2Vec2> points;
-    points.emplace_back(1, -1);
-    points.emplace_back(-1, -1);
-    points.emplace_back(-1.5, 0);
-    points.emplace_back(1.5, 0);
+    b2CircleShape gravityShape;
+    gravityShape.m_radius = config.orbCollectionRadius;
+
+    b2FixtureDef gravityFixtureDef;
+    gravityFixtureDef.filter.categoryBits = CategoryShipCollector;
+    gravityFixtureDef.filter.maskBits = CategoryOrb;
+    gravityFixtureDef.isSensor = true;
+    gravityFixtureDef.shape = &gravityShape;
+    gravityFixture = body->CreateFixture(&gravityFixtureDef);
     
-    b2PolygonShape shape;
-    shape.Set(points.data(), (int)points.size());
-
-    b2FixtureDef fixtureDef;
-    fixtureDef.filter.categoryBits = CollisionCategory::PlayerCollector;
-    fixtureDef.filter.maskBits = CollisionCategory::Asteroid;
-    fixtureDef.isSensor = true;
-    fixtureDef.density = 0.5;
-    fixtureDef.friction = 0.5;
-    fixtureDef.restitution = 0.2;
-    fixtureDef.shape = &shape;
-
-    fixture = body->CreateFixture(&fixtureDef);
+    orbGravityShape = sf::CircleShape();
+    orbGravityShape.setFillColor(sf::Color(100, 100, 100, 32));
 }
 
 b2Fixture* ShipCollector::getFixture()
 {
-    return fixture;
+    return gravityFixture;
+}
+
+void ShipCollector::receiveCollision(Orb *orb)
+{
+    for (auto o : orbsToCollect) {
+        if (o == orb)
+            return;
+    }
+    orbsToCollect.push_back(orb);
+}
+
+void ShipCollector::step(float dt)
+{
+    const float collectionRadius = 2.0f;
+    if (!gravityFixture)
+        return;
+    for (int i = 0; i < orbsToCollect.size();) {
+        auto orb = orbsToCollect[i];
+        applyGravityToOrb(orb);
+        
+        auto dist = (orb->getPosition() - gravityFixture->GetBody()->GetPosition()).Length();
+        bool isCollected = dist <= collectionRadius;
+        if (isCollected) {
+            onOrbCollected(orb);
+            orbsToCollect.erase(orbsToCollect.begin() + i);
+            orb->isDead = true;
+        } else {
+            i++;
+        }
+    }
+}
+
+void ShipCollector::applyGravityToOrb(Orb *orb)
+{
+    const float strength = 5.0f;
+    
+    b2Vec2 fieldCenter = gravityFixture->GetBody()->GetPosition();
+    b2Body *body = orb->body;
+    if (!body)
+        return;
+    
+    b2Vec2 center = body->GetPosition();
+    b2Vec2 shift = center - fieldCenter;
+    
+    b2Vec2 imp = -shift / shift.Normalize() * strength / shift.Length();
+    body->ApplyLinearImpulse(imp, body->GetWorldCenter(), true);
 }
 
 void ShipCollector::renderFixture(sf::RenderWindow *window, Camera camera)
 {
-    if (!fixture)
+    if (!gravityFixture)
         return;
     
-    b2Body *body = fixture->GetBody();
+    b2Body *body = gravityFixture->GetBody();
     
     sf::Vector2<float> localCenter{body->GetLocalCenter().x * camera.scale, body->GetLocalCenter().y * camera.scale};
     sf::Vector2<float> worldCenter{body->GetWorldCenter().x, body->GetWorldCenter().y};
-    float angle = body->GetAngle();
-
-    b2PolygonShape* shape = (b2PolygonShape*)fixture->GetShape();
-    sf::ConvexShape polygon;
-    polygon.setFillColor(color);
-    polygon.setOrigin(localCenter);
-    polygon.setPosition((worldCenter.x - camera.x) * camera.scale + window->getSize().x / 2,
-                        (worldCenter.y - camera.y) * camera.scale + window->getSize().y / 2);
-    polygon.setPointCount(shape->GetVertexCount());
-    for (int i = 0; i < shape->GetVertexCount(); i++) {
-        polygon.setPoint(i, sf::Vector2<float>(shape->GetVertex(i).x * camera.scale, shape->GetVertex(i).y * camera.scale));
-    }
-    polygon.setRotation(angle * DEG_PER_RAD);
-    window->draw(polygon);
+    
+    orbGravityShape.setRadius(config.orbCollectionRadius * camera.scale);
+    orbGravityShape.setOrigin(localCenter);
+    orbGravityShape.setPosition((worldCenter.x - config.orbCollectionRadius - camera.x) * camera.scale + window->getSize().x / 2,
+                                (worldCenter.y - config.orbCollectionRadius - camera.y) * camera.scale + window->getSize().y / 2);
+    window->draw(orbGravityShape);
 }

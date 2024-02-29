@@ -57,14 +57,8 @@ void PhysicsWorld::addEntity(BaseEntity *entity)
 
     bool intersects = (interLeft <= interRight) && (interTop <= interBottom);
     if (intersects) {
-        entity->activate(world);
+        entitiesToActivate.push_back(entity);
     }
-}
-
-void PhysicsWorld::addLink(BaseEntity *entityA, BaseEntity *entityB)
-{
-//    std::pair<BaseEntity *, BaseEntity *> link{entityA, entityB};
-//    linksToAdd.push_back(link);
 }
 
 void PhysicsWorld::updateChunks(b2Vec2 center, float width, float height)
@@ -129,7 +123,15 @@ void PhysicsWorld::updateChunks(b2Vec2 center, float width, float height)
 void PhysicsWorld::step(float dt)
 {
     processChunks();
+    updateEntitesChunks();
+    processDestroyedEntities();
+    processNewEntities();
     
+    world->Step(dt, 8, 3, 1);
+}
+
+void PhysicsWorld::updateEntitesChunks()
+{
     for (int x = activeChunkX.x; x <= activeChunkX.x + activeChunkX.y; x++) {
         for (int y = activeChunkY.x; y <= activeChunkY.x + activeChunkY.y; y++) {
             auto address = std::pair<int, int>(x, y);
@@ -193,11 +195,13 @@ void PhysicsWorld::step(float dt)
             }
         }
     }
-    
-    processDestroyedEntities();
-    processNewLinks();
-    
-    world->Step(dt, 8, 3, 1);
+}
+
+void PhysicsWorld::processNewEntities() {
+    for (auto entity : entitiesToActivate) {
+        entity->activate(world);
+    }
+    entitiesToActivate.clear();
 }
 
 // MARK: - Physics
@@ -269,30 +273,6 @@ void PhysicsWorld::processChunks()
     }
 }
 
-void PhysicsWorld::processNewLinks()
-{
-//    for (auto address: activeChunks) {
-//        Chunk *chunk = chunks[address];
-//        if (!chunk) {
-//            continue;
-//        }
-//        for (auto link : chunk->links) {
-//            b2Body *a = linksToAdd[i].first->body;
-//            b2Body *b = linksToAdd[i].second->body;
-//            if (a && b) {
-//                b2WeldJointDef cjd;
-//                cjd.collideConnected = false;
-//                cjd.bodyA = a;
-//                cjd.bodyB = b;
-//                world->CreateJoint(&cjd);
-//                linksToAdd.erase(linksToAdd.begin() + i);
-//            } else {
-//                i++;
-//            }
-//        }
-//    }
-}
-
 // MARK: - Contacts
 
 void PhysicsWorld::BeginContact(b2Contact* contact) {
@@ -305,11 +285,8 @@ void PhysicsWorld::BeginContact(b2Contact* contact) {
     if (entityA->isDead || entityB->isDead)
         return;
     
-    if (entityA)
-        entityA->contactBegin(entityB, contact->GetFixtureA());
-    
-    if (entityB)
-        entityB->contactBegin(entityA, contact->GetFixtureB());
+    entityA->contactBegin(entityB, contact->GetFixtureA());
+    entityB->contactBegin(entityA, contact->GetFixtureB());
 }
 
 void PhysicsWorld::EndContact(b2Contact* contact) {
@@ -322,28 +299,66 @@ void PhysicsWorld::EndContact(b2Contact* contact) {
     if (entityA->isDead || entityB->isDead)
         return;
     
-    if (entityA)
-        entityA->contactEnd(entityB, contact->GetFixtureA());
     
-    if (entityB)
-        entityB->contactEnd(entityA, contact->GetFixtureB());
+    entityA->contactEnd(entityB, contact->GetFixtureA());
+    entityB->contactEnd(entityA, contact->GetFixtureB());
+    
+    disabledContacts.erase({entityA, entityB});
 }
 
 void PhysicsWorld::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
-    b2Vec2 i = b2Vec2(impulse->normalImpulses[0] + impulse->normalImpulses[1], impulse->tangentImpulses[0] + impulse->tangentImpulses[1]);
-    
-    float imp = i.Length();
-    if (imp == 0) {
+    float imp = impulse->normalImpulses[0];
+    if (imp < COLLLISION_THRESHOLD) {
         return;
     }
+    
+    b2WorldManifold manifold;
+    contact->GetWorldManifold(&manifold);
+    b2Vec2 point = manifold.points[0];
     
     BodyEntity *entityA = static_cast<BodyEntity *>(contact->GetFixtureA()->GetBody()->GetUserData());
     BodyEntity *entityB = static_cast<BodyEntity *>(contact->GetFixtureB()->GetBody()->GetUserData());
     
-    if (entityA)
-        entityA->contactSolve(entityB, imp);
-    if (entityB)
-        entityB->contactSolve(entityA, imp);
+    if (disabledContacts[{entityA, entityB}]) {
+        return;
+    }
+    
+    float damageRadius = COLLLISION_RADIUS;
+    
+    // process contact for bodies a and b
+    entityA->receiveCollision(entityB, imp, point, damageRadius);
+    entityB->receiveCollision(entityA, imp, point, damageRadius);
+    
+    // process all other bodies separately
+    int xLo = std::floor((point.x - damageRadius) / CHUNK_SIZE);
+    int yLo = std::floor((point.y - damageRadius) / CHUNK_SIZE);
+    int xHi = std::ceil((point.x + damageRadius) / CHUNK_SIZE);
+    int yHi = std::ceil((point.y + damageRadius) / CHUNK_SIZE);
+    
+    std::map<BodyEntity *, bool> processedEntities;
+    
+    for (int x = xLo; x <= xHi; x++) {
+        for (int y = yLo; y <= yHi; y++) {
+            std::pair<int, int> address = {x, y};
+            Chunk *chunk = chunks[address];
+            if (!chunk)
+                continue;
+            
+            for (int i = 0; i < chunk->entities.size(); i++) {
+                auto e = chunk->entities[i];
+                if (e->isDead || e == entityA || e == entityB)
+                    continue;
+                BodyEntity *be = dynamic_cast<BodyEntity *>(e);
+                if (be && !processedEntities[be]) {
+                    float dist = (be->getPosition() - point).Length();
+                    float impulseAdjusted = imp * (1.0f - dist / damageRadius);
+                    be->receiveDamage(impulseAdjusted);
+                    processedEntities[be] = true;
+                }
+            }
+        }
+    }
+    disabledContacts[{entityA, entityB}] = true;
 }
 
 // MARK: - Render

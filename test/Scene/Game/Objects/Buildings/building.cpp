@@ -4,7 +4,7 @@
 using namespace PolygonUtils;
 
 Building::Building(b2Vec2 pos, float contactRadius)
-    : BodyEntity(pos, PlanetCore, false)
+    : BodyEntity(pos, CategoryBuilding)
     , pos(pos)
     , contactRadius(contactRadius)
     , contactAreaColor(sf::Color(100, 100, 100, 64))
@@ -29,8 +29,8 @@ b2Body* Building::createBody(b2World *world)
 
     b2FixtureDef contactFixtureDef;
     contactFixtureDef.isSensor = true;
-    contactFixtureDef.filter.categoryBits = PlanetCore;
-    contactFixtureDef.filter.maskBits = PlayerFrame;
+    contactFixtureDef.filter.categoryBits = CategoryBuilding;
+    contactFixtureDef.filter.maskBits = CategoryShip;
     contactFixtureDef.shape = &contactShape;
 
     contactFixture = body->CreateFixture(&contactFixtureDef);
@@ -39,7 +39,7 @@ b2Body* Building::createBody(b2World *world)
 
 void Building::contactBegin(BodyEntity *entity, b2Fixture *fixture)
 {
-    if (entity->collisionCategory != PlayerFrame)
+    if (entity->collisionCategory != CategoryShip)
         return;
     contactAreaColor = sf::Color(0, 255, 0, 64);
     if (onPlayerEnter)
@@ -48,7 +48,7 @@ void Building::contactBegin(BodyEntity *entity, b2Fixture *fixture)
 
 void Building::contactEnd(BodyEntity *entity, b2Fixture *fixture)
 {
-    if (entity->collisionCategory != PlayerFrame)
+    if (entity->collisionCategory != CategoryShip)
         return;
     contactAreaColor = sf::Color(sf::Color(100, 100, 100, 64));
     if (onPlayerLeave)

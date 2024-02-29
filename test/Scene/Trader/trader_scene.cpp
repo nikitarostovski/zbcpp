@@ -56,7 +56,7 @@ void TraderScene::step(float dt)
     std::string shipEmitter = string_format("Emitter \"%s\". Max speed: %.0f Acceleration: %.1f", emitterTypeString(player->ship->shipConfig.emitter.category).c_str(), player->ship->shipConfig.emitter.maxSpeed, player->ship->shipConfig.emitter.acceleration);
     ImGui::Text("%s", shipEmitter.c_str());
     
-    std::string shipCollector = string_format("Collector: \"%s\". Capacity: %.0f", collectorTypeString(player->ship->shipConfig.collector.category).c_str(), player->ship->shipConfig.collector.capacity);
+    std::string shipCollector = string_format("Collector: \"%s\". Radius: %.0f", collectorTypeString(player->ship->shipConfig.collector.category).c_str(), player->ship->shipConfig.collector.orbCollectionRadius);
     ImGui::Text("%s", shipCollector.c_str());
     
     ImGui::Text("--- Available ---");

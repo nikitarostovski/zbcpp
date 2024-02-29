@@ -2,6 +2,8 @@
 #include "constants.h"
 #include "string_utils.hpp"
 
+#include "solid_block.hpp"
+
 b2Vec2 normalize(const b2Vec2 source)
 {
     float length = sqrt((source.x * source.x) + (source.y * source.y));
@@ -26,13 +28,17 @@ GameScene::GameScene(sf::RenderWindow *window)
     PlayerConfig playerConfig{20.0f, 20.0f, 350};
     FrameConfig frameConfig{FrameBasic, 0.0f, 1.0f};
     EmitterConfig emitterConfig{EmitterBasic, 30.0f, 10.0f, 1.0f};
-    CollectorConfig collectorConfig{CollectorBasic, 10};
+    CollectorConfig collectorConfig{CollectorBasic, 10.0f};
     ShipConfig shipConfig{frameConfig, emitterConfig, collectorConfig, 1900.0f, 3000.0f};
     player = new Player(b2Vec2(-100, 0), playerConfig, shipConfig, world);
     
     mainPlanet = new Planet(b2Vec2(-20, -40), 5, 30, world);
     mainAsteroids = new AsteroidBelt(mainPlanet->center, mainPlanet->gravityRadius, mainPlanet->gravityRadius + 5, 1, world);
-//    
+    
+    auto bp = PolygonUtils::Polygon::makeCircle(b2Vec2(-70, -30), 25, 16, MaterialType::green, true, true);
+    auto block = new SolidBlock(bp, false, world);
+    world->addEntity(block);
+    
     auto planet2 = new Planet(b2Vec2(60, 5), 30, 40, world);
     auto asteroids2 = new AsteroidBelt(planet2->center, planet2->gravityRadius, planet2->gravityRadius + 10, 0.8, world);
 
@@ -71,7 +77,7 @@ GameScene::GameScene(sf::RenderWindow *window)
         int price = 10 + i * 3;
         
         std::string title = string_format("Collector \"%s\"", collectorTypeString(newCollector.category).c_str());
-        std::string description = string_format("Capacity: %.0f\nPrice: %d", newCollector.capacity, price);
+        std::string description = string_format("Radius: %.0f\nPrice: %d", newCollector.orbCollectionRadius, price);
         auto item = TradingItem(price, title, description, [newCollector, this](PlayerConfig *playerConfig, ShipConfig *shipConfig){
             shipConfig->collector = newCollector;
             this->player->ship->onConfigDidUpdate();

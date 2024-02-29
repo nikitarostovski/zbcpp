@@ -18,8 +18,8 @@ ShipFrame::ShipFrame(FrameConfig config, b2Body *body)
     shape.Set(points.data(), (int)points.size());
 
     b2FixtureDef fixtureDef;
-    fixtureDef.filter.categoryBits = CollisionCategory::PlayerFrame;
-    fixtureDef.filter.maskBits = CollisionCategory::Asteroid | CollisionCategory::PlanetCore;
+    fixtureDef.filter.categoryBits = CategoryShip;
+    fixtureDef.filter.maskBits = CategoryShip | CategoryTerrain | CategoryTerrain | CategoryOrb;
     fixtureDef.density = config.mass;
     fixtureDef.friction = 0.5;
     fixtureDef.restitution = 0.2;

@@ -17,4 +17,7 @@
 #define CHUNK_SIZE 8.0f
 #define CHUNK_ACTIVATION_TIME_LIMIT_MS 2
 
+#define COLLLISION_THRESHOLD 100.0f
+#define COLLLISION_RADIUS 4.0f
+
 #endif /* constants_h */

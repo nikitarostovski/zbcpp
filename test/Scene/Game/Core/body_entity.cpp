@@ -1,7 +1,7 @@
 #include "body_entity.hpp"
 #include "constants.h"
 
-BodyEntity::BodyEntity(b2Vec2 initialPosition, CollisionCategory collisionCategory, bool canBeDestroyed)
+BodyEntity::BodyEntity(b2Vec2 initialPosition, CollisionCategory collisionCategory)
     : BaseEntity()
 {
     this->didSetupAABB = false;
@@ -9,8 +9,6 @@ BodyEntity::BodyEntity(b2Vec2 initialPosition, CollisionCategory collisionCatego
     this->lastKnownAngle = 0;
     this->body = nullptr;
     this->collisionCategory = collisionCategory;
-    this->canBeDestroyed = canBeDestroyed;
-    this->isDestroying = false;
     this->didSetupAABB = false;
 }
 
@@ -70,21 +68,4 @@ void BodyEntity::deactivate(b2World *world)
     lastKnownAngle = body->GetAngle();
     world->DestroyBody(body);
     body = nullptr;
-}
-
-void BodyEntity::contactBegin(BodyEntity *entity, b2Fixture *fixture) {
-    if (entity)
-        collisionMap[entity] = true;
-}
-
-void BodyEntity::contactEnd(BodyEntity *entity, b2Fixture *fixture) { }
-
-void BodyEntity::contactSolve(BodyEntity *entity, float impulse) {
-    if (!entity)
-        return;
-    
-    if (collisionMap[entity] == false)
-        return;
-    receiveCollision(entity, impulse);
-    collisionMap.erase(entity);
 }

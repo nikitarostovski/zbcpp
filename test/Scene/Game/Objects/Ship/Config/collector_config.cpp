@@ -13,15 +13,15 @@ std::string collectorTypeString(CollectorCategory collector)
 }
 
 CollectorConfig::CollectorConfig()
-    : CollectorConfig(CollectorNone, 0)
+    : CollectorConfig(CollectorNone, 0.0f)
 { }
 
-CollectorConfig::CollectorConfig(CollectorCategory category, float capacity)
+CollectorConfig::CollectorConfig(CollectorCategory category, float orbCollectionRadius)
     : category(category)
-    , capacity(capacity)
+    , orbCollectionRadius(orbCollectionRadius)
 { }
 
 bool CollectorConfig::operator==(const CollectorConfig& rhs) const
 {
-    return category == rhs.category && capacity == rhs.capacity;
+    return category == rhs.category && orbCollectionRadius == rhs.orbCollectionRadius;
 }

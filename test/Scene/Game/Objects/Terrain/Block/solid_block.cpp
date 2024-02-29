@@ -1,13 +1,23 @@
 #include "solid_block.hpp"
 #include "constants.h"
+#include "orb.hpp"
 
 using namespace PolygonUtils;
 
-SolidBlock::SolidBlock(Polygon polygon)
-    : BodyEntity(b2Vec2(polygon.center.x, polygon.center.y), polygon.isDynamic ? Asteroid : PlanetCore, polygon.isDynamic)
+SolidBlock::SolidBlock(Polygon polygon, bool isImmortal, PhysicsWorld *world)
+    : BodyEntity(b2Vec2(polygon.center.x, polygon.center.y), CategoryTerrain)
+    , world(world)
     , polygon(polygon)
-    , canBeCollected(polygon.isDynamic)
-{ }
+    , isImmortal(isImmortal)
+{
+//    if (!polygon.subPolygons.empty()) {
+//        isDead = true;
+//        for (auto p: polygon.subPolygons) {
+//            auto nb = new SolidBlock(p, isImmortal, world);
+//            world->addEntity(nb);
+//        }
+//    }
+}
 
 b2AABB SolidBlock::getInitialAABB()
 {
@@ -38,12 +48,97 @@ b2Body* SolidBlock::createBody(b2World *world)
     return body;
 }
 
-void SolidBlock::receiveCollision(BodyEntity *entity, float impulse)
+void SolidBlock::createFixture(b2Body *body, Polygon polygon)
 {
-    if (impulse > 10/* && !def.partsDefs.empty()*/) {
-//        destroy();
+    // Create shape
+    b2PolygonShape shape;
+    auto points = polygon.points;
+    for (int i = 0; i < points.size(); i++)
+        points[i] = b2Vec2(points[i].x, points[i].y);
+    
+    
+    // Check duplicates (box2d algorithm)
+    bool allPointsUnique = true;
+    for (int i = 0; i < polygon.points.size(); i++) {
+        for (int j = i + 1; j < polygon.points.size(); j++) {
+            if (b2DistanceSquared(polygon.points[i], polygon.points[j]) < 0.5f * b2_linearSlop) {
+                allPointsUnique = false;
+                goto uniqueExitPoint;
+            }
+        }
+    }
+uniqueExitPoint:
+    
+    if (!allPointsUnique) {
+        return;
+    }
+    
+    shape.Set(points.data(), (int)points.size());
+    
+    // Create fixture
+    b2FixtureDef fixtureDef;
+    fixtureDef.filter.categoryBits = collisionCategory;
+    fixtureDef.filter.maskBits = CategoryShip | CategoryTerrain | CategoryBuilding | CategoryTerrain;
+    fixtureDef.density = 10;
+    fixtureDef.friction = 0.4;
+    fixtureDef.restitution = 0;
+    fixtureDef.shape = &shape;
+    body->CreateFixture(&fixtureDef);
+}
+
+// MARK: - Collision
+
+void SolidBlock::receiveCollision(BodyEntity *entity, float impulse, b2Vec2 point, float radius)
+{
+    if (isImmortal)
+        return;
+    
+    if (impulse > 100) {
+        isDead = true;
+        if (!polygon.subPolygons.empty()) {
+            spawnSubBlocks(point, radius, true);
+        } else {
+            spawnOrb(getPosition());
+        }
     }
 }
+
+void SolidBlock::receiveDamage(float impulse)
+{
+    if (impulse > 100) {
+        isDead = true;
+        if (!polygon.subPolygons.empty()) {
+            spawnSubBlocks(b2Vec2_zero, 0, false);
+        } else {
+            spawnOrb(getPosition());
+        }
+    }
+}
+
+void SolidBlock::spawnSubBlocks(b2Vec2 point, float radius, bool hasPointAndRadius)
+{
+    for (auto p : polygon.subPolygons) {
+        if (hasPointAndRadius) {
+            float dist = (p.center - point).Length();
+            if (dist > radius) {
+                p.isDynamic = polygon.isDynamic;
+            } else {
+                p.isDynamic = true;
+                p.material = Material(MaterialType::red);
+            }
+        }
+        auto nb = new SolidBlock(p, isImmortal, world);
+        world->addEntity(nb);
+    }
+}
+
+void SolidBlock::spawnOrb(b2Vec2 point)
+{
+    auto orb = new Orb(point);
+    world->addEntity(orb);
+}
+
+// MARK: - Render
 
 void SolidBlock::render(sf::RenderWindow *window, Camera camera)
 {
@@ -66,86 +161,16 @@ void SolidBlock::render(sf::RenderWindow *window, Camera camera)
             }
             polygonShape.setRotation(body->GetAngle() * DEG_PER_RAD);
             
-            if (canBeCollected) {
-                polygonShape.setScale(1.1f, 1.1f);
-                polygonShape.setFillColor(sf::Color::Green);
-                polygonShape.setOutlineColor(sf::Color::Transparent);
-                window->draw(polygonShape);
-            }
+//            polygonShape.setScale(1.1f, 1.1f);
+//            polygonShape.setFillColor(sf::Color::Green);
+//            polygonShape.setOutlineColor(sf::Color::Transparent);
+//            window->draw(polygonShape);
             
             polygonShape.setScale(1.0f, 1.0f);
             polygonShape.setFillColor(this->polygon.material.color);
             window->draw(polygonShape);
         }
     }
-}
-
-
-//std::vector<SolidBlockDef> SolidBlock::split()
-//{
-//    std::vector<SolidBlockDef> result;
-//    
-//    if (def.partsDefs.empty())
-//        return result;
-//    
-//    for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext()) {
-//        b2PolygonShape *shape = (b2PolygonShape *)f->GetShape();
-//        std::vector<b2Vec2> points;
-//        
-//        for (int i = 0; i < shape->GetVertexCount(); i++) {
-//            float x = shape->GetVertex(i).x;
-//            float y = shape->GetVertex(i).y;
-//            b2Vec2 pt = b2Vec2(x, y);
-//            pt = body->GetWorldPoint(pt);
-//            x = pt.x;
-//            y = pt.y;
-//            points.emplace_back(x, y);
-//        }
-//        Polygon p{points, def.polygon.material.type, def.polygon.isDynamic};
-//        SolidBlockDef partDef(p, true);
-//        auto splitResult = partDef.partsDefs;
-//        result.insert(result.end(), splitResult.begin(), splitResult.end());
-//    }
-//    
-//    return result;
-//}
-
-void SolidBlock::createFixture(b2Body *body, Polygon polygon)
-{
-    // Create shape
-    b2PolygonShape shape;
-    auto points = polygon.points;
-    for (int i = 0; i < points.size(); i++)
-        points[i] = b2Vec2(points[i].x, points[i].y);
-    
-    
-    // Check duplicates (box2d algorithm)
-    bool allPointsUnique = true;
-    for (int i = 0; i < polygon.points.size(); i++) {
-        for (int j = i + 1; j < polygon.points.size(); j++) {
-            if (b2DistanceSquared(polygon.points[i], polygon.points[j]) < 0.5f * b2_linearSlop) {
-                allPointsUnique = false;
-                goto uniqueExitPoint;
-            }
-        }
-    }
-    uniqueExitPoint:
-    
-    if (!allPointsUnique) {
-        return;
-    }
-    
-    shape.Set(points.data(), (int)points.size());
-
-    // Create fixture
-    b2FixtureDef fixtureDef;
-    fixtureDef.filter.categoryBits = CollisionCategory::Asteroid;
-    fixtureDef.filter.maskBits = CollisionCategory::Asteroid | CollisionCategory::PlanetCore | CollisionCategory::PlayerFrame | CollisionCategory::PlayerCollector | CollisionCategory::PlayerEmitter | CollisionCategory::PlayerShield;
-    fixtureDef.density = 10;
-    fixtureDef.friction = 0.4;
-    fixtureDef.restitution = 0;
-    fixtureDef.shape = &shape;
-    body->CreateFixture(&fixtureDef);
 }
 
 std::string SolidBlock::getName()

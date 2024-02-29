@@ -10,9 +10,9 @@
 		8D0300572B63C0390084DD17 /* asteroid_belt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D0300552B63C0390084DD17 /* asteroid_belt.cpp */; };
 		8D0301C12B64C38D0084DD17 /* Signwood-Regular.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D67740F2B54211C00403134 /* Signwood-Regular.ttf */; };
 		8D0301C42B64C6090084DD17 /* player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D0301C22B64C6090084DD17 /* player.cpp */; };
+		8D0309E02B8CE92800219E8B /* orb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D0309DE2B8CE92800219E8B /* orb.cpp */; };
 		8D03FF012B639DBC0084DD17 /* planet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D03FEFF2B639DBC0084DD17 /* planet.cpp */; };
 		8D2806E92B31BD0F00DD0D8F /* game_scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D2806E72B31BD0F00DD0D8F /* game_scene.cpp */; };
-		8D2AEC3D2B3A9CE4000C7F6B /* solid_block_def.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D2AEC3B2B3A9CE4000C7F6B /* solid_block_def.cpp */; };
 		8D36B72B2B79F733008731BD /* body_entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D36B7292B79F733008731BD /* body_entity.cpp */; };
 		8D36C1DF2B7A6DDE008731BD /* chunk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D36C1DD2B7A6DDE008731BD /* chunk.cpp */; };
 		8D6772A42B4C410D00403134 /* material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D6772A32B4C410D00403134 /* material.cpp */; };
@@ -82,7 +82,6 @@
 		8D898D572B221F11008E532F /* b2CollideEdge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D898D202B221F11008E532F /* b2CollideEdge.cpp */; };
 		8D898D582B221F11008E532F /* b2Collision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D898D212B221F11008E532F /* b2Collision.cpp */; };
 		8D8995C92B2361C3008E532F /* physics_world.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8995C82B2361C3008E532F /* physics_world.cpp */; };
-		8D8998792B273E50008E532F /* player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8998772B273E50008E532F /* player.cpp */; };
 		8D89A9A22B2B0F0A008E532F /* solid_block.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D89A9A02B2B0F0A008E532F /* solid_block.cpp */; };
 		8DA6882B2B64EE12006CDF9C /* ship_collector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA688292B64EE12006CDF9C /* ship_collector.cpp */; };
 		8DA6894B2B669845006CDF9C /* imgui_widgets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA688492B669844006CDF9C /* imgui_widgets.cpp */; };
@@ -144,6 +143,8 @@
 		8D0300562B63C0390084DD17 /* asteroid_belt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = asteroid_belt.hpp; sourceTree = "<group>"; };
 		8D0301C22B64C6090084DD17 /* player.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = player.cpp; sourceTree = "<group>"; };
 		8D0301C32B64C6090084DD17 /* player.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = player.hpp; sourceTree = "<group>"; };
+		8D0309DE2B8CE92800219E8B /* orb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = orb.cpp; sourceTree = "<group>"; };
+		8D0309DF2B8CE92800219E8B /* orb.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = orb.hpp; sourceTree = "<group>"; };
 		8D03FEFF2B639DBC0084DD17 /* planet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = planet.cpp; sourceTree = "<group>"; };
 		8D03FF002B639DBC0084DD17 /* planet.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = planet.hpp; sourceTree = "<group>"; };
 		8D2806E72B31BD0F00DD0D8F /* game_scene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = game_scene.cpp; sourceTree = "<group>"; };
@@ -151,8 +152,6 @@
 		8D2AEB3A2B369FA1000C7F6B /* jc_voronoi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jc_voronoi.h; sourceTree = "<group>"; };
 		8D2AEB3B2B369FA1000C7F6B /* jc_voronoi_clip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jc_voronoi_clip.h; sourceTree = "<group>"; };
 		8D2AEB422B382EA3000C7F6B /* poisson_disc_distribution.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = poisson_disc_distribution.hpp; sourceTree = "<group>"; };
-		8D2AEC3B2B3A9CE4000C7F6B /* solid_block_def.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = solid_block_def.cpp; sourceTree = "<group>"; };
-		8D2AEC3C2B3A9CE4000C7F6B /* solid_block_def.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = solid_block_def.hpp; sourceTree = "<group>"; };
 		8D2DE0142B6BD90900AFE75C /* string_utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = string_utils.hpp; sourceTree = "<group>"; };
 		8D36B7292B79F733008731BD /* body_entity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = body_entity.cpp; sourceTree = "<group>"; };
 		8D36B72A2B79F733008731BD /* body_entity.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = body_entity.hpp; sourceTree = "<group>"; };
@@ -301,10 +300,6 @@
 		8D8995C72B235A6C008E532F /* physics_world.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = physics_world.hpp; sourceTree = "<group>"; };
 		8D8995C82B2361C3008E532F /* physics_world.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = physics_world.cpp; sourceTree = "<group>"; };
 		8D8998762B273C5A008E532F /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
-		8D8998772B273E50008E532F /* player.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = player.cpp; sourceTree = "<group>"; };
-		8D8998782B273E50008E532F /* player.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = player.hpp; sourceTree = "<group>"; };
-		8D89A99D2B2AFE9D008E532F /* planet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = planet.cpp; sourceTree = "<group>"; };
-		8D89A99E2B2AFE9D008E532F /* planet.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = planet.hpp; sourceTree = "<group>"; };
 		8D89A9A02B2B0F0A008E532F /* solid_block.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = solid_block.cpp; sourceTree = "<group>"; };
 		8D89A9A12B2B0F0A008E532F /* solid_block.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = solid_block.hpp; sourceTree = "<group>"; };
 		8DA688292B64EE12006CDF9C /* ship_collector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ship_collector.cpp; sourceTree = "<group>"; };
@@ -373,9 +368,6 @@
 		8DF3DA802B4B056E00A9593C /* ConcavePolygon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConcavePolygon.h; sourceTree = "<group>"; };
 		8DF3DA832B4BEA6E00A9593C /* License.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = License.md; sourceTree = "<group>"; };
 		8DF3DA842B4BEA6E00A9593C /* bayazit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bayazit.h; sourceTree = "<group>"; };
-		8DF5DC9C2B5AD95F0037562F /* player_tool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = player_tool.hpp; sourceTree = "<group>"; };
-		8DF5DC9D2B5ADA500037562F /* collector_tool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = collector_tool.hpp; sourceTree = "<group>"; };
-		8DF5DC9E2B5ADB500037562F /* shield_tool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shield_tool.hpp; sourceTree = "<group>"; };
 		8DF5DCA52B5D6EAC0037562F /* inventory_scene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = inventory_scene.cpp; sourceTree = "<group>"; };
 		8DF5DCA62B5D6EAC0037562F /* inventory_scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = inventory_scene.hpp; sourceTree = "<group>"; };
 		8DF5DDA02B5EB6890037562F /* game.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = game.cpp; sourceTree = "<group>"; };
@@ -447,6 +439,8 @@
 			children = (
 				8D89A9A12B2B0F0A008E532F /* solid_block.hpp */,
 				8D89A9A02B2B0F0A008E532F /* solid_block.cpp */,
+				8D0309DF2B8CE92800219E8B /* orb.hpp */,
+				8D0309DE2B8CE92800219E8B /* orb.cpp */,
 			);
 			path = Block;
 			sourceTree = "<group>";
@@ -475,25 +469,6 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		8D67729E2B4C400C00403134 /* Player */ = {
-			isa = PBXGroup;
-			children = (
-				8DF5DC9B2B5AD94D0037562F /* Tools */,
-				8D8998782B273E50008E532F /* player.hpp */,
-				8D8998772B273E50008E532F /* player.cpp */,
-			);
-			path = Player;
-			sourceTree = "<group>";
-		};
-		8D67729F2B4C401C00403134 /* Planet */ = {
-			isa = PBXGroup;
-			children = (
-				8D89A99E2B2AFE9D008E532F /* planet.hpp */,
-				8D89A99D2B2AFE9D008E532F /* planet.cpp */,
-			);
-			path = Planet;
-			sourceTree = "<group>";
-		};
 		8D6772A02B4C406700403134 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
@@ -508,15 +483,6 @@
 				8DF5DDA92B5ED9FD0037562F /* Game */,
 			);
 			path = Scene;
-			sourceTree = "<group>";
-		};
-		8D6772A12B4C407400403134 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				8D2AEC3C2B3A9CE4000C7F6B /* solid_block_def.hpp */,
-				8D2AEC3B2B3A9CE4000C7F6B /* solid_block_def.cpp */,
-			);
-			path = Core;
 			sourceTree = "<group>";
 		};
 		8D67739D2B4DB7D400403134 /* include */ = {
@@ -594,7 +560,6 @@
 				8D67740D2B54211C00403134 /* Resources */,
 				8D2AEB392B369FA1000C7F6B /* Utils */,
 				8D6772A02B4C406700403134 /* Scene */,
-				8D8995C62B235A2D008E532F /* Physics */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -796,16 +761,6 @@
 			path = Shapes;
 			sourceTree = "<group>";
 		};
-		8D8995C62B235A2D008E532F /* Physics */ = {
-			isa = PBXGroup;
-			children = (
-				8D6772A12B4C407400403134 /* Core */,
-				8D67729E2B4C400C00403134 /* Player */,
-				8D67729F2B4C401C00403134 /* Planet */,
-			);
-			path = Physics;
-			sourceTree = "<group>";
-		};
 		8DA6882C2B669844006CDF9C /* imgui */ = {
 			isa = PBXGroup;
 			children = (
@@ -970,16 +925,6 @@
 				8DF3DA842B4BEA6E00A9593C /* bayazit.h */,
 			);
 			path = bayazit;
-			sourceTree = "<group>";
-		};
-		8DF5DC9B2B5AD94D0037562F /* Tools */ = {
-			isa = PBXGroup;
-			children = (
-				8DF5DC9C2B5AD95F0037562F /* player_tool.hpp */,
-				8DF5DC9D2B5ADA500037562F /* collector_tool.hpp */,
-				8DF5DC9E2B5ADB500037562F /* shield_tool.hpp */,
-			);
-			path = Tools;
 			sourceTree = "<group>";
 		};
 		8DF5DDA92B5ED9FD0037562F /* Game */ = {
@@ -1178,7 +1123,6 @@
 				8D898D382B221F11008E532F /* b2PrismaticJoint.cpp in Sources */,
 				8DA698592B68DDFA006CDF9C /* collector_config.cpp in Sources */,
 				8D898D2F2B221F11008E532F /* b2WeldJoint.cpp in Sources */,
-				8D8998792B273E50008E532F /* player.cpp in Sources */,
 				8DA689882B669845006CDF9C /* imgui_draw.cpp in Sources */,
 				8D898D532B221F11008E532F /* b2CircleShape.cpp in Sources */,
 				8D898D2E2B221F11008E532F /* b2WorldCallbacks.cpp in Sources */,
@@ -1187,11 +1131,11 @@
 				8D898D2A2B221F11008E532F /* b2ContactSolver.cpp in Sources */,
 				8D898D512B221F11008E532F /* b2ChainShape.cpp in Sources */,
 				8D898D2B2B221F11008E532F /* b2CircleContact.cpp in Sources */,
-				8D2AEC3D2B3A9CE4000C7F6B /* solid_block_def.cpp in Sources */,
 				8D898D502B221F11008E532F /* b2DynamicTree.cpp in Sources */,
 				8D898D562B221F11008E532F /* b2BroadPhase.cpp in Sources */,
 				8DA6882B2B64EE12006CDF9C /* ship_collector.cpp in Sources */,
 				8DF83B1D2B749644000DC138 /* fuel_station_building.cpp in Sources */,
+				8D0309E02B8CE92800219E8B /* orb.cpp in Sources */,
 				8D898D272B221F11008E532F /* b2ChainAndCircleContact.cpp in Sources */,
 				8D36C1DF2B7A6DDE008731BD /* chunk.cpp in Sources */,
 				8DF3DA772B431D3900A9593C /* PolygonClipping.cpp in Sources */,

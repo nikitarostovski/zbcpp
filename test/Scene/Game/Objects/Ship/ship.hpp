@@ -21,7 +21,7 @@ private:
 protected:
     b2Body* createBody(b2World *world) override;
     b2AABB getInitialAABB() override;
-    
+    void receiveCollision(BodyEntity *entity, float impulse, b2Vec2 point, float radius) override;
 public:
     ShipFrame *frame;
     ShipEmitter *emitter;
@@ -42,7 +42,5 @@ public:
     void onConfigDidUpdate();
     
     void contactBegin(BodyEntity *entity, b2Fixture *fixture) override;
-    void receiveCollision(BodyEntity *entity, float impulse) override;
-    
     void render(sf::RenderWindow *window, Camera camera) override;
 };

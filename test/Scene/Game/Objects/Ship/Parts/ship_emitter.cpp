@@ -16,8 +16,8 @@ ShipEmitter::ShipEmitter(EmitterConfig config, b2Body *body)
     shape.Set(points.data(), (int)points.size());
 
     b2FixtureDef fixtureDef;
-    fixtureDef.filter.categoryBits = CollisionCategory::PlayerEmitter;
-    fixtureDef.filter.maskBits = 0;//CollisionCategory::Asteroid | CollisionCategory::PlanetCore;
+    fixtureDef.filter.categoryBits = CategoryShip;
+    fixtureDef.filter.maskBits = 0;
     fixtureDef.density = 0.5;
     fixtureDef.friction = 0.5;
     fixtureDef.restitution = 0.2;

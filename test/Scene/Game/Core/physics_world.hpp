@@ -10,6 +10,8 @@ private:
     sf::Clock chunkClock;
     b2ParticleSystem *particle_system;
     
+    std::map<std::pair<BaseEntity *, BaseEntity *>, bool> disabledContacts;
+    
     std::map<std::pair<int, int>, Chunk *> chunks;
     
     sf::Vector2i activeChunkX;
@@ -18,14 +20,18 @@ private:
     std::vector<std::pair<int, int>> chunksToDeactivate;
     std::vector<std::pair<int, int>> chunksToActivate;
     
+    std::vector<BaseEntity *> entitiesToActivate;
+    
     b2Vec2 lastChunkUpdateCenter;
     
     void processDestroyedEntities();
     void processChunks();
-    void processNewLinks();
+    void processNewEntities();
+    void updateEntitesChunks();
     
     void BeginContact(b2Contact* contact);
     void EndContact(b2Contact* contact);
+    void PreSolve(b2Contact *contact, const b2Manifold *oldManifold) {};
     void PostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
 public:
     b2World *world;
@@ -37,7 +43,6 @@ public:
     void step(float dt);
     
     void addEntity(BaseEntity *entity);
-    void addLink(BaseEntity *entityA, BaseEntity *entityB);
     
     void render(sf::RenderWindow *window, Camera camera);
 };

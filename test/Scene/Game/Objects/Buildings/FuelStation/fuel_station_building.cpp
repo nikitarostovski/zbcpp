@@ -25,8 +25,8 @@ b2Body* FuelStationBuilding::initializeBuildingBody(b2World *world)
     mainShape.Set(mainPoints.data(), (int)mainPoints.size());
 
     b2FixtureDef mainFixtureDef;
-    mainFixtureDef.filter.categoryBits = PlanetCore;
-    mainFixtureDef.filter.maskBits = Asteroid | PlanetCore;
+    mainFixtureDef.filter.categoryBits = collisionCategory;
+    mainFixtureDef.filter.maskBits = CategoryTerrain;
     mainFixtureDef.density = 0.5;
     mainFixtureDef.friction = 0.5;
     mainFixtureDef.restitution = 0.2;
@@ -39,6 +39,9 @@ b2Body* FuelStationBuilding::initializeBuildingBody(b2World *world)
 
 void FuelStationBuilding::renderBuilding(sf::RenderWindow *window, Camera camera)
 {
+    if (!body)
+        return;
+    
     sf::Vector2<float> localCenter{body->GetLocalCenter().x * camera.scale, body->GetLocalCenter().y * camera.scale};
     sf::Vector2<float> worldCenter{body->GetWorldCenter().x, body->GetWorldCenter().y};
     float angle = body->GetAngle();

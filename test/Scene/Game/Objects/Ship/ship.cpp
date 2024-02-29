@@ -3,7 +3,7 @@
 #include "liquid_entity.hpp"
 
 Ship::Ship(b2Vec2 pos, ShipConfig config, PhysicsWorld *world)
-    : BodyEntity(pos, PlayerFrame, false)
+    : BodyEntity(pos, CategoryShip)
     , world(world)
     , shipConfig(ShipConfig())
 {
@@ -12,14 +12,13 @@ Ship::Ship(b2Vec2 pos, ShipConfig config, PhysicsWorld *world)
     updateCollectorIfNeeded(config.collector, pos);
     
     shipConfig = config;
-    printf("!!! init \n");
 }
 
 Ship::~Ship()
 {
-//    delete frame;
-//    delete emitter;
-//    delete collector;
+    delete frame;
+    delete emitter;
+    delete collector;
 }
 
 b2Body* Ship::createBody(b2World *world)
@@ -102,6 +101,9 @@ bool Ship::updateCollectorIfNeeded(CollectorConfig newCollector, b2Vec2 pos)
         body->DestroyFixture(collector->getFixture());
     }
     collector = new ShipCollector(newCollector, body);
+    collector->onOrbCollected = [this](Orb *orb){
+        this->onMaterialCollect(1);
+    };
     return true;
 }
 
@@ -125,6 +127,10 @@ void Ship::step(float dt)
         delta += M_PI * 2;
 
     body->SetAngularVelocity(delta * rotationSpeed);
+    
+    if (collector) {
+        collector->step(dt);
+    }
 }
 
 void Ship::makeExhaustTrace(b2Vec2 impulse)
@@ -194,19 +200,19 @@ void Ship::render(sf::RenderWindow *window, Camera camera) {
 
 void Ship::contactBegin(BodyEntity *entity, b2Fixture *fixture)
 {
-    if (!entity)
+    if (!entity) {
+        BodyEntity::contactBegin(entity, fixture);
         return;
-    
-    if (entity->collisionCategory == Asteroid && fixture == collector->getFixture()) {
-//        entity->destroy();
-        if (onMaterialCollect)
-            onMaterialCollect(1);
+    }
+    Orb *orb = dynamic_cast<Orb *>(entity);
+    if (collector && orb) {
+        collector->receiveCollision(orb);
     }
 }
 
-void Ship::receiveCollision(BodyEntity *entity, float impulse)
+void Ship::receiveCollision(BodyEntity *entity, float impulse, b2Vec2 point, float radius)
 {
-    const std::vector<std::pair<float, float>> impactToDamage = {{5, 1}, {20, 2}, {50, 3}, {100, 10}};
+    const std::vector<std::pair<float, float>> impactToDamage = {{100, 1}, {300, 2}, {500, 3}, {800, 10}};
     
     float damage = 0;
     float impact = std::abs(impulse);// * speed;
@@ -232,5 +238,5 @@ void Ship::receiveCollision(BodyEntity *entity, float impulse)
     
     damage *= (1.0 - armorValue);
     onDamageReceive(damage);
-//    printf("IMAPCT: %2.2f, DAMAGE: %1.0f, HEALTH: %3.0f\n", std::abs(impulse), damage, health);
+    printf("!!! IMPACT: %2.2f, DAMAGE: %1.0f\n", std::abs(impulse), damage);
 }

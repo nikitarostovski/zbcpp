@@ -11,10 +11,10 @@ enum CollectorCategory
 struct CollectorConfig
 {
     CollectorCategory category;
-    float capacity;
+    float orbCollectionRadius;
     
     CollectorConfig();
-    CollectorConfig(CollectorCategory category, float capacity);
+    CollectorConfig(CollectorCategory category, float orbCollectionRadius);
     
     bool operator==(const CollectorConfig& rhs) const;
 };

@@ -9,7 +9,7 @@ AsteroidBelt::AsteroidBelt(b2Vec2 pos, float startRadius, float endRadius, float
     float bradiusstart = startRadius + asteroidSize;
     float bradiusend = endRadius;
     
-    Polygon bcontour = Polygon::makeCircle(pos, (bradiusend + asteroidSize), 32, MaterialType::blue, true);
+    Polygon bcontour = Polygon::makeCircle(pos, (bradiusend + asteroidSize), 32, MaterialType::blue, true, false);
     auto bchunks = bcontour.split(asteroidSize);
     
     std::vector<Polygon> asteroids;
@@ -31,7 +31,7 @@ AsteroidBelt::AsteroidBelt(b2Vec2 pos, float startRadius, float endRadius, float
             asteroids.push_back(bchunk);
     }
     for (auto chunk: asteroids) {
-        SolidBlock *block = new SolidBlock(chunk);
+        SolidBlock *block = new SolidBlock(chunk, false, world);
         world->addEntity(block);
     }
 }

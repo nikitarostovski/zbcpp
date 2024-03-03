@@ -24,7 +24,10 @@ PhysicsWorld::~PhysicsWorld()
     delete world;
 }
 
-// MARK: - Lifecycle
+Chunk* PhysicsWorld::getChunk(std::pair<int, int> address)
+{
+    return chunks[address];
+}
 
 void PhysicsWorld::addEntity(BaseEntity *entity)
 {
@@ -120,12 +123,27 @@ void PhysicsWorld::updateChunks(b2Vec2 center, float width, float height)
     lastChunkUpdateCenter = center;
 }
 
+// MARK: - Lifecycle
+
 void PhysicsWorld::step(float dt)
 {
     processChunks();
     updateEntitesChunks();
     processDestroyedEntities();
     processNewEntities();
+    
+    for (int x = activeChunkX.x; x <= activeChunkX.x + activeChunkX.y; x++) {
+        for (int y = activeChunkY.x; y <= activeChunkY.x + activeChunkY.y; y++) {
+            auto address = std::pair<int, int>(x, y);
+            Chunk *chunk = chunks[address];
+            if (!chunk)
+                continue;
+            
+            for (auto entity : chunk->entities) {
+                entity->step(dt);
+            }
+        }
+    }
     
     world->Step(dt, 8, 3, 1);
 }
@@ -198,13 +216,16 @@ void PhysicsWorld::updateEntitesChunks()
 }
 
 void PhysicsWorld::processNewEntities() {
-    for (auto entity : entitiesToActivate) {
+    chunkClock.restart();
+    for (int i = 0; i < entitiesToActivate.size();) {
+        if (chunkClock.getElapsedTime().asMilliseconds() > CHUNK_ACTIVATION_TIME_LIMIT_MS) {
+            break;
+        }
+        auto entity = entitiesToActivate[i];
         entity->activate(world);
+        entitiesToActivate.erase(entitiesToActivate.begin() + i);
     }
-    entitiesToActivate.clear();
 }
-
-// MARK: - Physics
 
 void PhysicsWorld::processDestroyedEntities()
 {
@@ -233,7 +254,7 @@ void PhysicsWorld::processChunks()
             chunks[address] = chunk;
         }
         for (auto entity : chunk->entities) {
-            entity->activate(world);
+            entitiesToActivate.push_back(entity);
         }
         chunksToActivate.erase(chunksToActivate.begin() + i);
     }

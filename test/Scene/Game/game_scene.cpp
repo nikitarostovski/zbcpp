@@ -35,7 +35,7 @@ GameScene::GameScene(sf::RenderWindow *window)
     mainPlanet = new Planet(b2Vec2(-20, -40), 5, 30, world);
     mainAsteroids = new AsteroidBelt(mainPlanet->center, mainPlanet->gravityRadius, mainPlanet->gravityRadius + 5, 1, world);
     
-    auto bp = PolygonUtils::Polygon::makeCircle(b2Vec2(-70, -30), 25, 16, MaterialType::green, true, true);
+    auto bp = PolygonUtils::Polygon::makeCircle(b2Vec2(-80, -30), 15, 16, MaterialType::green, true, true);
     auto block = new SolidBlock(bp, false, world);
     world->addEntity(block);
     
@@ -117,8 +117,8 @@ void GameScene::step(float dt)
     player->ship->rotate(playerRotation);
     player->ship->step(dt);
     
-    float viewportWidth = window->getSize().x / camera.scale / 2;
-    float viewportHeight = window->getSize().y / camera.scale / 2;
+    float viewportWidth = window->getSize().x / camera.scale * DEBUG_RENDER_VIEWPORT;
+    float viewportHeight = window->getSize().y / camera.scale * DEBUG_RENDER_VIEWPORT;
     world->updateChunks(b2Vec2(camera.x, camera.y), viewportWidth, viewportHeight);
     
     world->step(dt);
@@ -126,8 +126,8 @@ void GameScene::step(float dt)
 
 void GameScene::render()
 {
-    float viewportWidth = window->getSize().x / 2;
-    float viewportHeight = window->getSize().y / 2;
+    float viewportWidth = window->getSize().x * DEBUG_RENDER_VIEWPORT;
+    float viewportHeight = window->getSize().y * DEBUG_RENDER_VIEWPORT;
     
     sf::RectangleShape chunkRect;
     chunkRect.setSize(sf::Vector2f{viewportWidth, viewportHeight});

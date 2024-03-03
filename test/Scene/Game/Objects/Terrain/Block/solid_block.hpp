@@ -12,8 +12,11 @@ private:
     Polygon polygon;
     float approximateArea;
     bool isImmortal;
-    void createFixture(b2Body *body, Polygon polygon);
+    sf::ConvexShape renderShape;
     
+    std::vector<sf::ConvexShape> renderShapes;
+    
+    void createFixture(b2Body *body, Polygon polygon);
     void spawnSubBlocks(b2Vec2 point, float radius, bool hasPointAndRadius);
     void spawnOrb(b2Vec2 point);
 protected:

@@ -21,9 +21,6 @@ public:
     
     Polygon(std::vector<b2Vec2> points, MaterialType materialType, bool isDynamic, bool isSplitable);
     
-    std::vector<Polygon> triangulate();
-    std::vector<Polygon> splitIntoSubpolygons(); // splits concave polygon into convex
-    std::vector<Polygon> split(float distance);
     std::vector<Polygon> intersection(std::vector<Polygon> source);
     std::vector<Polygon> substraction(std::vector<Polygon> source);
     

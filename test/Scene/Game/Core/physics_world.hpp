@@ -42,6 +42,8 @@ public:
     void updateChunks(b2Vec2 center, float width, float height);
     void step(float dt);
     
+    Chunk* getChunk(std::pair<int, int> address);
+    
     void addEntity(BaseEntity *entity);
     
     void render(sf::RenderWindow *window, Camera camera);

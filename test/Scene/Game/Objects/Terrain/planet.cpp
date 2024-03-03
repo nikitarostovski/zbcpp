@@ -14,7 +14,7 @@ Planet::Planet(b2Vec2 pos, float radius, float gravityRadius, PhysicsWorld *worl
     SolidBlock *coreBlock = new SolidBlock(corePolygon, true, world);
     world->addEntity(coreBlock);
     
-    GravityFieldEntity *field = new GravityFieldEntity(pos, gravityRadius, 0.1f);
+    GravityFieldEntity *field = new GravityFieldEntity(pos, gravityRadius, 0.1f, world);
     world->addEntity(field);
 }
 

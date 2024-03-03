@@ -15,9 +15,14 @@
 #define PARTICLE_RADIUS 0.3F
 
 #define CHUNK_SIZE 8.0f
-#define CHUNK_ACTIVATION_TIME_LIMIT_MS 2
+#define CHUNK_ACTIVATION_TIME_LIMIT_MS 4
 
 #define COLLLISION_THRESHOLD 100.0f
-#define COLLLISION_RADIUS 4.0f
+#define COLLLISION_RADIUS 8.0f
+
+// TODO: remove DEBUG_ constants for release
+#define DEBUG_RENDER_VIEWPORT 1.0f
+#define DEBUG_RESOLUTION_X 1280
+#define DEBUG_RESOLUTION_Y 720
 
 #endif /* constants_h */

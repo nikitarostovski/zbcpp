@@ -1,10 +1,12 @@
 #include "gravity_field_entity.hpp"
 #include "body_entity.hpp"
 #include "liquid_entity.hpp"
+#include "physics_world.hpp"
 #include "constants.h"
 
-GravityFieldEntity::GravityFieldEntity(b2Vec2 pos, float radius, float strength)
+GravityFieldEntity::GravityFieldEntity(b2Vec2 pos, float radius, float strength, PhysicsWorld *world)
     : BaseEntity()
+    , world(world)
 {
     this->center = pos;
     this->radius = radius;
@@ -35,16 +37,36 @@ void GravityFieldEntity::activate(b2World *world) { }
 
 void GravityFieldEntity::deactivate(b2World *world) { }
 
-void GravityFieldEntity::applyGravityToEntities(std::vector<BaseEntity *> entities)
+void GravityFieldEntity::step(float dt)
 {
-    for (BaseEntity *baseEntity : entities) {
-        BodyEntity *bodyEntity = dynamic_cast<BodyEntity *>(baseEntity);
-        if (bodyEntity)
-            applyGravityToBody(bodyEntity);
-        
-        LiquidEntity *liquidEntity = dynamic_cast<LiquidEntity *>(baseEntity);
-        if (liquidEntity)
-            applyGravityToLiquid(liquidEntity);
+    if (!world)
+        return;
+    
+    b2Vec2 fieldCenter = getPosition();
+    float radiusSquared = radius * radius;
+    
+    for (int cx = lastChunkXLo; cx <= lastChunkXHi; cx++) {
+        for (int cy = lastChunkYLo; cy <= lastChunkYHi; cy++) {
+            Chunk *chunk = world->getChunk({cx, cy});
+            if (!chunk)
+                continue;
+            
+            for (auto e : chunk->entities) {
+                b2Vec2 center = e->getPosition();
+                b2Vec2 shift = center - fieldCenter;
+                float distSquared = shift.LengthSquared();
+                if (distSquared > radiusSquared)
+                    continue;
+                
+                BodyEntity *bodyEntity = dynamic_cast<BodyEntity *>(e);
+                if (bodyEntity)
+                    applyGravityToBody(bodyEntity);
+                
+                LiquidEntity *liquidEntity = dynamic_cast<LiquidEntity *>(e);
+                if (liquidEntity)
+                    applyGravityToLiquid(liquidEntity);
+            }
+        }
     }
 }
 
@@ -52,7 +74,7 @@ void GravityFieldEntity::applyGravityToBody(BodyEntity *entity)
 {
     b2Vec2 fieldCenter = getPosition();
     b2Body *body = entity->body;
-    if (!body || body->GetType() != b2_dynamicBody)
+    if (!body)
         return;
     
     b2Vec2 center = body->GetPosition();

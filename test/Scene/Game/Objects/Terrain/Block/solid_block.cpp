@@ -10,6 +10,9 @@ SolidBlock::SolidBlock(Polygon polygon, bool isImmortal, PhysicsWorld *world)
     , polygon(polygon)
     , isImmortal(isImmortal)
 {
+    renderShape = sf::ConvexShape();
+    renderShape.setFillColor(polygon.material.color);
+    
 //    if (!polygon.subPolygons.empty()) {
 //        isDead = true;
 //        for (auto p: polygon.subPolygons) {
@@ -37,31 +40,34 @@ b2Body* SolidBlock::createBody(b2World *world)
     bodyDef.angularDamping = 0.95f;
     b2Body *body = world->CreateBody(&bodyDef);
     
-    auto subPolygons = polygon.triangulate();
-    for (auto subPolygon : subPolygons) {
-        for (int i = 0; i < subPolygon.points.size(); i++) {
-            subPolygon.points[i] += subPolygon.center - polygon.center;
+//    polygon.center = b2Vec2_zero;
+    if (!polygon.subPolygons.empty()) {
+        for (auto p : polygon.subPolygons) {
+            createFixture(body, p);
         }
-        createFixture(body, subPolygon);
+    } else {
+        createFixture(body, polygon);
     }
-    polygon.center = b2Vec2_zero;
+    
     return body;
 }
 
 void SolidBlock::createFixture(b2Body *body, Polygon polygon)
 {
+    b2Vec2 centerShift = polygon.center - this->polygon.center;
+    
     // Create shape
     b2PolygonShape shape;
     auto points = polygon.points;
     for (int i = 0; i < points.size(); i++)
-        points[i] = b2Vec2(points[i].x, points[i].y);
+        points[i] = b2Vec2(points[i].x, points[i].y) - centerShift;
     
     
     // Check duplicates (box2d algorithm)
     bool allPointsUnique = true;
-    for (int i = 0; i < polygon.points.size(); i++) {
-        for (int j = i + 1; j < polygon.points.size(); j++) {
-            if (b2DistanceSquared(polygon.points[i], polygon.points[j]) < 0.5f * b2_linearSlop) {
+    for (int i = 0; i < points.size(); i++) {
+        for (int j = i + 1; j < points.size(); j++) {
+            if (b2DistanceSquared(points[i], points[j]) < 0.5f * b2_linearSlop) {
                 allPointsUnique = false;
                 goto uniqueExitPoint;
             }
@@ -83,7 +89,12 @@ uniqueExitPoint:
     fixtureDef.friction = 0.4;
     fixtureDef.restitution = 0;
     fixtureDef.shape = &shape;
+//    fixtureDef.userData -> shape index
     body->CreateFixture(&fixtureDef);
+    
+    auto renderShape = sf::ConvexShape();
+    renderShape.setFillColor(polygon.material.color);
+    renderShapes.push_back(renderShape);
 }
 
 // MARK: - Collision
@@ -105,6 +116,9 @@ void SolidBlock::receiveCollision(BodyEntity *entity, float impulse, b2Vec2 poin
 
 void SolidBlock::receiveDamage(float impulse)
 {
+    if (isImmortal)
+        return;
+    
     if (impulse > 100) {
         isDead = true;
         if (!polygon.subPolygons.empty()) {
@@ -117,18 +131,26 @@ void SolidBlock::receiveDamage(float impulse)
 
 void SolidBlock::spawnSubBlocks(b2Vec2 point, float radius, bool hasPointAndRadius)
 {
-    for (auto p : polygon.subPolygons) {
-        if (hasPointAndRadius) {
-            float dist = (p.center - point).Length();
-            if (dist > radius) {
-                p.isDynamic = polygon.isDynamic;
-            } else {
-                p.isDynamic = true;
-                p.material = Material(MaterialType::red);
+    float radiusSquared = radius * radius;
+    for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext()) {
+        b2Shape::Type shapeType = f->GetType();
+        if (shapeType == b2Shape::e_polygon) {
+            b2PolygonShape* shape = (b2PolygonShape*)f->GetShape();
+            
+            std::vector<b2Vec2> newPoints;
+            for (int i = 0; i < shape->GetVertexCount(); i++) {
+                newPoints.push_back(shape->GetVertex(i) + polygon.center);
             }
+            Polygon newP = Polygon(newPoints, polygon.material.type, polygon.isDynamic, false);
+            
+            float distSquared = (shape->m_centroid + polygon.center - point).LengthSquared();
+            if (distSquared < radiusSquared) {
+                newP.isDynamic = true;
+                newP.material = Material(MaterialType::red);
+            }
+            auto nb = new SolidBlock(newP, isImmortal, world);
+            world->addEntity(nb);
         }
-        auto nb = new SolidBlock(p, isImmortal, world);
-        world->addEntity(nb);
     }
 }
 
@@ -145,11 +167,13 @@ void SolidBlock::render(sf::RenderWindow *window, Camera camera)
     if (!body)
         return;
     
+    // TODO: render with sf::VertexArray
+    int ii = 0;
     for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext()) {
         b2Shape::Type shapeType = f->GetType();
         if (shapeType == b2Shape::e_polygon) {
             b2PolygonShape* shape = (b2PolygonShape*)f->GetShape();
-            sf::ConvexShape polygonShape;
+            sf::ConvexShape polygonShape = renderShapes[ii++];
             
             polygonShape.setOrigin(sf::Vector2<float>(body->GetLocalCenter().x * camera.scale,
                                                       body->GetLocalCenter().y * camera.scale));
@@ -165,9 +189,9 @@ void SolidBlock::render(sf::RenderWindow *window, Camera camera)
 //            polygonShape.setFillColor(sf::Color::Green);
 //            polygonShape.setOutlineColor(sf::Color::Transparent);
 //            window->draw(polygonShape);
+//            polygonShape.setScale(1.0f, 1.0f);
             
-            polygonShape.setScale(1.0f, 1.0f);
-            polygonShape.setFillColor(this->polygon.material.color);
+//            polygonShape.setFillColor(this->polygon.material.color);
             window->draw(polygonShape);
         }
     }

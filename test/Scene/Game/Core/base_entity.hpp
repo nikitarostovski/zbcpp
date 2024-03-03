@@ -26,5 +26,6 @@ public:
     virtual void activate(b2World *world) = 0;
     virtual void deactivate(b2World *world) = 0;
     
+    virtual void step(float dt) {};
     virtual void render(sf::RenderWindow *window, Camera camera) {};
 };

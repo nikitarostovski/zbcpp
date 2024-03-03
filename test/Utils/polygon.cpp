@@ -81,67 +81,7 @@ void Polygon::calculateCenter()
 
 void Polygon::calculateSubPolygons()
 {
-    std::vector<Polygon> source;
-    source.push_back(*this);
-    
-    std::vector<Polygon> result;
-    
-    // triangles
-//    const float stepx = 2.0f;
-//    const float stepy = stepx * sqrt(3) / 2;
-//    float xLo = aabb.lowerBound.x;
-//    float xHi = xLo + std::ceil((aabb.upperBound.x - aabb.lowerBound.x) / stepx) * stepx;
-//    float yLo = aabb.lowerBound.y;
-//    float yHi = yLo + std::ceil((aabb.upperBound.y - aabb.lowerBound.y) / stepy) * stepy;
-//    
-//    for (float x = xLo; x <= xHi; x += stepx) {
-//        for (float y = yLo; y <= yHi; y += stepy) {
-//            std::vector<b2Vec2> points;
-//            points.emplace_back(x, y);
-//            points.emplace_back(x + stepx, y);
-//            points.emplace_back(x + stepx / 2, y + stepy);
-//            Polygon subPolygon1 = Polygon(points, material.type, isDynamic, false);
-//            for (auto clippedPolygon : subPolygon1.intersection(source)) {
-//                result.push_back(clippedPolygon);
-//            }
-//            std::vector<b2Vec2> points2;
-//            points2.emplace_back(x + stepx, y);
-//            points2.emplace_back(x + stepx / 2, y + stepy);
-//            points2.emplace_back(x + stepx * 3 / 2, y + stepy);
-//            Polygon subPolygon2 = Polygon(points2, material.type, isDynamic, false);
-//            for (auto clippedPolygon : subPolygon2.intersection(source)) {
-//                result.push_back(clippedPolygon);
-//            }
-//        }
-//    }
-    
-    // squares
-    const float stepx = 1.0f;
-    const float stepy = 1.0f;
-    float xLo = aabb.lowerBound.x;
-    float xHi = xLo + std::ceil((aabb.upperBound.x - aabb.lowerBound.x) / stepx) * stepx;
-    float yLo = aabb.lowerBound.y;
-    float yHi = yLo + std::ceil((aabb.upperBound.y - aabb.lowerBound.y) / stepy) * stepy;
-    
-    bool evenRow = true;
-    for (float x = xLo; x <= xHi; x += stepx) {
-        evenRow = !evenRow;
-        for (float y = yLo - (evenRow ? stepy / 2 : 0); y <= yHi; y += stepy) {
-            std::vector<b2Vec2> points;
-            points.emplace_back(x, y);
-            points.emplace_back(x + stepx, y);
-            points.emplace_back(x + stepx, y + stepy);
-            points.emplace_back(x, y + stepy);
-
-            Polygon subPolygon = Polygon(points, material.type, isDynamic, false);
-            
-            for (auto clippedPolygon : subPolygon.intersection(source)) {
-                result.push_back(clippedPolygon);
-            }
-        }
-    }
-    
-    subPolygons = result;
+    subPolygons = material.splitPolygon(*this);
 }
 
 std::vector<Polygon> Polygon::combine(std::vector<Polygon> source)

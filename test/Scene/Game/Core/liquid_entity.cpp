@@ -63,6 +63,8 @@ b2ParticleColor LiquidEntity::getParticleColor()
 
 void LiquidEntity::activate(b2World *world)
 {
+    if (!DEBUG_PARTICLES_ENABLED)
+        return;
     if (handle || system || isDead)
         return;
     

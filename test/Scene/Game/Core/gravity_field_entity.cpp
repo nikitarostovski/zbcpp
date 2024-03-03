@@ -89,6 +89,10 @@ void GravityFieldEntity::applyGravityToBody(BodyEntity *entity)
 
 void GravityFieldEntity::applyGravityToLiquid(LiquidEntity *entity)
 {
+    if (!DEBUG_PARTICLES_ENABLED)
+        return;
+    if (!entity->system)
+        return;
     const float particleGravityStrength = 0.01f;
     const float particleStrength = strength * entity->system->GetDensity() * particleGravityStrength;
     b2Vec2 fieldCenter = getPosition();

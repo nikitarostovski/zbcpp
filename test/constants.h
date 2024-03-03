@@ -21,6 +21,7 @@
 #define COLLLISION_RADIUS 8.0f
 
 // TODO: remove DEBUG_ constants for release
+#define DEBUG_PARTICLES_ENABLED 0
 #define DEBUG_RENDER_VIEWPORT 1.0f
 #define DEBUG_RESOLUTION_X 1280
 #define DEBUG_RESOLUTION_Y 720

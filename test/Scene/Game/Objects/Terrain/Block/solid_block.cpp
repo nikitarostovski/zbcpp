@@ -12,14 +12,6 @@ SolidBlock::SolidBlock(Polygon polygon, bool isImmortal, PhysicsWorld *world)
 {
     renderShape = sf::ConvexShape();
     renderShape.setFillColor(polygon.material.color);
-    
-//    if (!polygon.subPolygons.empty()) {
-//        isDead = true;
-//        for (auto p: polygon.subPolygons) {
-//            auto nb = new SolidBlock(p, isImmortal, world);
-//            world->addEntity(nb);
-//        }
-//    }
 }
 
 b2AABB SolidBlock::getInitialAABB()
@@ -40,7 +32,6 @@ b2Body* SolidBlock::createBody(b2World *world)
     bodyDef.angularDamping = 0.95f;
     b2Body *body = world->CreateBody(&bodyDef);
     
-//    polygon.center = b2Vec2_zero;
     if (!polygon.subPolygons.empty()) {
         for (auto p : polygon.subPolygons) {
             createFixture(body, p);
@@ -60,7 +51,7 @@ void SolidBlock::createFixture(b2Body *body, Polygon polygon)
     b2PolygonShape shape;
     auto points = polygon.points;
     for (int i = 0; i < points.size(); i++)
-        points[i] = b2Vec2(points[i].x, points[i].y) - centerShift;
+        points[i] = b2Vec2(points[i].x, points[i].y) + centerShift;
     
     
     // Check duplicates (box2d algorithm)
@@ -89,11 +80,12 @@ uniqueExitPoint:
     fixtureDef.friction = 0.4;
     fixtureDef.restitution = 0;
     fixtureDef.shape = &shape;
-//    fixtureDef.userData -> shape index
     body->CreateFixture(&fixtureDef);
     
     auto renderShape = sf::ConvexShape();
     renderShape.setFillColor(polygon.material.color);
+    renderShape.setOutlineColor(sf::Color::White);
+    renderShape.setOutlineThickness(1.0f);
     renderShapes.push_back(renderShape);
 }
 
@@ -185,13 +177,6 @@ void SolidBlock::render(sf::RenderWindow *window, Camera camera)
             }
             polygonShape.setRotation(body->GetAngle() * DEG_PER_RAD);
             
-//            polygonShape.setScale(1.1f, 1.1f);
-//            polygonShape.setFillColor(sf::Color::Green);
-//            polygonShape.setOutlineColor(sf::Color::Transparent);
-//            window->draw(polygonShape);
-//            polygonShape.setScale(1.0f, 1.0f);
-            
-//            polygonShape.setFillColor(this->polygon.material.color);
             window->draw(polygonShape);
         }
     }

@@ -4,6 +4,8 @@
 #include "chunk.hpp"
 #include <SFML/System.hpp>
 
+#include "terrain_renderer.hpp"
+
 class PhysicsWorld : public b2ContactListener
 {
 private:
@@ -35,6 +37,8 @@ private:
     void PostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
 public:
     b2World *world;
+    
+    TerrainRenderer *terrainRenderer;
     
     PhysicsWorld();
     ~PhysicsWorld();

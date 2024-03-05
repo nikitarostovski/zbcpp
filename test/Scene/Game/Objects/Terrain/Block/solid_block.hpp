@@ -9,6 +9,8 @@ using namespace PolygonUtils;
 class SolidBlock : public BodyEntity
 {
 private:
+    std::vector<sf::Vertex> cachedVertices;
+    
     Polygon polygon;
     float approximateArea;
     bool isImmortal;

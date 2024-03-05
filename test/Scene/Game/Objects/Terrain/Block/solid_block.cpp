@@ -50,9 +50,12 @@ void SolidBlock::createFixture(b2Body *body, Polygon polygon)
     // Create shape
     b2PolygonShape shape;
     auto points = polygon.points;
-    for (int i = 0; i < points.size(); i++)
+    for (int i = 0; i < points.size(); i++) {
         points[i] = b2Vec2(points[i].x, points[i].y) + centerShift;
-    
+        cachedVertices.push_back({{0, 0}, polygon.material.color});
+    }
+    // for center point
+    cachedVertices.push_back({{0, 0}, polygon.material.color});
     
     // Check duplicates (box2d algorithm)
     bool allPointsUnique = true;
@@ -159,25 +162,40 @@ void SolidBlock::render(sf::RenderWindow *window, Camera camera)
     if (!body)
         return;
     
-    // TODO: render with sf::VertexArray
-    int ii = 0;
+    int vi = 0;
     for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext()) {
         b2Shape::Type shapeType = f->GetType();
         if (shapeType == b2Shape::e_polygon) {
             b2PolygonShape* shape = (b2PolygonShape*)f->GetShape();
-            sf::ConvexShape polygonShape = renderShapes[ii++];
             
-            polygonShape.setOrigin(sf::Vector2<float>(body->GetLocalCenter().x * camera.scale,
-                                                      body->GetLocalCenter().y * camera.scale));
-            polygonShape.setPosition((body->GetWorldCenter().x - camera.x) * camera.scale + window->getSize().x / 2,
-                                     (body->GetWorldCenter().y - camera.y) * camera.scale + window->getSize().y / 2);
-            polygonShape.setPointCount(shape->GetVertexCount());
+            float cx = body->GetWorldCenter().x;
+            float cy = body->GetWorldCenter().y;
+            
+            // TODO: not copy all vertices, but resize vertex array in one go
+            int ci = vi + shape->GetVertexCount() - 1;
+            auto vc = cachedVertices[ci];
+            vc.position.x = cx;
+            vc.position.y = cy;
+            
+            b2Vec2 pl = body->GetWorldPoint(shape->GetVertex(shape->GetVertexCount() - 1));
+            sf::Vertex last = cachedVertices[vi + shape->GetVertexCount() - 1];
+            last.position.x = pl.x;
+            last.position.y = pl.y;
+            
             for (int i = 0; i < shape->GetVertexCount(); i++) {
-                polygonShape.setPoint(i, sf::Vector2<float>(shape->GetVertex(i).x * camera.scale, shape->GetVertex(i).y * camera.scale));
+                b2Vec2 p = body->GetWorldPoint(shape->GetVertex(i));
+                
+                auto v1 = cachedVertices[vi + i];
+                v1.position.x = p.x;
+                v1.position.y = p.y;
+                
+                world->terrainRenderer->addVertex(v1);
+                world->terrainRenderer->addVertex(last);
+                world->terrainRenderer->addVertex(vc);
+                
+                last = v1;
             }
-            polygonShape.setRotation(body->GetAngle() * DEG_PER_RAD);
-            
-            window->draw(polygonShape);
+            vi += shape->GetVertexCount();
         }
     }
 }

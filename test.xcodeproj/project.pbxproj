@@ -99,6 +99,7 @@
 		8DA6986D2B694615006CDF9C /* market_building.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6986B2B694615006CDF9C /* market_building.cpp */; };
 		8DC002CD2B7DD5780004337C /* liquid_entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DC002CB2B7DD5780004337C /* liquid_entity.cpp */; };
 		8DC891002B87134500123FB1 /* ship.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DC890FE2B87134500123FB1 /* ship.cpp */; };
+		8DD0BD072B94822300940FFB /* terrain_renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DD0BD052B94822300940FFB /* terrain_renderer.cpp */; };
 		8DE64CA42B403E6D0068AE91 /* CDT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DE64C9F2B403E6D0068AE91 /* CDT.cpp */; };
 		8DF3DA762B431D3900A9593C /* Polygon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF3DA722B431D3900A9593C /* Polygon.cpp */; };
 		8DF3DA772B431D3900A9593C /* PolygonClipping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF3DA742B431D3900A9593C /* PolygonClipping.cpp */; };
@@ -342,6 +343,8 @@
 		8DC890FF2B87134500123FB1 /* ship.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship.hpp; sourceTree = "<group>"; };
 		8DC8A1BB2B889B5C00123FB1 /* camera.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = camera.hpp; sourceTree = "<group>"; };
 		8DC8A1BC2B889C2E00123FB1 /* collision_category.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = collision_category.hpp; sourceTree = "<group>"; };
+		8DD0BD052B94822300940FFB /* terrain_renderer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = terrain_renderer.cpp; sourceTree = "<group>"; };
+		8DD0BD062B94822300940FFB /* terrain_renderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = terrain_renderer.hpp; sourceTree = "<group>"; };
 		8DE64A362B403E6C0068AE91 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		8DE64A382B403E6C0068AE91 /* portable_nth_element.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = portable_nth_element.hpp; sourceTree = "<group>"; };
 		8DE64A392B403E6C0068AE91 /* KDTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KDTree.h; sourceTree = "<group>"; };
@@ -973,6 +976,8 @@
 				8D36B7292B79F733008731BD /* body_entity.cpp */,
 				8DC002CC2B7DD5780004337C /* liquid_entity.hpp */,
 				8DC002CB2B7DD5780004337C /* liquid_entity.cpp */,
+				8DD0BD062B94822300940FFB /* terrain_renderer.hpp */,
+				8DD0BD052B94822300940FFB /* terrain_renderer.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1172,6 +1177,7 @@
 				8DA693552B67F69E006CDF9C /* trader_scene.cpp in Sources */,
 				8D898D4C2B221F11008E532F /* b2ParticleAssembly.cpp in Sources */,
 				8D898D322B221F11008E532F /* b2DistanceJoint.cpp in Sources */,
+				8DD0BD072B94822300940FFB /* terrain_renderer.cpp in Sources */,
 				8DF83B142B749260000DC138 /* fuel_station.cpp in Sources */,
 				8D898D432B221F11008E532F /* b2Stat.cpp in Sources */,
 				8DF5DDA22B5EB6890037562F /* game.cpp in Sources */,

@@ -16,6 +16,8 @@ PhysicsWorld::PhysicsWorld()
     def.viscousStrength = 0.8f;
     b2ParticleSystem *system = world->CreateParticleSystem(&def);
     particle_system = system;
+    
+    terrainRenderer = new TerrainRenderer();
 }
 
 PhysicsWorld::~PhysicsWorld()
@@ -406,4 +408,10 @@ void PhysicsWorld::render(sf::RenderWindow *window, Camera camera)
                 entity->render(window, camera);
         }
     }
+    
+    terrainRenderer->setPosition(-camera.x * camera.scale + window->getSize().x / 2,
+                                 -camera.y * camera.scale + window->getSize().y / 2);
+    terrainRenderer->setScale(camera.scale, camera.scale);
+    window->draw(*terrainRenderer);
+    terrainRenderer->reset();
 }

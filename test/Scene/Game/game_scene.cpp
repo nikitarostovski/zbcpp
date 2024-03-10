@@ -26,8 +26,8 @@ GameScene::GameScene(sf::RenderWindow *window)
     world = new PhysicsWorld();
     
     PlayerConfig playerConfig{20.0f, 20.0f, 350};
-    FrameConfig frameConfig{FrameBasic, 0.0f, 1.0f};
-    EmitterConfig emitterConfig{EmitterBasic, 30.0f, 10.0f, 1.0f};
+    FrameConfig frameConfig{FrameBasic, 0.0f, 10.0f};
+    EmitterConfig emitterConfig{EmitterBasic, 50.0f, 500.0f, 0.2f};
     CollectorConfig collectorConfig{CollectorBasic, 10.0f};
     ShipConfig shipConfig{frameConfig, emitterConfig, collectorConfig, 1900.0f, 3000.0f};
     player = new Player(b2Vec2(-100, 0), playerConfig, shipConfig, world);
@@ -35,9 +35,15 @@ GameScene::GameScene(sf::RenderWindow *window)
     mainPlanet = new Planet(b2Vec2(-20, -40), 5, 30, world);
     mainAsteroids = new AsteroidBelt(mainPlanet->center, mainPlanet->gravityRadius, mainPlanet->gravityRadius + 5, 1, world);
     
-    auto bp = PolygonUtils::Polygon::makeCircle(b2Vec2(-80, -30), 15, 16, MaterialType::green, true, true);
-    auto block = new SolidBlock(bp, false, world);
-    world->addEntity(block);
+    int count = sizeof(allMaterialTypes) / sizeof(MaterialType);
+    for (int i = 0; i < count; i++) {
+        auto mt = allMaterialTypes[i];
+        int x = -400 + i * 30;
+        float radius = 12.0f;
+        auto bp = PolygonUtils::Polygon::makeCircle(b2Vec2(x, -30), radius, 8, mt, true, true);
+        auto block = new SolidBlock(bp, false, world);
+        world->addEntity(block);
+    }
     
     auto planet2 = new Planet(b2Vec2(60, 5), 30, 40, world);
     auto asteroids2 = new AsteroidBelt(planet2->center, planet2->gravityRadius, planet2->gravityRadius + 10, 0.8, world);

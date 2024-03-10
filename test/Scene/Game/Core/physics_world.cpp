@@ -17,7 +17,9 @@ PhysicsWorld::PhysicsWorld()
     b2ParticleSystem *system = world->CreateParticleSystem(&def);
     particle_system = system;
     
-    terrainRenderer = new TerrainRenderer();
+    for (auto t : allMaterialTypes) {
+        terrainRenderers[t] = new TerrainRenderer(t);
+    }
 }
 
 PhysicsWorld::~PhysicsWorld()
@@ -330,8 +332,15 @@ void PhysicsWorld::EndContact(b2Contact* contact) {
 }
 
 void PhysicsWorld::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
-    float imp = impulse->normalImpulses[0];
-    if (imp < COLLLISION_THRESHOLD) {
+    float mass = (contact->GetFixtureA()->GetBody()->GetMass() + contact->GetFixtureB()->GetBody()->GetMass()) / 2;
+    // impulse adjusted for neadby bodies (shockwave damage)
+    float impulseAdjusted = impulse->normalImpulses[0] / mass;
+
+    // imulses adjusted for colliding bodies personally
+    float ia = impulse->normalImpulses[0] / contact->GetFixtureB()->GetBody()->GetMass();
+    float ib = impulse->normalImpulses[0] / contact->GetFixtureA()->GetBody()->GetMass();
+    
+    if (impulseAdjusted < COLLLISION_THRESHOLD) {
         return;
     }
     
@@ -349,8 +358,8 @@ void PhysicsWorld::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse
     float damageRadius = COLLLISION_RADIUS;
     
     // process contact for bodies a and b
-    entityA->receiveCollision(entityB, imp, point, damageRadius);
-    entityB->receiveCollision(entityA, imp, point, damageRadius);
+    entityA->receiveCollision(entityB, ia/*impulseAdjusted*/, point, damageRadius);
+    entityB->receiveCollision(entityA, ib, point, damageRadius);
     
     // process all other bodies separately
     int xLo = std::floor((point.x - damageRadius) / CHUNK_SIZE);
@@ -374,8 +383,8 @@ void PhysicsWorld::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse
                 BodyEntity *be = dynamic_cast<BodyEntity *>(e);
                 if (be && !processedEntities[be]) {
                     float dist = (be->getPosition() - point).Length();
-                    float impulseAdjusted = imp * (1.0f - dist / damageRadius);
-                    be->receiveDamage(impulseAdjusted);
+                    float impulsePersonal = impulseAdjusted * (1.0f - dist / damageRadius);
+                    be->receiveDamage(impulsePersonal);
                     processedEntities[be] = true;
                 }
             }
@@ -409,9 +418,12 @@ void PhysicsWorld::render(sf::RenderWindow *window, Camera camera)
         }
     }
     
-    terrainRenderer->setPosition(-camera.x * camera.scale + window->getSize().x / 2,
+    
+    for (auto pair : terrainRenderers) {
+        pair.second->setPosition(-camera.x * camera.scale + window->getSize().x / 2,
                                  -camera.y * camera.scale + window->getSize().y / 2);
-    terrainRenderer->setScale(camera.scale, camera.scale);
-    window->draw(*terrainRenderer);
-    terrainRenderer->reset();
+        pair.second->setScale(camera.scale, camera.scale);
+        window->draw(*pair.second);
+        pair.second->reset();
+    }
 }

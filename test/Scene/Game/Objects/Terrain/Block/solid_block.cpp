@@ -7,101 +7,128 @@ using namespace PolygonUtils;
 SolidBlock::SolidBlock(Polygon polygon, bool isImmortal, PhysicsWorld *world)
     : BodyEntity(b2Vec2(polygon.center.x, polygon.center.y), CategoryTerrain)
     , world(world)
-    , polygon(polygon)
+//    , polygon(polygon)
+    , material(polygon.material)
     , isImmortal(isImmortal)
 {
-    renderShape = sf::ConvexShape();
-    renderShape.setFillColor(polygon.material.color);
-}
-
-b2AABB SolidBlock::getInitialAABB()
-{
-    return polygon.aabb;
-}
-
-b2Body* SolidBlock::createBody(b2World *world)
-{
-    if (polygon.points.size() < 3)
-        return nullptr;
+    initialAABB = polygon.aabb;
     
     b2BodyDef bodyDef;
-    bodyDef.userData = static_cast<void*>(this);
     bodyDef.position.Set(polygon.center.x, polygon.center.y);
     bodyDef.type = polygon.isDynamic ? b2_dynamicBody : b2_kinematicBody;
     bodyDef.linearDamping = 0.95f;
     bodyDef.angularDamping = 0.95f;
+    this->bodyDef = bodyDef;
+    this->bodyDef.userData = static_cast<void*>(this);
+    
+    auto fps = polygon.subPolygons;
+    if (fps.empty()) {
+        fps.push_back(polygon);
+    } else {
+        parentPolygonCenterOffset = polygon.center;
+    }
+    
+    for (auto p : fps) {
+        b2Vec2 centerShift = p.center - polygon.center;
+        
+        // Create shape
+        b2PolygonShape *shape = new b2PolygonShape();
+        auto points = p.points;
+        for (int i = 0; i < points.size(); i++) {
+            points[i] = b2Vec2(points[i].x, points[i].y) + centerShift;
+        }
+        
+        // Check duplicates (box2d algorithm)
+        bool allPointsUnique = true;
+        for (int i = 0; i < points.size(); i++) {
+            for (int j = i + 1; j < points.size(); j++) {
+                if (b2DistanceSquared(points[i], points[j]) < 0.5f * b2_linearSlop) {
+                    allPointsUnique = false;
+                    goto uniqueExitPoint;
+                }
+            }
+        }
+    uniqueExitPoint:
+        
+        if (!allPointsUnique) {
+            return;
+        }
+        
+        shape->Set(points.data(), (int)points.size());
+        
+        // Create fixture
+        b2FixtureDef *fixtureDef = new b2FixtureDef();
+        fixtureDef->filter.categoryBits = collisionCategory;
+        fixtureDef->filter.maskBits = CategoryShip | CategoryTerrain | CategoryBuilding | CategoryTerrain;
+        fixtureDef->density = 10;
+        fixtureDef->friction = 0.4;
+        fixtureDef->restitution = 0;
+        fixtureDef->shape = shape;
+        fixtureDefs.push_back(fixtureDef);
+        
+        fixtureDefPolygons[fixtureDef] = p;
+    }
+}
+
+b2AABB SolidBlock::getInitialAABB()
+{
+    return initialAABB;
+}
+
+b2Body* SolidBlock::createBody(b2World *world)
+{
     b2Body *body = world->CreateBody(&bodyDef);
     
-    if (!polygon.subPolygons.empty()) {
-        for (auto p : polygon.subPolygons) {
-            createFixture(body, p);
-        }
-    } else {
-        createFixture(body, polygon);
+    for (auto fd : fixtureDefs) {
+        createFixture(body, fd);
     }
     
     return body;
 }
 
-void SolidBlock::createFixture(b2Body *body, Polygon polygon)
+void SolidBlock::createFixture(b2Body *body, b2FixtureDef *def)
 {
-    b2Vec2 centerShift = polygon.center - this->polygon.center;
+    auto f = body->CreateFixture(def);
+    f->SetUserData(def);
+}
+
+void SolidBlock::step(float dt)
+{
+    if (!body || isDead || fixturesToDestroy.empty())
+        return;
     
-    // Create shape
-    b2PolygonShape shape;
-    auto points = polygon.points;
-    for (int i = 0; i < points.size(); i++) {
-        points[i] = b2Vec2(points[i].x, points[i].y) + centerShift;
-        cachedVertices.push_back({{0, 0}, polygon.material.color});
-    }
-    // for center point
-    cachedVertices.push_back({{0, 0}, polygon.material.color});
-    
-    // Check duplicates (box2d algorithm)
-    bool allPointsUnique = true;
-    for (int i = 0; i < points.size(); i++) {
-        for (int j = i + 1; j < points.size(); j++) {
-            if (b2DistanceSquared(points[i], points[j]) < 0.5f * b2_linearSlop) {
-                allPointsUnique = false;
-                goto uniqueExitPoint;
+    for (auto defToDestroy : fixturesToDestroy) {
+        for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext()) {
+            if (defToDestroy == f->GetUserData()) {
+                for (int i = 0; i < fixtureDefs.size(); i++) {
+                    if (fixtureDefs[i] == defToDestroy) {
+                        fixtureDefs.erase(fixtureDefs.begin() + i);
+                        fixtureDefPolygons.erase(defToDestroy);
+                        break;
+                    }
+                }
+                body->DestroyFixture(f);
+                break;
             }
         }
     }
-uniqueExitPoint:
+    fixturesToDestroy.clear();
     
-    if (!allPointsUnique) {
-        return;
+    if (!body->GetFixtureList()) {
+        isDead = true;
     }
-    
-    shape.Set(points.data(), (int)points.size());
-    
-    // Create fixture
-    b2FixtureDef fixtureDef;
-    fixtureDef.filter.categoryBits = collisionCategory;
-    fixtureDef.filter.maskBits = CategoryShip | CategoryTerrain | CategoryBuilding | CategoryTerrain;
-    fixtureDef.density = 10;
-    fixtureDef.friction = 0.4;
-    fixtureDef.restitution = 0;
-    fixtureDef.shape = &shape;
-    body->CreateFixture(&fixtureDef);
-    
-    auto renderShape = sf::ConvexShape();
-    renderShape.setFillColor(polygon.material.color);
-    renderShape.setOutlineColor(sf::Color::White);
-    renderShape.setOutlineThickness(1.0f);
-    renderShapes.push_back(renderShape);
 }
 
 // MARK: - Collision
 
 void SolidBlock::receiveCollision(BodyEntity *entity, float impulse, b2Vec2 point, float radius)
 {
-    if (isImmortal)
+    if (isImmortal || !body)
         return;
     
-    if (impulse > 100) {
-        isDead = true;
-        if (!polygon.subPolygons.empty()) {
+    // TODO: move damage threshold to material
+    if (impulse > 2.0f) {
+        if (fixtureDefs.size() > 1) {
             spawnSubBlocks(point, radius, true);
         } else {
             spawnOrb(getPosition());
@@ -111,39 +138,35 @@ void SolidBlock::receiveCollision(BodyEntity *entity, float impulse, b2Vec2 poin
 
 void SolidBlock::receiveDamage(float impulse)
 {
-    if (isImmortal)
-        return;
-    
-    if (impulse > 100) {
-        isDead = true;
-        if (!polygon.subPolygons.empty()) {
-            spawnSubBlocks(b2Vec2_zero, 0, false);
-        } else {
-            spawnOrb(getPosition());
-        }
-    }
+    receiveCollision(nullptr, impulse, b2Vec2_zero, 0);
 }
 
 void SolidBlock::spawnSubBlocks(b2Vec2 point, float radius, bool hasPointAndRadius)
 {
+    if (!body)
+        return;
+    
     float radiusSquared = radius * radius;
-    for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext()) {
-        b2Shape::Type shapeType = f->GetType();
-        if (shapeType == b2Shape::e_polygon) {
-            b2PolygonShape* shape = (b2PolygonShape*)f->GetShape();
-            
-            std::vector<b2Vec2> newPoints;
-            for (int i = 0; i < shape->GetVertexCount(); i++) {
-                newPoints.push_back(shape->GetVertex(i) + polygon.center);
+    
+    for (auto fp : fixtureDefPolygons) {
+        b2FixtureDef *fixtureDef = fp.first;
+        Polygon polygon = fp.second;
+        
+        for (int i = 0; i < polygon.points.size(); i++) {
+            b2Vec2 localPoint = polygon.points[i];
+            if (parentPolygonCenterOffset != b2Vec2_zero) {
+                localPoint += polygon.center - parentPolygonCenterOffset;
             }
-            Polygon newP = Polygon(newPoints, polygon.material.type, polygon.isDynamic, false);
+            b2Vec2 p = body->GetWorldPoint(localPoint);
+            polygon.points[i] = p - polygon.center;
+        }
+        
+        float distSquared = (polygon.center - point).LengthSquared();
+        if (distSquared < radiusSquared) {
+            fixturesToDestroy.push_back(fixtureDef);
+            polygon.isDynamic = true;
             
-            float distSquared = (shape->m_centroid + polygon.center - point).LengthSquared();
-            if (distSquared < radiusSquared) {
-                newP.isDynamic = true;
-                newP.material = Material(MaterialType::red);
-            }
-            auto nb = new SolidBlock(newP, isImmortal, world);
+            auto nb = new SolidBlock(polygon, isImmortal, world);
             world->addEntity(nb);
         }
     }
@@ -151,6 +174,7 @@ void SolidBlock::spawnSubBlocks(b2Vec2 point, float radius, bool hasPointAndRadi
 
 void SolidBlock::spawnOrb(b2Vec2 point)
 {
+    isDead = true;
     auto orb = new Orb(point);
     world->addEntity(orb);
 }
@@ -162,40 +186,37 @@ void SolidBlock::render(sf::RenderWindow *window, Camera camera)
     if (!body)
         return;
     
-    int vi = 0;
-    for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext()) {
-        b2Shape::Type shapeType = f->GetType();
-        if (shapeType == b2Shape::e_polygon) {
-            b2PolygonShape* shape = (b2PolygonShape*)f->GetShape();
-            
-            float cx = body->GetWorldCenter().x;
-            float cy = body->GetWorldCenter().y;
-            
-            // TODO: not copy all vertices, but resize vertex array in one go
-            int ci = vi + shape->GetVertexCount() - 1;
-            auto vc = cachedVertices[ci];
-            vc.position.x = cx;
-            vc.position.y = cy;
-            
-            b2Vec2 pl = body->GetWorldPoint(shape->GetVertex(shape->GetVertexCount() - 1));
-            sf::Vertex last = cachedVertices[vi + shape->GetVertexCount() - 1];
-            last.position.x = pl.x;
-            last.position.y = pl.y;
-            
-            for (int i = 0; i < shape->GetVertexCount(); i++) {
-                b2Vec2 p = body->GetWorldPoint(shape->GetVertex(i));
-                
-                auto v1 = cachedVertices[vi + i];
-                v1.position.x = p.x;
-                v1.position.y = p.y;
-                
-                world->terrainRenderer->addVertex(v1);
-                world->terrainRenderer->addVertex(last);
-                world->terrainRenderer->addVertex(vc);
-                
-                last = v1;
+    for (auto fp : fixtureDefPolygons) {
+        Polygon polygon = fp.second;
+        
+        sf::Vertex vStart, vLast;
+        for (int i = 0; i < polygon.points.size(); i++) {
+            b2Vec2 localPoint = polygon.points[i];
+            if (parentPolygonCenterOffset != b2Vec2_zero) {
+                localPoint += polygon.center - parentPolygonCenterOffset;
             }
-            vi += shape->GetVertexCount();
+            b2Vec2 p = body->GetWorldPoint(localPoint);
+            
+            sf::Vertex v;
+            v.position.x = p.x;
+            v.position.y = p.y;
+            v.texCoords.x = polygon.texCoords[i].x;
+            v.texCoords.y = polygon.texCoords[i].y;
+            
+            if (i == 0) {
+                vStart = v;
+                continue;
+            }
+            if (i == 1) {
+                vLast = v;
+                continue;
+            }
+            
+            world->terrainRenderers[material.type]->addVertex(vStart);
+            world->terrainRenderers[material.type]->addVertex(vLast);
+            world->terrainRenderers[material.type]->addVertex(v);
+            
+            vLast = v;
         }
     }
 }

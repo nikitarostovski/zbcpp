@@ -3,7 +3,7 @@
 #include "base_entity.hpp"
 #include "chunk.hpp"
 #include <SFML/System.hpp>
-
+#include "material.hpp"
 #include "terrain_renderer.hpp"
 
 class PhysicsWorld : public b2ContactListener
@@ -38,7 +38,7 @@ private:
 public:
     b2World *world;
     
-    TerrainRenderer *terrainRenderer;
+    std::map<PolygonUtils::MaterialType, TerrainRenderer *> terrainRenderers;
     
     PhysicsWorld();
     ~PhysicsWorld();

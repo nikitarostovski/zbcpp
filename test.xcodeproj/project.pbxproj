@@ -115,6 +115,13 @@
 		8DF83B1A2B7492B1000DC138 /* building.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF83B182B7492B1000DC138 /* building.cpp */; };
 		8DF83B1D2B749644000DC138 /* fuel_station_building.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF83B1B2B749644000DC138 /* fuel_station_building.cpp */; };
 		8DF83B212B749C7D000DC138 /* fuel_station_scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DF83B1F2B749C7D000DC138 /* fuel_station_scene.cpp */; };
+		8DFA00FE2B9DDEB6001DFAA4 /* core.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DFA00F92B9DDEA7001DFAA4 /* core.png */; };
+		8DFA00FF2B9DDEB6001DFAA4 /* crystal_red.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DFA00FC2B9DDEA7001DFAA4 /* crystal_red.png */; };
+		8DFA01002B9DDEB6001DFAA4 /* crystal_green.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DFA00F72B9DDEA7001DFAA4 /* crystal_green.png */; };
+		8DFA01012B9DDEB6001DFAA4 /* dirt.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DFA00FA2B9DDEA7001DFAA4 /* dirt.png */; };
+		8DFA01022B9DDEB6001DFAA4 /* explosive.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DFA00FD2B9DDEA7001DFAA4 /* explosive.png */; };
+		8DFA01032B9DDEB6001DFAA4 /* lava.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DFA00FB2B9DDEA7001DFAA4 /* lava.png */; };
+		8DFA01042B9DDEB6001DFAA4 /* rock.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DFA00F82B9DDEA7001DFAA4 /* rock.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -124,6 +131,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				8DFA00FE2B9DDEB6001DFAA4 /* core.png in CopyFiles */,
+				8DFA00FF2B9DDEB6001DFAA4 /* crystal_red.png in CopyFiles */,
+				8DFA01002B9DDEB6001DFAA4 /* crystal_green.png in CopyFiles */,
+				8DFA01012B9DDEB6001DFAA4 /* dirt.png in CopyFiles */,
+				8DFA01022B9DDEB6001DFAA4 /* explosive.png in CopyFiles */,
+				8DFA01032B9DDEB6001DFAA4 /* lava.png in CopyFiles */,
+				8DFA01042B9DDEB6001DFAA4 /* rock.png in CopyFiles */,
 				8D0301C12B64C38D0084DD17 /* Signwood-Regular.ttf in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -393,6 +407,13 @@
 		8DF83B1C2B749644000DC138 /* fuel_station_building.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fuel_station_building.hpp; sourceTree = "<group>"; };
 		8DF83B1F2B749C7D000DC138 /* fuel_station_scene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fuel_station_scene.cpp; sourceTree = "<group>"; };
 		8DF83B202B749C7D000DC138 /* fuel_station_scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fuel_station_scene.hpp; sourceTree = "<group>"; };
+		8DFA00F72B9DDEA7001DFAA4 /* crystal_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crystal_green.png; sourceTree = "<group>"; };
+		8DFA00F82B9DDEA7001DFAA4 /* rock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rock.png; sourceTree = "<group>"; };
+		8DFA00F92B9DDEA7001DFAA4 /* core.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = core.png; sourceTree = "<group>"; };
+		8DFA00FA2B9DDEA7001DFAA4 /* dirt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dirt.png; sourceTree = "<group>"; };
+		8DFA00FB2B9DDEA7001DFAA4 /* lava.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lava.png; sourceTree = "<group>"; };
+		8DFA00FC2B9DDEA7001DFAA4 /* crystal_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crystal_red.png; sourceTree = "<group>"; };
+		8DFA00FD2B9DDEA7001DFAA4 /* explosive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = explosive.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -472,6 +493,14 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		8D5C3B6C2B96F3F800F6AF90 /* Texture */ = {
+			isa = PBXGroup;
+			children = (
+				8DFA00F42B9DDD74001DFAA4 /* Material */,
+			);
+			path = Texture;
+			sourceTree = "<group>";
+		};
 		8D6772A02B4C406700403134 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
@@ -524,6 +553,7 @@
 		8D67740D2B54211C00403134 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8D5C3B6C2B96F3F800F6AF90 /* Texture */,
 				8D67740E2B54211C00403134 /* Font */,
 			);
 			path = Resources;
@@ -1045,6 +1075,20 @@
 				8DF83B1F2B749C7D000DC138 /* fuel_station_scene.cpp */,
 			);
 			path = FuelStation;
+			sourceTree = "<group>";
+		};
+		8DFA00F42B9DDD74001DFAA4 /* Material */ = {
+			isa = PBXGroup;
+			children = (
+				8DFA00F92B9DDEA7001DFAA4 /* core.png */,
+				8DFA00FC2B9DDEA7001DFAA4 /* crystal_red.png */,
+				8DFA00F72B9DDEA7001DFAA4 /* crystal_green.png */,
+				8DFA00FA2B9DDEA7001DFAA4 /* dirt.png */,
+				8DFA00FD2B9DDEA7001DFAA4 /* explosive.png */,
+				8DFA00FB2B9DDEA7001DFAA4 /* lava.png */,
+				8DFA00F82B9DDEA7001DFAA4 /* rock.png */,
+			);
+			path = Material;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

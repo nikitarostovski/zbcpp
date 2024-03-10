@@ -1,55 +1,43 @@
 #include "material.hpp"
 #include "polygon.hpp"
-
-#define ALPHA 255 // 64
+#include "constants.h"
 
 using namespace PolygonUtils;
-
-sf::Color getMaterialColor(MaterialType type);
 
 Material::Material(MaterialType type)
     : type(type)
 {
-    this->color = getMaterialColor(type);
-}
-
-sf::Color getMaterialColor(MaterialType type)
-{
-    switch (type) {
-        case MaterialType::red:
-            return {255, 0, 0, ALPHA};
-        case MaterialType::green:
-            return {0, 255, 0, ALPHA};
-        case MaterialType::yellow:
-            return {255, 255, 0, ALPHA};
-        case MaterialType::blue:
-            return {0, 0, 255, ALPHA};
-    }
 }
 
 std::vector<Polygon> Material::splitPolygon(Polygon polygon)
 {
     switch (type) {
-        case MaterialType::yellow:
-            return splitIntoSquares(polygon);
-        case MaterialType::green:
-            return splitIntoTriangles(polygon);
-        default:
-            std::vector<Polygon> result;
-            result.push_back(polygon);
-            return result;
+        case PolygonUtils::MaterialTypeRock:
+            return splitIntoTriangles(polygon, CELL_SIZE);
+        case PolygonUtils::MaterialTypeDirt:
+            return splitIntoTriangles(polygon, CELL_SIZE * 0.5f);
+        case PolygonUtils::MaterialTypeCrystalRed:
+            return splitIntoTriangles(polygon, CELL_SIZE * 0.5f);
+        case PolygonUtils::MaterialTypeCrystalGreen:
+            return splitIntoTriangles(polygon, CELL_SIZE);
+        case MaterialTypeCore:
+            return splitIntoTriangles(polygon, CELL_SIZE);
+        case MaterialTypeExplosive:
+            return splitIntoTriangles(polygon, CELL_SIZE);
+        case MaterialTypeLava:
+            return splitIntoTriangles(polygon, CELL_SIZE);
     }
 }
 
-std::vector<Polygon> Material::splitIntoSquares(Polygon polygon)
+std::vector<Polygon> Material::splitIntoSquares(Polygon polygon, float cellSize)
 {
     std::vector<Polygon> source;
     source.push_back(polygon);
     
     std::vector<Polygon> result;
     
-    const float stepx = 3.0f;
-    const float stepy = 3.0f;
+    const float stepx = cellSize;
+    const float stepy = cellSize;
     float xLo = polygon.aabb.lowerBound.x;
     float xHi = xLo + std::ceil((polygon.aabb.upperBound.x - polygon.aabb.lowerBound.x) / stepx) * stepx;
     float yLo = polygon.aabb.lowerBound.y;
@@ -76,14 +64,14 @@ std::vector<Polygon> Material::splitIntoSquares(Polygon polygon)
     return result;
 }
 
-std::vector<Polygon> Material::splitIntoTriangles(Polygon polygon)
+std::vector<Polygon> Material::splitIntoTriangles(Polygon polygon, float cellSize)
 {
     std::vector<Polygon> source;
     source.push_back(polygon);
     
     std::vector<Polygon> result;
     
-    const float stepx = 3.0f;
+    const float stepx = cellSize;
     const float stepy = stepx * sqrt(3) / 2;
     float xLo = polygon.aabb.lowerBound.x;
     float xHi = xLo + std::ceil((polygon.aabb.upperBound.x - polygon.aabb.lowerBound.x) / stepx) * stepx;

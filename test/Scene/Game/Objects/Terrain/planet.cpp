@@ -10,7 +10,7 @@ Planet::Planet(b2Vec2 pos, float radius, float gravityRadius, PhysicsWorld *worl
     this->center = pos;
     this->gravityRadius = gravityRadius;
     
-    Polygon corePolygon = Polygon::makeCircle(pos, radius, 16, MaterialType::yellow, false, true);
+    Polygon corePolygon = Polygon::makeCircle(pos, radius, 8, MaterialTypeCore, false, true);
     SolidBlock *coreBlock = new SolidBlock(corePolygon, true, world);
     world->addEntity(coreBlock);
     

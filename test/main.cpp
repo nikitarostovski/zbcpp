@@ -11,7 +11,9 @@ int main()
     
     sf::View viewport(sf::FloatRect(0.f, 0.f, window_width, window_height));
     
-    sf::RenderWindow window(sf::VideoMode(window_width, window_height), "Test");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    sf::RenderWindow window(sf::VideoMode(window_width, window_height), "Test", sf::Style::Close, settings);
     window.setFramerateLimit(fps);
     window.setView(viewport);
     window.setKeyRepeatEnabled(false);

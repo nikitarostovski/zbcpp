@@ -9,7 +9,7 @@ AsteroidBelt::AsteroidBelt(b2Vec2 pos, float startRadius, float endRadius, float
     float bradiusstart = startRadius + asteroidSize;
     float bradiusend = endRadius;
     
-    Polygon bcontour = Polygon::makeCircle(pos, (bradiusend + asteroidSize), 32, MaterialType::blue, true, true);
+    Polygon bcontour = Polygon::makeCircle(pos, (bradiusend + asteroidSize), 32, MaterialTypeRock, true, true);
     
     std::vector<Polygon> asteroids;
     for (auto &bchunk : bcontour.subPolygons) {

@@ -1,8 +1,39 @@
 #include "terrain_renderer.hpp"
+#include "resource_path.hpp"
+#include "string_utils.hpp"
+#include "constants.h"
 
-TerrainRenderer::TerrainRenderer()
+TerrainRenderer::TerrainRenderer(PolygonUtils::MaterialType type)
 {
     vertices = sf::VertexArray(sf::Triangles);
+    
+    std::string name;
+    switch (type) {
+        case PolygonUtils::MaterialTypeRock:
+            name = "rock.png";
+            break;
+        case PolygonUtils::MaterialTypeDirt:
+            name = "dirt.png";
+            break;
+        case PolygonUtils::MaterialTypeCrystalRed:
+            name = "crystal_red.png";
+            break;
+        case PolygonUtils::MaterialTypeCrystalGreen:
+            name = "crystal_green.png";
+            break;
+        case PolygonUtils::MaterialTypeCore:
+            name = "core.png";
+            break;
+        case PolygonUtils::MaterialTypeExplosive:
+            name = "explosive.png";
+            break;
+        case PolygonUtils::MaterialTypeLava:
+            name = "lava.png";
+            break;
+    }
+    texture.loadFromFile(resourcePath() + name);
+    texture.setSmooth(true);
+    texture.setRepeated(true);
 }
 
 void TerrainRenderer::addVertex(sf::Vertex vertex)
@@ -26,6 +57,7 @@ void TerrainRenderer::reset()
 
 void TerrainRenderer::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
+    states.texture = &texture;
     states.transform *= getTransform();
     target.draw(vertices, states);
 }

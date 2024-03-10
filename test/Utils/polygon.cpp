@@ -17,6 +17,11 @@
 
 using namespace PolygonUtils;
 
+Polygon::Polygon()
+    : material(MaterialTypeCore)
+{
+}
+
 Polygon::Polygon(std::vector<b2Vec2> points, MaterialType materialType, bool isDynamic, bool isSplitable)
     : material{materialType}
 {
@@ -28,6 +33,8 @@ Polygon::Polygon(std::vector<b2Vec2> points, MaterialType materialType, bool isD
     calculateCenter();
     if (isSplitable)
         calculateSubPolygons();
+    
+    calculateTexCoords();
 }
 
 void Polygon::calculateAABB()
@@ -84,10 +91,24 @@ void Polygon::calculateSubPolygons()
     subPolygons = material.splitPolygon(*this);
 }
 
+void Polygon::calculateTexCoords()
+{
+    texCoords = std::vector<b2Vec2>();
+    for (auto p : points) {
+        auto ptc = b2Vec2(p.x, p.y) + center;
+        texCoords.push_back(ptc * TEXTURE_SCALE);
+    }
+}
+
 std::vector<Polygon> Polygon::combine(std::vector<Polygon> source)
 {
-    MaterialType material = MaterialType::red;
+    std::vector<Polygon> result;
+    MaterialType material;
     bool isDynamic = false;
+    
+    if (source.empty()) {
+        return result;
+    }
     
     Clipper2Lib::PathsD subject, clip, solution;
     for (auto p : source) {
@@ -100,7 +121,7 @@ std::vector<Polygon> Polygon::combine(std::vector<Polygon> source)
         subject.push_back(s);
     }
     solution = Clipper2Lib::Union(subject, clip, Clipper2Lib::FillRule::EvenOdd);
-    std::vector<Polygon> result;
+    
     for (auto s : solution) {
         std::vector<b2Vec2> r;
         for (auto pt : s)
@@ -172,7 +193,12 @@ std::vector<Polygon> Polygon::substraction(std::vector<Polygon> source)
 
 std::vector<Polygon> Polygon::substraction_mult(std::vector<Polygon> source, std::vector<Polygon> clip)
 {
+    MaterialType mt;
     Clipper2Lib::PathsD sourcePath, clipPath, solutionPath;
+    std::vector<Polygon> result;
+    
+    if (source.empty())
+        return result;
     
     for (auto p : clip) {
         Clipper2Lib::PathD s;
@@ -183,6 +209,7 @@ std::vector<Polygon> Polygon::substraction_mult(std::vector<Polygon> source, std
     }
     
     for (auto p : source) {
+        mt = p.material.type;
         Clipper2Lib::PathD s;
         for (auto pt : p.points)
             s.emplace_back((p.center.x + pt.x) * UPSCALE, (p.center.y + pt.y) * UPSCALE);
@@ -190,13 +217,12 @@ std::vector<Polygon> Polygon::substraction_mult(std::vector<Polygon> source, std
         sourcePath.push_back(s);
     }
     solutionPath = Clipper2Lib::Difference(sourcePath, clipPath, Clipper2Lib::FillRule::NonZero);
-    std::vector<Polygon> result;
     for (auto s : solutionPath) {
         std::vector<b2Vec2> r;
         for (auto pt : s)
             r.emplace_back(pt.x / UPSCALE, pt.y / UPSCALE);
         
-        Polygon p{r, MaterialType::red, true, true};
+        Polygon p{r, mt, true, true};
         result.push_back(p);
     }
     return result;

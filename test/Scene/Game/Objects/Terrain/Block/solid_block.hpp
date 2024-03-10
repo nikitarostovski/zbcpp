@@ -9,16 +9,22 @@ using namespace PolygonUtils;
 class SolidBlock : public BodyEntity
 {
 private:
-    std::vector<sf::Vertex> cachedVertices;
+    b2Vec2 parentPolygonCenterOffset;
     
-    Polygon polygon;
+    std::vector<b2FixtureDef *> fixturesToDestroy;
+    
+    Material material;
+    
+    b2AABB initialAABB;
+    b2BodyDef bodyDef;
+    
+    std::vector<b2FixtureDef *> fixtureDefs;
+    std::map<b2FixtureDef *, Polygon> fixtureDefPolygons;
+    
     float approximateArea;
     bool isImmortal;
-    sf::ConvexShape renderShape;
     
-    std::vector<sf::ConvexShape> renderShapes;
-    
-    void createFixture(b2Body *body, Polygon polygon);
+    void createFixture(b2Body *body, b2FixtureDef *def);
     void spawnSubBlocks(b2Vec2 point, float radius, bool hasPointAndRadius);
     void spawnOrb(b2Vec2 point);
 protected:
@@ -26,7 +32,10 @@ protected:
     b2AABB getInitialAABB() override;
 public:
     PhysicsWorld *world;
+    
     SolidBlock(Polygon polygon, bool isImmortal, PhysicsWorld *world);
+    
+    void step(float dt) override;
     
     void receiveCollision(BodyEntity *entity, float impulse, b2Vec2 point, float radius) override;
     void receiveDamage(float impulse) override;

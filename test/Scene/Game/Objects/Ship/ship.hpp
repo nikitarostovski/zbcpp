@@ -5,6 +5,7 @@
 #include "ship_emitter.hpp"
 #include "ship_collector.hpp"
 #include "ship_config.hpp"
+#include "ship_weapon.hpp"
 
 class Ship : public BodyEntity
 {
@@ -16,6 +17,7 @@ private:
     bool updateFrameIfNeeded(FrameConfig newFrame, b2Vec2 pos);
     bool updateEmitterIfNeeded(EmitterConfig newEmitter, b2Vec2 pos);
     bool updateCollectorIfNeeded(CollectorConfig newCollector, b2Vec2 pos);
+    bool updateWeaponInNeeded(WeaponConfig newWeapon, b2Vec2 pos);
     
     void makeExhaustTrace(b2Vec2 impulse);
 protected:
@@ -26,6 +28,7 @@ public:
     ShipFrame *frame;
     ShipEmitter *emitter;
     ShipCollector *collector;
+    ShipWeapon *weapon;
     
     ShipConfig shipConfig;
     std::function<void(float)> onDamageReceive;
@@ -34,8 +37,10 @@ public:
     Ship(b2Vec2 pos, ShipConfig config, PhysicsWorld *world);
     ~Ship();
     
-    void step(float dt);
+    void step(float dt) override;
     
+    void startFire();
+    void stopFire();
     void move(b2Vec2 vector);
     void rotate(float desiredAngle);
     

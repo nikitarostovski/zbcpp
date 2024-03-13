@@ -337,8 +337,10 @@ void PhysicsWorld::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse
     float impulseAdjusted = impulse->normalImpulses[0] / mass;
 
     // imulses adjusted for colliding bodies personally
-    float ia = impulse->normalImpulses[0] / contact->GetFixtureB()->GetBody()->GetMass();
-    float ib = impulse->normalImpulses[0] / contact->GetFixtureA()->GetBody()->GetMass();
+    float ma = contact->GetFixtureA()->GetBody()->GetMass();
+    float mb = contact->GetFixtureB()->GetBody()->GetMass();
+    float ia = abs(impulse->normalImpulses[0] * mb / (ma + mb));
+    float ib = abs(impulse->normalImpulses[0] * ma / (ma + mb));
     
     if (impulseAdjusted < COLLLISION_THRESHOLD) {
         return;

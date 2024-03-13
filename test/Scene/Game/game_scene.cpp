@@ -21,7 +21,7 @@ GameScene::GameScene(sf::RenderWindow *window)
     
     camera.x = 0;
     camera.y = 0;
-    camera.scale = 10.0f;
+    camera.scale = 30.0f;
     
     world = new PhysicsWorld();
     
@@ -29,18 +29,29 @@ GameScene::GameScene(sf::RenderWindow *window)
     FrameConfig frameConfig{FrameBasic, 0.0f, 10.0f};
     EmitterConfig emitterConfig{EmitterBasic, 50.0f, 500.0f, 0.2f};
     CollectorConfig collectorConfig{CollectorBasic, 10.0f};
-    ShipConfig shipConfig{frameConfig, emitterConfig, collectorConfig, 1900.0f, 3000.0f};
+    WeaponConfig weaponConfig(10.0f, 2);
+    ShipConfig shipConfig{frameConfig, emitterConfig, collectorConfig, weaponConfig, 1900.0f, 3000.0f};
     player = new Player(b2Vec2(-100, 0), playerConfig, shipConfig, world);
     
     mainPlanet = new Planet(b2Vec2(-20, -40), 5, 30, world);
     mainAsteroids = new AsteroidBelt(mainPlanet->center, mainPlanet->gravityRadius, mainPlanet->gravityRadius + 5, 1, world);
     
+//    int count = sizeof(allMaterialTypes) / sizeof(MaterialType);
+//    for (int i = 0; i < count; i++) {
+//        auto mt = allMaterialTypes[i];
+//        int x = -400 + i * 30;
+//        float radius = 12.0f;
+//        auto bp = PolygonUtils::Polygon::makeCircle(b2Vec2(x, -30), radius, 8, mt, true, true);
+//        auto block = new SolidBlock(bp, false, world);
+//        world->addEntity(block);
+//    }
+    
     int count = sizeof(allMaterialTypes) / sizeof(MaterialType);
     for (int i = 0; i < count; i++) {
         auto mt = allMaterialTypes[i];
         int x = -400 + i * 30;
-        float radius = 12.0f;
-        auto bp = PolygonUtils::Polygon::makeCircle(b2Vec2(x, -30), radius, 8, mt, true, true);
+        float radius = 5 + i * 2;
+        auto bp = PolygonUtils::Polygon::makeCircle(b2Vec2(x, -30), radius, 4, mt, true, true);
         auto block = new SolidBlock(bp, false, world);
         world->addEntity(block);
     }
@@ -206,10 +217,14 @@ void GameScene::handleMouseMove(sf::Vector2i screenPos)
 
 void GameScene::handleMouseDown(sf::Vector2i screenPos)
 {
-    
+    if (!player || !player->ship)
+        return;
+    player->ship->startFire();
 }
 
 void GameScene::handleMouseUp(sf::Vector2i screenPos)
 {
-    
+    if (!player || !player->ship)
+        return;
+    player->ship->stopFire();
 }

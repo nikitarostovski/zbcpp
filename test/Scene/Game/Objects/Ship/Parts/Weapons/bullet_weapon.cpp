@@ -1,26 +1,30 @@
-#include "ship_frame.hpp"
-#include "constants.h"
+#include "bullet_weapon.hpp"
 #include "collision_category.hpp"
+#include "bullet_missle.hpp"
+#include "constants.h"
+#include "physics_world.hpp"
 
-ShipFrame::ShipFrame(FrameConfig config, b2Body *body)
-    : config(config)
-    , color(sf::Color(255, 255, 0))
+BulletWeapon::BulletWeapon(WeaponConfig config, PhysicsWorld *world)
+    : ShipWeapon(config)
+    , world(world)
+{
+}
+
+void BulletWeapon::createFixture(b2Body *body)
 {
     std::vector<b2Vec2> points;
-    points.emplace_back(-1, 0);
-    points.emplace_back(-1.5, 1.5);
-    points.emplace_back(-0.75, 2.5);
-    points.emplace_back(0.75, 2.5);
-    points.emplace_back(1.5, 1.5);
-    points.emplace_back(1, 0);
+    points.emplace_back(-1.3, 5);
+    points.emplace_back(1.3, 5);
+    points.emplace_back(1.7, 6);
+    points.emplace_back(-1.7, 6);
     
     b2PolygonShape shape;
     shape.Set(points.data(), (int)points.size());
 
     b2FixtureDef fixtureDef;
     fixtureDef.filter.categoryBits = CategoryShip;
-    fixtureDef.filter.maskBits = CategoryShip | CategoryTerrain | CategoryTerrain | CategoryOrb;
-    fixtureDef.density = config.mass;
+    fixtureDef.filter.maskBits = 0;
+    fixtureDef.density = 0.5;
     fixtureDef.friction = 0.5;
     fixtureDef.restitution = 0.2;
     fixtureDef.shape = &shape;
@@ -28,12 +32,32 @@ ShipFrame::ShipFrame(FrameConfig config, b2Body *body)
     fixture = body->CreateFixture(&fixtureDef);
 }
 
-b2Fixture* ShipFrame::getFixture()
+void BulletWeapon::step(float dt)
 {
-    return fixture;
+    if (isShooting) {
+        auto secondsPassed = lastShotClock.getElapsedTime().asSeconds();
+        if (secondsPassed >= 1.0f/config.rate) {
+            spawnBullet();
+            lastShotClock.restart();
+        }
+    }
 }
 
-void ShipFrame::renderFixture(sf::RenderWindow *window, Camera camera)
+void BulletWeapon::spawnBullet()
+{
+    if (!fixture)
+        return;
+    
+    float f = 1000000.0f;
+    auto rot = b2Rot(fixture->GetBody()->GetAngle() - M_PI_2);
+    b2Vec2 imp = b2Vec2(f * rot.c, f * rot.s);
+    
+    auto pos = fixture->GetBody()->GetPosition();
+    auto bullet = new BulletMissle(pos, imp, config.damage);
+    world->addEntity(bullet);
+}
+
+void BulletWeapon::renderFixture(sf::RenderWindow *window, Camera camera)
 {
     if (!fixture)
         return;
@@ -46,7 +70,7 @@ void ShipFrame::renderFixture(sf::RenderWindow *window, Camera camera)
 
     b2PolygonShape* shape = (b2PolygonShape*)fixture->GetShape();
     sf::ConvexShape polygon;
-    polygon.setFillColor(color);
+    polygon.setFillColor(sf::Color(127, 0, 127));
     polygon.setOrigin(localCenter);
     polygon.setPosition((worldCenter.x - camera.x) * camera.scale + window->getSize().x / 2,
                         (worldCenter.y - camera.y) * camera.scale + window->getSize().y / 2);

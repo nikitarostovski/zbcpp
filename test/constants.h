@@ -20,7 +20,7 @@
 #define CHUNK_ACTIVATION_TIME_LIMIT_MS 4
 
 // MARK: - Materials
-#define CELL_SIZE 4.0f
+#define CELL_SIZE 2.0f
 
 // MARK: - Collisions
 #define COLLLISION_THRESHOLD 1.0f

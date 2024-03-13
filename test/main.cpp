@@ -41,7 +41,7 @@ int main()
         game->step(dt);
         
         auto t = clock.getElapsedTime();
-        printf("%.dms\n", t.asMilliseconds());
+//        printf("%.dms\n", t.asMilliseconds());
         clock.restart();
     }
     return 0;

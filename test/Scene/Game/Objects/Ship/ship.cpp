@@ -10,6 +10,7 @@ Ship::Ship(b2Vec2 pos, ShipConfig config, PhysicsWorld *world)
     updateFrameIfNeeded(config.frame, pos);
     updateEmitterIfNeeded(config.emitter, pos);
     updateCollectorIfNeeded(config.collector, pos);
+    updateWeaponInNeeded(config.weapon, pos);
     
     shipConfig = config;
 }
@@ -54,6 +55,7 @@ void Ship::onConfigDidUpdate()
     updateFrameIfNeeded(shipConfig.frame, pos);
     updateEmitterIfNeeded(shipConfig.emitter, pos);
     updateCollectorIfNeeded(shipConfig.collector, pos);
+    updateWeaponInNeeded(shipConfig.weapon, pos);
 }
 
 bool Ship::updateFrameIfNeeded(FrameConfig newFrame, b2Vec2 pos)
@@ -107,6 +109,37 @@ bool Ship::updateCollectorIfNeeded(CollectorConfig newCollector, b2Vec2 pos)
     return true;
 }
 
+bool Ship::updateWeaponInNeeded(WeaponConfig newWeapon, b2Vec2 pos)
+{
+    if (!body)
+        return false;
+    
+    if (weapon && weapon->config == shipConfig.weapon && weapon->getFixture() != nullptr) {
+        return false;
+    }
+    
+    if (weapon && weapon->getFixture()) {
+        body->DestroyFixture(collector->getFixture());
+    }
+    weapon = ShipWeapon::makeWeapon(newWeapon, world);
+    weapon->createFixture(body);
+    return true;
+}
+
+void Ship::startFire()
+{
+    if (!weapon)
+        return;
+    weapon->startShoot();
+}
+
+void Ship::stopFire()
+{
+    if (!weapon)
+        return;
+    weapon->endShoot();
+}
+
 void Ship::step(float dt)
 {
     if (!body)
@@ -130,6 +163,9 @@ void Ship::step(float dt)
     
     if (collector) {
         collector->step(dt);
+    }
+    if (weapon) {
+        weapon->step(dt);
     }
 }
 
@@ -195,6 +231,9 @@ void Ship::render(sf::RenderWindow *window, Camera camera) {
     }
     if (collector) {
         collector->renderFixture(window, camera);
+    }
+    if (weapon) {
+        weapon->renderFixture(window, camera);
     }
 }
 

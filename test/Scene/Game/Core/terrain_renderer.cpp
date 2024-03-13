@@ -31,6 +31,7 @@ TerrainRenderer::TerrainRenderer(PolygonUtils::MaterialType type)
             name = "lava.png";
             break;
     }
+    name = "rock.png";
     texture.loadFromFile(resourcePath() + name);
     texture.setSmooth(true);
     texture.setRepeated(true);

@@ -52,6 +52,9 @@ void GravityFieldEntity::step(float dt)
                 continue;
             
             for (auto e : chunk->entities) {
+                if (e->gravityAppliedOnCurrentStep)
+                    continue;
+                
                 b2Vec2 center = e->getPosition();
                 b2Vec2 shift = center - fieldCenter;
                 float distSquared = shift.LengthSquared();
@@ -65,7 +68,19 @@ void GravityFieldEntity::step(float dt)
                 LiquidEntity *liquidEntity = dynamic_cast<LiquidEntity *>(e);
                 if (liquidEntity)
                     applyGravityToLiquid(liquidEntity);
+                
+                e->gravityAppliedOnCurrentStep = true;
             }
+        }
+    }
+    for (int cx = lastChunkXLo; cx <= lastChunkXHi; cx++) {
+        for (int cy = lastChunkYLo; cy <= lastChunkYHi; cy++) {
+            Chunk *chunk = world->getChunk({cx, cy});
+            if (!chunk)
+                continue;
+            
+            for (auto e : chunk->entities)
+                e->gravityAppliedOnCurrentStep = false;
         }
     }
 }

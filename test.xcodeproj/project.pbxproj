@@ -122,6 +122,12 @@
 		8DFA01022B9DDEB6001DFAA4 /* explosive.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DFA00FD2B9DDEA7001DFAA4 /* explosive.png */; };
 		8DFA01032B9DDEB6001DFAA4 /* lava.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DFA00FB2B9DDEA7001DFAA4 /* lava.png */; };
 		8DFA01042B9DDEB6001DFAA4 /* rock.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DFA00F82B9DDEA7001DFAA4 /* rock.png */; };
+		8DFA13832BA02DDC001DFAA4 /* ship_weapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA13812BA02DDC001DFAA4 /* ship_weapon.cpp */; };
+		8DFA13872BA02E47001DFAA4 /* weapon_config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA13852BA02E47001DFAA4 /* weapon_config.cpp */; };
+		8DFA138A2BA038B2001DFAA4 /* bullet_weapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA13882BA038B2001DFAA4 /* bullet_weapon.cpp */; };
+		8DFA138D2BA038BB001DFAA4 /* rocket_weapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA138B2BA038BB001DFAA4 /* rocket_weapon.cpp */; };
+		8DFA25372BA08FD1001DFAA4 /* bullet_missle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA25352BA08FD1001DFAA4 /* bullet_missle.cpp */; };
+		8DFA253A2BA0A2AB001DFAA4 /* rocket_missle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA25382BA0A2AB001DFAA4 /* rocket_missle.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -414,6 +420,18 @@
 		8DFA00FB2B9DDEA7001DFAA4 /* lava.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lava.png; sourceTree = "<group>"; };
 		8DFA00FC2B9DDEA7001DFAA4 /* crystal_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crystal_red.png; sourceTree = "<group>"; };
 		8DFA00FD2B9DDEA7001DFAA4 /* explosive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = explosive.png; sourceTree = "<group>"; };
+		8DFA13812BA02DDC001DFAA4 /* ship_weapon.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ship_weapon.cpp; sourceTree = "<group>"; };
+		8DFA13822BA02DDC001DFAA4 /* ship_weapon.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ship_weapon.hpp; sourceTree = "<group>"; };
+		8DFA13852BA02E47001DFAA4 /* weapon_config.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = weapon_config.cpp; sourceTree = "<group>"; };
+		8DFA13862BA02E47001DFAA4 /* weapon_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = weapon_config.hpp; sourceTree = "<group>"; };
+		8DFA13882BA038B2001DFAA4 /* bullet_weapon.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bullet_weapon.cpp; sourceTree = "<group>"; };
+		8DFA13892BA038B2001DFAA4 /* bullet_weapon.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = bullet_weapon.hpp; sourceTree = "<group>"; };
+		8DFA138B2BA038BB001DFAA4 /* rocket_weapon.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rocket_weapon.cpp; sourceTree = "<group>"; };
+		8DFA138C2BA038BB001DFAA4 /* rocket_weapon.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rocket_weapon.hpp; sourceTree = "<group>"; };
+		8DFA25352BA08FD1001DFAA4 /* bullet_missle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bullet_missle.cpp; sourceTree = "<group>"; };
+		8DFA25362BA08FD1001DFAA4 /* bullet_missle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = bullet_missle.hpp; sourceTree = "<group>"; };
+		8DFA25382BA0A2AB001DFAA4 /* rocket_missle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rocket_missle.cpp; sourceTree = "<group>"; };
+		8DFA25392BA0A2AB001DFAA4 /* rocket_missle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rocket_missle.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -448,6 +466,7 @@
 		8D03FEFD2B639D7B0084DD17 /* Parts */ = {
 			isa = PBXGroup;
 			children = (
+				8DFA13802BA02DC5001DFAA4 /* Weapons */,
 				8DF5E7462B61683D0037562F /* ship_frame.hpp */,
 				8DF5E7452B61683D0037562F /* ship_frame.cpp */,
 				8D883D3E2B62A86C0044A476 /* ship_emitter.hpp */,
@@ -837,6 +856,7 @@
 		8DA698562B68DDEB006CDF9C /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				8DFA13842BA02E0F001DFAA4 /* WeaponConfig */,
 				8DA6985E2B68DE0B006CDF9C /* frame_config.hpp */,
 				8DA6985D2B68DE0B006CDF9C /* frame_config.cpp */,
 				8DA6985B2B68DE03006CDF9C /* emitter_config.hpp */,
@@ -1091,6 +1111,40 @@
 			path = Material;
 			sourceTree = "<group>";
 		};
+		8DFA13802BA02DC5001DFAA4 /* Weapons */ = {
+			isa = PBXGroup;
+			children = (
+				8DFA25342BA08FB5001DFAA4 /* Missles */,
+				8DFA13822BA02DDC001DFAA4 /* ship_weapon.hpp */,
+				8DFA13812BA02DDC001DFAA4 /* ship_weapon.cpp */,
+				8DFA13892BA038B2001DFAA4 /* bullet_weapon.hpp */,
+				8DFA13882BA038B2001DFAA4 /* bullet_weapon.cpp */,
+				8DFA138C2BA038BB001DFAA4 /* rocket_weapon.hpp */,
+				8DFA138B2BA038BB001DFAA4 /* rocket_weapon.cpp */,
+			);
+			path = Weapons;
+			sourceTree = "<group>";
+		};
+		8DFA13842BA02E0F001DFAA4 /* WeaponConfig */ = {
+			isa = PBXGroup;
+			children = (
+				8DFA13862BA02E47001DFAA4 /* weapon_config.hpp */,
+				8DFA13852BA02E47001DFAA4 /* weapon_config.cpp */,
+			);
+			path = WeaponConfig;
+			sourceTree = "<group>";
+		};
+		8DFA25342BA08FB5001DFAA4 /* Missles */ = {
+			isa = PBXGroup;
+			children = (
+				8DFA25362BA08FD1001DFAA4 /* bullet_missle.hpp */,
+				8DFA25352BA08FD1001DFAA4 /* bullet_missle.cpp */,
+				8DFA25392BA0A2AB001DFAA4 /* rocket_missle.hpp */,
+				8DFA25382BA0A2AB001DFAA4 /* rocket_missle.cpp */,
+			);
+			path = Missles;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1162,10 +1216,12 @@
 				8D898D392B221F11008E532F /* b2PulleyJoint.cpp in Sources */,
 				8DA6894B2B669845006CDF9C /* imgui_widgets.cpp in Sources */,
 				8D2806E92B31BD0F00DD0D8F /* game_scene.cpp in Sources */,
+				8DFA13832BA02DDC001DFAA4 /* ship_weapon.cpp in Sources */,
 				8D6773AB2B4DB7D900403134 /* clipper.offset.cpp in Sources */,
 				8D6772A42B4C410D00403134 /* material.cpp in Sources */,
 				8DF83B212B749C7D000DC138 /* fuel_station_scene.cpp in Sources */,
 				8DA6895F2B669845006CDF9C /* imgui.cpp in Sources */,
+				8DFA253A2BA0A2AB001DFAA4 /* rocket_missle.cpp in Sources */,
 				8D898D232B221F11008E532F /* b2World.cpp in Sources */,
 				8D898D372B221F11008E532F /* b2Joint.cpp in Sources */,
 				8DF5DDA82B5ED8880037562F /* base_scene.cpp in Sources */,
@@ -1176,12 +1232,14 @@
 				8D898D532B221F11008E532F /* b2CircleShape.cpp in Sources */,
 				8D898D2E2B221F11008E532F /* b2WorldCallbacks.cpp in Sources */,
 				8D36B72B2B79F733008731BD /* body_entity.cpp in Sources */,
+				8DFA25372BA08FD1001DFAA4 /* bullet_missle.cpp in Sources */,
 				8D898D3A2B221F11008E532F /* b2RopeJoint.cpp in Sources */,
 				8D898D2A2B221F11008E532F /* b2ContactSolver.cpp in Sources */,
 				8D898D512B221F11008E532F /* b2ChainShape.cpp in Sources */,
 				8D898D2B2B221F11008E532F /* b2CircleContact.cpp in Sources */,
 				8D898D502B221F11008E532F /* b2DynamicTree.cpp in Sources */,
 				8D898D562B221F11008E532F /* b2BroadPhase.cpp in Sources */,
+				8DFA138D2BA038BB001DFAA4 /* rocket_weapon.cpp in Sources */,
 				8DA6882B2B64EE12006CDF9C /* ship_collector.cpp in Sources */,
 				8DF83B1D2B749644000DC138 /* fuel_station_building.cpp in Sources */,
 				8D0309E02B8CE92800219E8B /* orb.cpp in Sources */,
@@ -1191,6 +1249,7 @@
 				8DA6985F2B68DE0B006CDF9C /* frame_config.cpp in Sources */,
 				8DF5E7472B61683D0037562F /* ship_frame.cpp in Sources */,
 				8D89A9A22B2B0F0A008E532F /* solid_block.cpp in Sources */,
+				8DFA138A2BA038B2001DFAA4 /* bullet_weapon.cpp in Sources */,
 				8D0300572B63C0390084DD17 /* asteroid_belt.cpp in Sources */,
 				8DC891002B87134500123FB1 /* ship.cpp in Sources */,
 				8D8995C92B2361C3008E532F /* physics_world.cpp in Sources */,
@@ -1213,6 +1272,7 @@
 				8DA689862B669845006CDF9C /* imgui_tables.cpp in Sources */,
 				8D898D2D2B221F11008E532F /* b2Contact.cpp in Sources */,
 				8D03FF012B639DBC0084DD17 /* planet.cpp in Sources */,
+				8DFA13872BA02E47001DFAA4 /* weapon_config.cpp in Sources */,
 				8D898D4D2B221F11008E532F /* b2Distance.cpp in Sources */,
 				8DF3DA762B431D3900A9593C /* Polygon.cpp in Sources */,
 				8D898D302B221F11008E532F /* b2MouseJoint.cpp in Sources */,

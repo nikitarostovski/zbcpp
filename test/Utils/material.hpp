@@ -36,6 +36,7 @@ struct Material {
 private:
     std::vector<Polygon> splitIntoSquares(Polygon polygon, float cellSize);
     std::vector<Polygon> splitIntoTriangles(Polygon polygon, float cellSize);
+    std::vector<Polygon> splitIntoHexagons(Polygon polygon, float cellSize);
 public:
     MaterialType type;
     

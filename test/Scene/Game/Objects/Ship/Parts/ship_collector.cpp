@@ -36,7 +36,7 @@ void ShipCollector::receiveCollision(Orb *orb)
 
 void ShipCollector::step(float dt)
 {
-    const float collectionRadius = 2.0f;
+    const float collectionRadius = 1.0f;
     if (!gravityFixture)
         return;
     for (int i = 0; i < orbsToCollect.size();) {

@@ -7,10 +7,10 @@ ShipEmitter::ShipEmitter(EmitterConfig config, b2Body *body)
     , color(sf::Color(24, 200, 160))
 {
     std::vector<b2Vec2> points;
-    points.emplace_back(-1.3, 5);
-    points.emplace_back(1.3, 5);
-    points.emplace_back(1.7, 6);
-    points.emplace_back(-1.7, 6);
+    points.emplace_back(-0.65, 2.5);
+    points.emplace_back(0.65, 2.5);
+    points.emplace_back(0.85, 3);
+    points.emplace_back(-0.85, 3);
     
     b2PolygonShape shape;
     shape.Set(points.data(), (int)points.size());

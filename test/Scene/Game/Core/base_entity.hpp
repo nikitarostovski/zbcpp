@@ -13,6 +13,8 @@ public:
     
     bool isDead;
     
+    bool gravityAppliedOnCurrentStep;
+    
     BaseEntity();
     virtual ~BaseEntity();
     

@@ -125,7 +125,7 @@ void SolidBlock::receiveCollision(BodyEntity *entity, float impulse, b2Vec2 poin
 {
     if (isImmortal || !body)
         return;
-    
+    printf("!!! block gets damage  %.2f\n", impulse);
     // TODO: move damage threshold to material
     if (impulse > 2.0f) {
         if (fixtureDefs.size() > 1) {
